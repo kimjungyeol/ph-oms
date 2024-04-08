@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="sample/layouts/default_layout">
+<th:block layout:fragment="content">
+    <div class="container">
+        <h2>Board - Register</h2>
+        <div data-trigger="form">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Title.</label>
+                <input type="text" class="form-control" id="title" name="title" maxlength="25">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Contents.</label>
+                <textarea class="form-control" id="contents" name="contents" rows="5" maxlength="1000"></textarea>
+            </div>
+        </div>
+        <div data-trigger="form">
+            <div class="mb-3 row">
+                <div class="col">
+                    <label class="form-label fw-bold">Use.</label>
+                    <div>
+                        <input class="form-check-input" type="radio" name="useYn" id="useYn1" value="Y">
+                        <label class="form-check-label" for="useYn1">사용</label>
+                        <input class="form-check-input" type="radio" name="useYn" id="useYn2" value="N">
+                        <label class="form-check-label" for="useYn2">미사용</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <label class="form-label fw-bold">Use-selectbox.</label>
+                    <div>
+                        <select id="use_select" name="use_select" style="width: 100px;">
+                            <option value="">--Select-</option>
+                            <option value="Y">사용</option>
+                            <option value="N">미사용</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col">
+                    <label class="fw-bold">Register ID.</label>
+                    <span id="registerId" style='background-color: #c7c5c5'></span>
+                </div>
+                <div class="col">
+                    <label class="fw-bold">Register Time.</label>
+                    <span id="registerDt"  style='background-color: #c7c5c5'></span>
+                </div>
+            </div>
+        </div>
+        <div data-trigger="button">
+            <div class="float-start">
+                <button type="button" class="btn btn-success" id="prevBtn">List</button>
+            </div> 
+            <div class="float-end">
+                <button type="button" class="btn btn-danger" id="saveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        'use strict';
+        // 1.page init area.
+        ;(function(co, fn) {
+            co.initParams = fn.storage.getMoveParams();
+            
+            co.uriMap = {
+                search : '/sample/board/register/search',
+                save   : '/sample/board/register/save',
+            }
+            co.moveMap = {
+                boardList : '/sample/contents/board/board-list',
+            }
+            
+        })(wg.c, wg.f);
+        
+        // 2.function area.
+        ;(function(co, fn, trigger) {
+            fn.search = function() {
+            	fn.api.search(co.initParams, function(res) {
+            		if (res.result) {
+            			// set data value on based searched data.
+            			fn.setFormData(res.data);
+            		}
+            	});
+            }
+            fn.save = function() {
+            	// data-trigger="form" 속성 하위 dom.
+            	//   - id가 지정 되어 있는 모든 dom의 key value를 가져온다.
+            	let data = fn.getFormData();
+            	console.log('save data ==== ', data);
+            	
+            	fn.api.save(data);
+            }
+            
+        })(wg.c, wg.f, wg.t);
+        
+        // 3.event area.
+        ;(function(co, fn, trigger) {
+            fn.event = function() {
+                //save.
+                $(trigger.button.saveBtn).click(function() {
+                    fn.save();
+                });
+                //move page.
+                $(trigger.button.prevBtn).click(function() {
+                    fn.movePage(co.moveMap.boardList);
+                });
+            }
+        })(wg.c, wg.f, wg.t);
+    </script>
+    <script th:inline="javascript">
+        'use strict';
+        $(document).ready(async() => {
+            const co = wg.c;
+            const fn = wg.f;
+            
+            // event load.
+            await fn.event();
+            await fn.search();
+        });
+    </script>
+</th:block>
+</html>

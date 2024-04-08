@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="sample/layouts/default_layout">
+<th:block layout:fragment="content">
+    <div class="container">
+        <h2>Search</h2>
+        <div class="mt-3" data-trigger="button">
+            <a href="javascript:void(0);" class="btn btn-primary" id="searchBtn">Search</a> 
+            <a href="javascript:void(0);" class="btn btn-danger"  id="saveBtn">Save</a> 
+            <a href="javascript:void(0);" class="btn btn-warning" id="writeBtn">Write</a>
+            <a href="javascript:void(0);" class="btn btn-primary" id="tempBtn">temp</a>
+        </div>
+        
+        <div class="mt-3" data-trigger="form">
+            <div class="form-floating mb-3">
+                <input class="form-control" id="username" name="username" type="text" required>
+                <label for="username">username</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input class="form-control" id="email" name="email" type="email" required>
+                <label for="email">Email address</label>
+            </div>
+        </div>
+        
+        <h2>Grid 1</h2>
+        <div class="mt-2" data-trigger="button">
+            <a href="javascript:void(0);" class="btn btn-primary" id="clearRow">Clear Row</a> 
+            <a href="javascript:void(0);" class="btn btn-primary" id="appendRow">Append Row</a> 
+            <a href="javascript:void(0);" class="btn btn-primary" id="deleteRow">Delete Row</a> 
+            <a href="javascript:void(0);" class="btn btn-primary" id="modifiedRow">Modified Row</a> 
+        </div>
+        <div class="mt-2" id="sampleGrid"></div>
+        
+        <h2>Grid 2</h2>
+        <div class="mt-2" id="testGrid"></div>
+    </div>
+
+    <script th:inline="javascript">
+        'use strict';
+        // 1.page init area.
+        ;(function(co, grid) {
+            co.initParams = {
+            	param1 : 'p1',
+            	param2 : 'p2',
+            }
+            
+            co.uriMap = {
+        		search : '/sample/board/list/search',
+        		save   : '/sample/board/list/save',
+            }
+            co.moveMap = {
+            	write : '/sample/contents/board/board-register',
+            }
+            
+            grid.id = {
+            	sampleGrid : 'sampleGrid',
+        		testGrid : 'testGrid',
+            }
+            
+        })(wg.c, wg.gr);
+        
+        // 2.function area.
+        ;(function(co, fn, trigger, grid) {
+            fn.search = function() {
+            	let params = {
+                    username : $('#username').val(),
+                    email : $('#email').val(),
+                    param1 : 'new p1',
+                    param2 : 'new p2',
+                }
+                grid.api.search(grid.id.sampleGrid, params);
+                grid.api.search(grid.id.testGrid, params);
+            }
+            
+            fn.save = function() {
+            	//modified rows.
+            	let rows = grid.context[grid.id.sampleGrid].getModifiedRows();
+                console.log('ModifiedRows', rows);
+                
+                //checked row.
+                console.log('Checked row', grid.context[grid.id.sampleGrid].getCheckedRows()); 
+                
+                // TODO swal confirm 창 작업.
+                
+                let params = {
+                    data : rows,
+                }
+                fn.api.save(params, function() {
+                    console.log('save callback fnc!!');
+                });
+            }
+        })(wg.c, wg.f, wg.t, wg.gr);
+        
+        // 3.event area.
+        ;(function(co, fn, trigger, grid) {
+            fn.event = function() {
+            	//wg.t => data-trigger="button" 하위의 id를 가지고 있는 dom이 모두 등록 된다.
+            	
+            	//search.
+            	$(trigger.button.searchBtn).click(function() {
+            		fn.search();
+                });
+            	//save.
+            	$(trigger.button.saveBtn).click(function() {
+            		fn.save();
+                });
+            	//move writepage.
+                $(trigger.button.writeBtn).click(function() {
+                    fn.movePage(co.moveMap.write, {});
+                });
+            	
+            	
+                /* === grid event === */
+                //clear row
+                $(trigger.button.clearRow).click(function() {
+                	grid.context[grid.id.sampleGrid].clear();
+                });
+                //append row
+                $(trigger.button.appendRow).click(function() {
+                	grid.context[grid.id.sampleGrid].appendRow({name: 'addName', age: '20'}, {at: 0});
+                });
+                //delete row
+                $(trigger.button.deleteRow).click(function() {
+                	//true : 삭제여부 alert 사용., false : 삭제여부 alert 미사용.
+                	grid.context[grid.id.sampleGrid].removeCheckedRows(false);  
+                });
+                //modified row data.
+                $(trigger.button.modifiedRow).click(function() {
+                	let rows = grid.context[grid.id.sampleGrid].getModifiedRows();
+                	console.log(rows);
+                });
+            }
+            
+        })(wg.c, wg.f, wg.t, wg.gr);
+    </script>
+    <script th:inline="javascript" th:src="@{./grid/test-grid.js}"></script>
+    <script th:inline="javascript" th:src="@{./grid/sample-grid.js}"></script>
+    <script th:inline="javascript">
+        'use strict';
+        $(document).ready(async() => {
+            const co = wg.c;
+            const fn = wg.f;
+            const grid = wg.gr;
+            
+            // sampleGrid load.
+            grid.render(grid.id.sampleGrid, co.initParams);
+            
+            // testGrid load.
+            grid.render(grid.id.testGrid, {
+                param1 : 'testparam1',
+                param2 : 'testparam2',
+            });
+            
+            // event load.
+            await fn.event();  
+        });
+    </script>
+</th:block>
+</html>

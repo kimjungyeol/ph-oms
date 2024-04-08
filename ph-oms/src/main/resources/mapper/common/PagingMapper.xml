@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pagingMapper">
+    <sql id="header">
+        SELECT @ROWN:=@ROWN+1 AS ROWNUM
+              ,T1.* 
+          FROM (
+    </sql>
+    <sql id="footer">
+ 		) T1
+ 		JOIN (SELECT @ROWN:=0) INIT
+		LIMIT ${pgLimit} OFFSET ${pgStart-1}
+    </sql>
+</mapper>

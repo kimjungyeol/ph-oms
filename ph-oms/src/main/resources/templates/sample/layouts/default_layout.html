@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:replace="sample/fragments/header :: headerFragment"></th:block>
+<style>
+.contWrap {
+    min-width: 1000px;
+}
+.mainWrap {
+    position: relative;
+    margin-left: 280px;
+}
+.wrapper {
+    min-height: 852px;
+    height: auto;
+}
+</style>
+<body>
+    <div class="wrapper">
+		<th:block th:replace="sample/fragments/top :: naviFragment"></th:block>
+		<div class="contWrap container-fluid">
+	  	    <th:block th:replace="sample/fragments/left :: naviFragment"></th:block>
+		    <div class="mainWrap" data-contants="contants">
+		        <th:block layout:fragment="content"></th:block>
+		    </div>
+	    </div>
+    </div>
+	<th:block th:replace="sample/fragments/footer :: footerFragment"></th:block>
+</body>
+</html>

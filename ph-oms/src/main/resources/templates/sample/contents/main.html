@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="sample/layouts/default_layout">
+<th:block layout:fragment="content">
+	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-3 mb-3 border-bottom">
+	  <span class="fs-5 fw-semibold">Main</span>
+	  <div class="btn-toolbar mb-2 mb-md-0">
+	    <div class="btn-group me-2">
+	    </div>
+	  </div>
+	</div>
+	
+    <script th:inline="javascript">
+        'use strict';
+        let d = '[[${dataMap}]]';
+        console.log(d+'');
+    </script>
+</th:block>
+</html>

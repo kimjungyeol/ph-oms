@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="sample/layouts/sign_layout">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="card shadow-lg border-0 rounded-lg mt-5">
+                    <div class="card-header">
+                        <h3 class="text-center fw-bold my-4">Login</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="errorWrap" style="display: none;">
+                            <p class="alert alert-danger"></p>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="username" name="username" type="email" value="testId" required>
+                            <label for="username">Email address</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="password" name="password" type="password" value="123" required>
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" id="remember-me" name="remember-me" type="checkbox">
+                            <label class="form-check-label" for="remember-me">Remember</label>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                            <!--<a class="small" href="javascript:">Forgot Password?</a>-->
+                            <a type="button" class="small" onclick="javascript:location.href='/member/join'">Sign up</a>
+                            <button type="button" id="loginBtn" class="btn btn-primary">Login</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script th:inline="javascript">
+        $("button[id='loginBtn']").click(function() {
+            $.ajax({
+                url: "/login-process",
+                method: "post",
+                dataType: "json",
+                data: { username: $("input[name='username']").val(), password: $("input[name='password']").val() },
+                success: function(r) {
+                    console.log(r);
+                	if (r.status === 200) {
+                		window.location.href = '/sample/contents/main';
+                	} else {
+                		$('#errorWrap').find('p').first().text(r.message);
+                		$('#errorWrap').show();
+                	}
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                	alert('Eerror occurred.');
+                }
+            });
+        });
+    </script>
+</th:block>
+</html>
