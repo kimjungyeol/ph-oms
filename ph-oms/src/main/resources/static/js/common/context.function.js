@@ -74,6 +74,10 @@
          */ 
         storage : {
             movePrefix : 'moveParams::',
+            removeParams : function(uri) {
+				let key = this.movePrefix + uri;
+                sessionStorage.removeItem(key);
+			},
             setMoveParams : function(uri, params = {}) {
                 let key = this.movePrefix + uri;
                 
@@ -91,6 +95,17 @@
             }  
         },
         movePage : function(uri, params = null) {
+            console.log('call -> ' + uri);
+            
+            if (!uri.startsWith('/')) {
+                uri = '/' + uri;
+            }
+            
+            this.storage.removeParams(uri);
+            
+            window.location.href = uri;
+        },
+        moveDetailPage : function(uri, params = null) {
             console.log('call -> ' + uri);
             
             if (!uri.startsWith('/')) {

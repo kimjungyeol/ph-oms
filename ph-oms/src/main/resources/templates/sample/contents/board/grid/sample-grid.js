@@ -151,7 +151,7 @@
             
             if (rowData.title == '' || rowData.title == null) { return; }
             
-            fn.movePage(co.moveMap.write, rowData);  //page move.
+            fn.moveDetailPage(co.moveMap.write, rowData);  //page move.
         },
         afterChange : function(ev) {
             console.log(gridId + ' afterChange ==', ev);
