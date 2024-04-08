@@ -184,7 +184,7 @@
                         method: 'GET',
                         initParams: gridParams       // [Option] Query String으로 보낼 데이터
                     },
-                    modifyData: { url: opt.uriMap.save, method: 'POST' },
+                    //modifyData: { url: opt.uriMap.save, method: 'POST' },
                 },
             }}
         },
