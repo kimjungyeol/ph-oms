@@ -133,7 +133,7 @@
   width: 100%;
   position: relative;
   border-width: 0;
-  clear: both;
+  /*clear: both;*/
   font-size: 13px;
   font-family: Arial, '\B3CB\C6C0', Dotum, sans-serif;
 }

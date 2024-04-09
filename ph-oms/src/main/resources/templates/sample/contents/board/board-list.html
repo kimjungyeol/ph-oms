@@ -72,14 +72,23 @@
             }
             
             fn.save = function() {
+            	let sampleGrid = grid.context[grid.id.sampleGrid];
+            	
             	//modified rows.
-            	let rows = grid.context[grid.id.sampleGrid].getModifiedRows();
+            	let rows = sampleGrid.getModifiedRows();
                 console.log('ModifiedRows', rows);
-                
                 //checked row.
-                console.log('Checked row', grid.context[grid.id.sampleGrid].getCheckedRows()); 
+                console.log('Checked row', sampleGrid.getCheckedRows()); 
                 
-                // TODO swal confirm 창 작업.
+                //grid validation check.
+                let v = sampleGrid.validate();
+                console.log('v ==> ', v);
+                if (v.length > 0) {
+	                // TODO swal confirm 창 작업.
+	                // error message.
+	                return;
+                }
+                
                 
                 let opt = {
                		uri : co.uriMap.save,

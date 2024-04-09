@@ -115,13 +115,25 @@
         {
             header: 'NameEng',
             name: 'nameEng',
-            width: 400,
+            width: 200,
             align: "center",
             sortable: true,
             ellipsis: true,
             // hidden 값을 주어 사용자에게 해당 컬럼을 숨길 수 있다.
             //hidden: 1,
-        }
+        },
+        {
+	      header: 'Price',
+	      name: 'price',
+	      editor: 'text',
+	      align: "center",
+	      width: 100,
+	      validation: {
+	        min: 10000,
+	        max: 20000,
+	        regExp: g.regExp.number,
+	      }
+	    }
     ];
     
     /**
@@ -174,7 +186,6 @@
         autoSearch : true,   // 자동조회 여부.
         uriMap : {           // grid transaction uri.
             search : '/sample/board/list/search',
-            save   : '/sample/board/list/save',
         },
         option : {
             rowHeaders: [
@@ -195,4 +206,7 @@
         event : event
     }
     
+    /**
+	 * 참고 : https://github.com/nhn/tui.grid/blob/master/packages/toast-ui.grid/docs/ko/validation.md
+	 */
 })(window.global, wg.t, wg.f, wg.gr, wg.c);

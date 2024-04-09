@@ -1,56 +1,144 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="naviFragment">
-    <div class="flex-shrink-0 p-3" style="width: 280px;float: left;">
-	  <a href="javascript:void(0);" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none border-bottom">
-	    <span class="fs-5 fw-semibold">Menu</span>
-	  </a>
-	  <ul class="list-unstyled ps-0">
-	    <li class="mb-1">
-	      <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-	        Board
-	      </button>
-	      <div class="collapse show" id="home-collapse">
-	        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-	          <li><a href="javascript:wg.f.movePage('/sample/contents/board/board-list')" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Board-list</a></li>
-	          <li><a href="javascript:wg.f.movePage('/sample/contents/board/board-register')" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Board-register</a></li>
-	        </ul>
-	      </div>
-	    </li>
-        <!-- 
-	    <li class="mb-1">
-	      <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-	        Dashboard
-	      </button>
-	      <div class="collapse" id="dashboard-collapse">
-	        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-	          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Overview</a></li>
-	          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Weekly</a></li>
-	          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Monthly</a></li>
-	          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Annually</a></li>
-	        </ul>
-	      </div>
-	    </li>
-	    <li class="mb-1">
-	      <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-	        Orders
-	      </button>
-	      <div class="collapse" id="orders-collapse">
-	        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-	          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">New</a></li>
-	          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Processed</a></li>
-	          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Shipped</a></li>
-	          <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">Returned</a></li>
-	        </ul>
-	      </div>
-	    </li>
-         -->
-	    <li class="border-top my-3"></li>
-	  </ul>
-	</div>
-	<script th:inline="javascript">
-        'use strict';
-        console.log('left');
-    </script>
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="grid" viewBox="0 0 16 16">
+      <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z"/>
+    </symbol>
+</svg>
+<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;float: left;" data-trigger="button">
+    <a href="javascript:void(0);" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+      <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+      <span class="fs-4">MENU</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="javascript:void(0);" class="nav-link text-white" aria-current="page" id="boardList">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Board-list
+        </a>
+      </li>
+      <li>
+        <a href="javascript:void(0);" class="nav-link text-white" id="boardRegister">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Board-Register
+        </a>
+      </li>
+      <li>
+        <a href="javascript:void(0);" class="nav-link text-white" id="boardRegisterFile">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Board-Register-file
+        </a>
+      </li>
+    </ul>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li>
+        <a href="#" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Products
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Customers
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Products
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Customers
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Products
+        </a>
+      </li>
+      <li>
+        <a href="#" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Customers
+        </a>
+      </li>
+    </ul>
+    <hr>
+   <!--  <div class="dropdown">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+        <strong>mdo</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+        <li><a class="dropdown-item" href="#">New project...</a></li>
+        <li><a class="dropdown-item" href="#">Settings</a></li>
+        <li><a class="dropdown-item" href="#">Profile</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="#">Sign out</a></li>
+      </ul>
+    </div> -->
+ </div>
+<script th:inline="javascript">
+    'use strict';
+    console.log('left');
+    wg.c.left =  {};
+    wg.f.left =  {};
+    
+    ;(function(co) {
+    	co.left.moveMap = {
+   			boardList : '/sample/contents/board/board-list',
+   			boardRegister : '/sample/contents/board/board-register',
+			boardRegisterFile : '/sample/contents/board/board-register-file'
+    	}
+    })(wg.c);
+    
+    ;(function(co, fn) {
+    	fn.left.movePage = function(uri) {
+    		fn.movePage(co.left.moveMap[uri]);
+    	}
+    	fn.left.activeMenu = function() {
+    		Object.keys(co.left.moveMap).forEach(function(key) {
+    			if (co.left.moveMap[key] == location.pathname) {
+    				$('#'+key).addClass('active');
+    			} else {
+    				$('#'+key).removeClass('active');
+    			}
+    		})
+    	}
+    })(wg.c, wg.f);
+    
+    ;(function(fn, trigger) {
+    	fn.left.event = function() {
+	     	$(trigger.button.boardList).click(function() {
+	             fn.left.movePage('boardList');
+	        });
+	     	$(trigger.button.boardRegister).click(function() {
+	     		fn.left.movePage('boardRegister');
+	        });
+	     	$(trigger.button.boardRegisterFile).click(function() {
+	     		fn.left.movePage('boardRegisterFile');
+	        });
+    	}
+    })(wg.f, wg.t);
+</script>
+<script th:inline="javascript">
+    'use strict';
+    $(document).ready(async() => {
+        const fn = wg.f;
+        
+        // event load.
+        await fn.left.event();
+        await fn.left.activeMenu();
+    });
+</script>
+</th:block>
 </th:block>
 </html>
