@@ -36,10 +36,12 @@
                 </div>
             </div>
         </div>
-        <div data-trigger="form">
-            <div class="mb-3">
-                <label class="form-label fw-bold">file.</label>
-                <input type="file" class="form-control" id="file" name="file" maxlength="25">
+        
+        <div data-trigger="file"></div>
+        
+        <div data-trigger="button">
+            <div class="float-end">
+                <button type="button" class="btn btn-danger" id="saveBtn">Save</button>
             </div>
         </div>
     </div>
@@ -56,11 +58,10 @@
             
             co.uriMap = {
                 search : '/sample/board/register/search',
-                save   : '/sample/board/register/save',
+                save   : '/sample/board/register/saveForm',
             }
             
             co.moveMap = {
-                boardList : '/sample/contents/board/board-list',
             }
             
         })(wg.c, wg.f);
@@ -83,14 +84,14 @@
             fn.save = function() {
             	// data-trigger="form" 속성 하위 dom.
             	//   - id가 지정 되어 있는 모든 dom의 key value를 가져온다.
-            	let data = fn.getFormData();
-            	console.log('save data ==== ', data);
+            	//let data = fn.getFormData();
+            	//console.log('save data ==== ', data);
             	
             	let opt = {
                		uri : co.uriMap.save,
-               		params : data
+               		//params : data
                	}
-            	fn.api.save(opt, function() {
+            	fn.api.saveForm(opt, function() {
                     console.log('save callback fnc!!');
                 });
             }
@@ -119,6 +120,7 @@
             
             // event load.
             await fn.event();
+            await fn.file.render();
             await fn.search();
         });
     </script>

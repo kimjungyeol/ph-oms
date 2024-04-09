@@ -65,8 +65,40 @@
                     }
                 });
             },
-            saveForm : function() {
-                // TODO 
+            saveForm : function(opt = {}, callbackFnc = null) {
+                console.log('call -> ' + opt.uri);
+                
+                //get file data.
+                let fileDataForm = g.function.file.getFileData();
+                if (fileDataForm == null) {
+					return;
+				}
+                
+                //append dom data.
+                let formData = g.function.getFormData();
+                Object.keys(formData).forEach(function(key) {
+					fileDataForm.append(key, formData[key]);
+				});
+                
+                $.ajax({
+					url: opt.uri,
+					processData : false,
+					contentType : false,
+					data : fileDataForm,
+					type : 'POST',
+					success : function(result){
+						console.log('uploaded!!', result);
+						
+						if (callbackFnc != null && typeof callbackFnc == 'function') {
+                            callbackFnc(result);
+                        }
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+                        alert('search Eerror occurred.');
+                        
+                        console.log(jqXHR, textStatus, errorThrown);
+                    }
+				});
             }
         },
         /**
@@ -246,15 +278,97 @@
             }
             
             // target form object.
-            let formObj = document.querySelectorAll('[data-trigger="form"]');
-            formObj.forEach((form) => {
+            let triggerFormEle = document.querySelectorAll('[data-trigger="form"]');
+            triggerFormEle.forEach((form) => {
                 form.childNodes.forEach((fele) => {
                     getChildNodeData(fele);
                 });
             });
             
             return formParams;
-        }
+        },
+        
+        file : {
+			dom: `<div class="mb-3">
+	                <label class="form-label fw-bold">file Attch</label>
+	                <input type="file" class="form-control" id="multipleFile" name="multipleFile" multiple="multiple">
+	              </div>
+	              <div id="fileTxt">
+	              </div>`,
+	        validate : {
+				maxLength: 5,
+				maxFileSize: 50,   //100Mbytes
+				fileSize: 10,      //10Mbytes
+				checkFileSize: function(chkFileSize, type = '') {
+				    let check = false;
+				    let sizeinbytes = chkFileSize;
+				    let fSExt = new Array('Bytes', 'KB', 'MB', 'GB');
+				    let i = 0;
+				    
+				    let fileSize = 1024 * 1024 * this.fileSize;
+				    if (type == 'ALL') {
+						fileSize = 1024 * 1024 * this.maxFileSize;
+					}
+				    let checkSize = fileSize;
+				    
+				    while (checkSize > 900) {
+				        checkSize /= 1024;
+				        i++;
+				    }
+				    
+				    checkSize = (Math.round(checkSize * 100) / 100) + ' ' + fSExt[i];
+				    let fSize = sizeinbytes;
+				    
+				    if (fSize > fileSize) {
+				        alert("첨부파일은 " + checkSize + " 이하로 첨부 바랍니다.");
+				        check = false;
+				    } else {
+				        check = true;
+				    }
+				    
+				    return check;
+				}
+			},
+			render: function() {
+				let triggerFileEle = document.querySelector('[data-trigger="file"]');
+				triggerFileEle.innerHTML = this.dom;
+			},
+			getFileData: function() {
+				let formData = new FormData();
+                
+                let fileEle = document.querySelector(`[type="file"][id="multipleFile"]`);
+                
+				let files = fileEle.files;
+				console.log('getFileData === ', files);
+				
+				if (files.length == 0) {
+					return formData;
+				}
+				
+				//1.Check each file size.
+				let isChkSize = true;
+				let AllFileSize = 0;
+				for (let i=0; i<files.length; i++) {
+					if (!isChkSize) {
+						continue;
+					}
+					formData.append("uploadFile", files[i]);
+					
+					AllFileSize += files[i].size;
+					isChkSize = this.validate.checkFileSize(files[i].size);
+				}
+				
+				//2.Check all file size.
+				if (isChkSize) {
+					isChkSize = this.validate.checkFileSize(AllFileSize, 'ALL');
+				}
+				if (!isChkSize) {
+					formData = null;
+				}
+				
+				return formData;
+			}
+		}
     }
     
     wg.f = g.function;
