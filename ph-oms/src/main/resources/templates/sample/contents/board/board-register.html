@@ -65,6 +65,7 @@
                 search : '/sample/board/register/search',
                 save   : '/sample/board/register/save',
             }
+            
             co.moveMap = {
                 boardList : '/sample/contents/board/board-list',
             }
@@ -74,7 +75,12 @@
         // 2.function area.
         ;(function(co, fn, trigger) {
             fn.search = function() {
-            	fn.api.search(co.initParams, function(res) {
+            	
+            	let opt = {
+            		uri : co.uriMap.search,
+            		params : co.initParams
+            	}
+            	fn.api.search(opt, function(res) {
             		if (res.result) {
             			// set data value on based searched data.
             			fn.setFormData(res.data);
@@ -87,7 +93,13 @@
             	let data = fn.getFormData();
             	console.log('save data ==== ', data);
             	
-            	fn.api.save(data);
+            	let opt = {
+               		uri : co.uriMap.save,
+               		params : data
+               	}
+            	fn.api.save(opt, function() {
+                    console.log('save callback fnc!!');
+                });
             }
             
         })(wg.c, wg.f, wg.t);

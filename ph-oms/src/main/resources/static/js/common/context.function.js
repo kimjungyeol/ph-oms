@@ -14,18 +14,18 @@
          *   - search, save
          */
         api : {
-            search : function(params = {}, callbackFnc = null) {
-                console.log('call -> ' + g.contants.uriMap.search);
+            search : function(opt = {}, callbackFnc = null) {
+                console.log('call -> ' + opt.uri);
                 
                 if (!validation()) {
                     return;
                 }
                 
                 $.ajax({
-                    url: g.contants.uriMap.search,
+                    url: opt.uri,
                     method: "post",
                     dataType: "json",
-                    data: JSON.stringify(params),
+                    data: JSON.stringify(opt.params),
                     success: function(result) {
                         
                         console.log('search result!!', result);
@@ -42,14 +42,14 @@
                 });
                 
             },
-            save : function(params = {}, callbackFnc = null) {
-                console.log('call -> ' + g.contants.uriMap.save);
+            save : function(opt = {}, callbackFnc = null) {
+                console.log('call -> ' + opt.uri);
                 
                 $.ajax({
-                    url: g.contants.uriMap.save,
+                    url: opt.uri,
                     method: "post",
                     dataType: "json",
-                    data: JSON.stringify(params),
+                    data: JSON.stringify(opt.params),
                     success: function(result) {
                         
                         console.log('save result!!', result);

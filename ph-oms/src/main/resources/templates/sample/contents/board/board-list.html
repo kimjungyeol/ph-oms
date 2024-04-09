@@ -81,10 +81,11 @@
                 
                 // TODO swal confirm 창 작업.
                 
-                let params = {
-                    data : rows,
-                }
-                fn.api.save(params, function() {
+                let opt = {
+               		uri : co.uriMap.save,
+               		params : { data : rows }
+               	}
+                fn.api.save(opt, function() {
                     console.log('save callback fnc!!');
                 });
             }
