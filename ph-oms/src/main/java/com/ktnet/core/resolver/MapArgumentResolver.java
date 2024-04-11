@@ -24,6 +24,9 @@ import jakarta.servlet.http.HttpServletRequest;
 public class MapArgumentResolver implements HandlerMethodArgumentResolver {
 
     Logger logger = LoggerFactory.getLogger(getClass());
+    
+    String chkContentType = "application/x-www-form-urlencoded";
+    String chkMultipartType = "multipart/form-data";
 
     @Autowired
     private FileUtil fileUtil;
@@ -39,25 +42,50 @@ public class MapArgumentResolver implements HandlerMethodArgumentResolver {
         logger.debug("==================== MapArgumentResolver ====================");
 
         setParameter(request, collector);
-
+        
+        String contentType = (String) request.getContentType();
+        
+        //CALL POST REQUEST.
         if ("post".equalsIgnoreCase(request.getMethod().toLowerCase())) {
-            setParameterPostMethod(request, collector);
+        	if (contentType.indexOf(chkContentType) > -1) {
+        		// AJAX  REQUEST DATA.
+        		setParameterPostMethod(request, collector);
+        	} else if (contentType.indexOf(chkMultipartType) > -1) {
+        		// MULTIPART UPLOAD FILE REQUEST DATA.
+        		fileUtil.uploadFileConfig(request, collector);
+        	}
         }
 
-        logger.debug("collector.getMap() \t:  " + collector.getMap().toString());
+        logger.debug("contentType \t: {}", contentType);
+        logger.debug("collector.getMap() \t: {}", collector.getMap().toString());
 
         return collector;
     }
 
-    private void setParameter(HttpServletRequest request, ParamMap collector) {
+    private void setParameter(HttpServletRequest request, ParamMap collector) throws Exception {
+    	ObjectMapper mapper = new ObjectMapper();
         Enumeration<?> enumeration = request.getParameterNames();
+        
         String key = null;
         String[] values = null;
         while (enumeration.hasMoreElements()) {
             key = (String) enumeration.nextElement();
             values = request.getParameterValues(key);
+            
             if (values != null) {
-                collector.put(key, (values.length > 1) ? values : values[0]);
+                if (values.length > 1) {
+                	collector.put(key, values[0]);
+                } else {
+                	
+                	String value = values[0]+"";
+                	if (value.indexOf("{") > -1) {
+            			@SuppressWarnings("unchecked")
+            			Map<String, Object> mapData = mapper.readValue(value, Map.class);  //use saveForm - multipart/form-data
+            			collector.put(key, mapData);
+                	} else {
+                		collector.put(key, value);
+                	}
+                }
             }
         }
     }
@@ -73,9 +101,6 @@ public class MapArgumentResolver implements HandlerMethodArgumentResolver {
             collector.clear();
             collector.putAll(mapData);
         }
-
-        // MULTIPART UPLOAD CONFIG.
-        fileUtil.uploadFileConfig(request, collector);
     }
 
     @Override

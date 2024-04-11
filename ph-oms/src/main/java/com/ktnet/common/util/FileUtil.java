@@ -30,15 +30,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.ktnet.common.dto.FileDeleteDto;
+import com.ktnet.common.dto.FileDto;
+import com.ktnet.common.dto.FileUploadDto;
 import com.ktnet.core.map.ParamMap;
 
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
  
 @Component
 public class FileUtil {
 	
-	Logger logger = LoggerFactory.getLogger( getClass() );
+	Logger logger = LoggerFactory.getLogger(getClass());
  
     /** 다운로드 버퍼 크기 */
     private final int BUFFER_SIZE = 8192; // 8kb
@@ -111,7 +115,7 @@ public class FileUtil {
      * @throws ServletException
      * @throws IOException
      */
-    public void download( HttpServletRequest request, HttpServletResponse response, Map<String, Object> paramMap )
+    public void download( HttpServletRequest request, HttpServletResponse response, Map<String, Object> paramMap)
         throws Exception {
         
         String uploadPath = paramMap.get( "uploadpath" )+"";
@@ -229,31 +233,37 @@ public class FileUtil {
      * @param paramMap
      * @throws Exception
      */
-    public void uploadFileDelete( Map<String, Object> paramMap ) throws Exception {
-        
+    @SuppressWarnings("unchecked")
+    public static void uploadFileDelete(Map<String, Object> paramMap) throws Exception {
         String uploadPath = paramMap.get("uploadpath")+"";
-        if ("null".equals(uploadPath)) {
-        	return;
+        if ("".equals(uploadPath)) {
+            return;
         }
-        
-        @SuppressWarnings("unchecked")
-		ArrayList<HashMap<String, Object>> upFileList = (ArrayList<HashMap<String, Object>>) paramMap.get("uploadReqFileList");
-        
-        HashMap<String, Object> upFileMap = null;
-        if ( upFileList != null && upFileList.size() > 0 ) {
-        	upFileMap = null;
-        	
-            String fileCstdyNm = "";
-            for ( int i = 0; i < upFileList.size(); i++ ) {
-                upFileMap = (HashMap<String, Object>)upFileList.get( i );
-                fileCstdyNm = upFileMap.get("fileCstdyNm")+"";  //첨부파일 보관경로
-                
-                if ( fileCstdyNm != null && !"".equals( fileCstdyNm ) ) {
-                    File file = new File(uploadPath + File.separator + fileCstdyNm);
+
+        List<HashMap<String, Object>> upFileList = (List<HashMap<String, Object>>) paramMap.get("uploadFileList");
+
+        if (upFileList != null && upFileList.size() > 0) {
+            HashMap<String, Object> upFileMap = null;
+
+            String filePath = "";
+            String fileCnvrFilePath = "";
+
+            for (int i = 0; i < upFileList.size(); i++) {
+                upFileMap = (HashMap<String, Object>)upFileList.get(i);
+
+                filePath = upFileMap.get("filePathNm")+"";        //file Path
+                fileCnvrFilePath = upFileMap.get("cnvrFilePath")+"";  //file Saved name.
+
+                if (fileCnvrFilePath != null && !"".equals(fileCnvrFilePath)) {
+                    filePath = filePath.replaceAll("[../]", "");
+                    fileCnvrFilePath = fileCnvrFilePath.replaceAll("[../]", "");
+
+                    File file = new File(uploadPath + File.separator + filePath + File.separator + fileCnvrFilePath);
                     file.delete();
                 }
             }
         }
+        
     }
     
     /**
@@ -294,45 +304,39 @@ public class FileUtil {
         /**
          * 2. Set remove file data.
          */
-        List<HashMap<String, Object>> delFileList = new ArrayList<HashMap<String, Object>>();
-        
+        List<FileDeleteDto> delFileList = new ArrayList<FileDeleteDto>();
         String deleteFileInfo = (String)request.getParameter("deleteFileInfo");
         
         if (deleteFileInfo != null && !"".equals(deleteFileInfo)) {
+        	
             String[] delfileId = deleteFileInfo.split(",");
-            
-            HashMap<String, Object> delFileMap = new HashMap<String, Object>();
+            FileDeleteDto delFileDto = new FileDeleteDto();
             for (int i = 0; i < delfileId.length; i++) {
                 
-                delFileMap.put("fileId", delfileId[i]);
-                delFileMap.put("filePath", uploadPath + File.separator + fileUploadPath + File.separator + delfileId[i]);
-                delFileList.add(delFileMap);
+                delFileDto.setFileId(delfileId[i]);
+                delFileDto.setFilePath(uploadPath + File.separator + fileUploadPath + File.separator + delfileId[i]);
+                delFileList.add(delFileDto);
             }
         }
         
-        List<HashMap<String, Object>> upFileList = new ArrayList<HashMap<String, Object>>();
-        HashMap<String, Object> upFileMap = null;
+        List<FileUploadDto> upFileList = new ArrayList<FileUploadDto>();
+        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+        Iterator<String> iterator = multipartHttpServletRequest.getFileNames(); 
+        MultipartFile multipartFile = null; 
         
+        FileUploadDto upFileDto = null;
         String sourceFileName = "";
         String sourceExtension = "";
         String fileId = "";
-        
-        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
-        Iterator<String> iterator = multipartHttpServletRequest.getFileNames(); 
-        
-        MultipartFile multipartFile = null; 
-        
         String errMsg = "";
         
         /**
          * 3. Set upload file data.
          */
         while(iterator.hasNext()) { 
-            
             multipartFile = multipartHttpServletRequest.getFile(iterator.next());
             
             if (!multipartFile.isEmpty()) { 
-                
                 sourceFileName = multipartFile.getOriginalFilename();
                 sourceExtension = FilenameUtils.getExtension(sourceFileName);
                 
@@ -345,49 +349,40 @@ public class FileUtil {
                 
                 fileId = UUID.randomUUID().toString().replace( "-", "" );
 
-                upFileMap = new HashMap<String, Object>();
-                upFileMap.put("fileObj", multipartFile);
-                upFileMap.put("fileOrgnNm", sourceFileName);
-                upFileMap.put("fileExtension", sourceExtension);
-                upFileMap.put("fileId", fileId);
-                upFileMap.put("fileSize", multipartFile.getSize());
-                upFileMap.put("fileUploadPath", fileUploadPath);
-                upFileMap.put("fileClsfCd", fileClsfCd);
-                upFileMap.put("fileCstdyNm", fileUploadPath + File.separator + fileId);
+                upFileDto = new FileUploadDto();
+                upFileDto.setFileObj(multipartFile);
+                upFileDto.setFileOrgnNm(sourceFileName);
+                upFileDto.setFileExtension(sourceExtension);
+                upFileDto.setFileId(fileId);
+                upFileDto.setFileSize(multipartFile.getSize());
+                upFileDto.setFileUploadPath(fileUploadPath);
+                upFileDto.setFileClsfCd(fileClsfCd);
+                upFileDto.setFileCstdyPath(fileUploadPath + File.separator + fileId);
                 
                 fileUploadPath = uploadPath + File.separator + fileUploadPath;
                 
                 File fileDir = new File(fileUploadPath);
-                
                 if (!fileDir.exists()) {
                     fileDir.mkdirs();
                 }
                 
                 Path path = Paths.get(fileUploadPath + File.separator + sourceFileName);
-                Files.write( path, multipartFile.getBytes() );
+                Files.write(path, multipartFile.getBytes());
                 
                 //file name change.
                 File file = new File(fileUploadPath + File.separator + sourceFileName);
                 File fileToMove = new File(fileUploadPath + File.separator + fileId);
                 FileUtils.moveFile(file, fileToMove);
 
-                logger.info("------------- file start -------------"); 
-                logger.info("input name : "+ multipartFile.getName()); 
-                logger.info("fileOrgnNm : "+ sourceFileName); 
-                logger.info("fileExtension : "+ sourceExtension); 
-                logger.info("fileId : "+ fileId); 
-                logger.info("fileSize : " + multipartFile.getSize()); 
-                logger.info("fileUploadPath : "+ fileUploadPath); 
-                logger.info("fileClsfCd : "+ fileClsfCd); 
-                logger.info("fileCstdyNm : "+ fileUploadPath + File.separator + fileId); 
-                logger.info("-------------- file end --------------\n"); 
+                logger.info("------------- file info start -------------"); 
+                upFileDto.printData();
+                logger.info("-------------- file info end --------------\n"); 
             } 
             
-            upFileList.add(upFileMap);
+            upFileList.add(upFileDto);
         }
         
-        collector.put("reqDeleteFileList", delFileList); //delete file.
-        collector.put("reqUploadFileList", upFileList);  //upload file.
+        collector.put("fileList", new FileDto(upFileList, delFileList)); //file Object.
     }
     
     /**
@@ -396,7 +391,7 @@ public class FileUtil {
      * @param upFileMap
      * @return
      */
-    private String allowCheckExtension( String extension ) {
+    private String allowCheckExtension(String extension) {
         String errMsg = "";
         
         if (extension == null || "".equals(extension)) {
@@ -404,11 +399,11 @@ public class FileUtil {
         }
         
         if (allowExtention != null && !"".equals(allowExtention)) {
-        	
         	allowExtention = allowExtention.toLowerCase();
         	extension = extension.toLowerCase();
         	if (allowExtention.indexOf(extension) == -1) {
         		errMsg = "ERR_EXTENTION";
+        		logger.debug("extention: .{}, \t allowExtention Exception: {}", extension, allowExtention);
         	}
         }
         return errMsg;

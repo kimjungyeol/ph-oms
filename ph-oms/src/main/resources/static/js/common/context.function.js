@@ -14,6 +14,9 @@
          *   - search, save
          */
         api : {
+			/**
+			 * default search function.
+			 */
             search : function(opt = {}, callbackFnc = null) {
                 console.log('call -> ' + opt.uri);
                 
@@ -42,14 +45,32 @@
                 });
                 
             },
+            /**
+			 * default save function.
+			 */
             save : function(opt = {}, callbackFnc = null) {
                 console.log('call -> ' + opt.uri);
+                
+                let saveParams = {};
+                
+                //append form data.
+                let formData = g.function.getFormData();
+                Object.keys(formData).forEach(function(key) {
+					Object.assign(saveParams, formData);
+				});
+				
+				//append opt.params data.
+				if (opt.params != undefined && Object.keys(opt.params).length > 0) {
+					Object.assign(saveParams, opt.params);
+				}
+				
+				console.log('saveParams===',saveParams);
                 
                 $.ajax({
                     url: opt.uri,
                     method: "post",
                     dataType: "json",
-                    data: JSON.stringify(opt.params),
+                    data: JSON.stringify(saveParams),
                     success: function(result) {
                         
                         console.log('save result!!', result);
@@ -65,6 +86,10 @@
                     }
                 });
             },
+            /**
+			 * default saveForm function.
+			 *   - use file info upload.
+			 */
             saveForm : function(opt = {}, callbackFnc = null) {
                 console.log('call -> ' + opt.uri);
                 
@@ -74,11 +99,18 @@
 					return;
 				}
                 
-                //append dom data.
+                //append form data.
                 let formData = g.function.getFormData();
                 Object.keys(formData).forEach(function(key) {
-					fileDataForm.append(key, formData[key]);
+					fileDataForm.append(key, JSON.stringify(formData[key]));
 				});
+				
+				//append opt.params data.
+				if (opt.params != undefined && Object.keys(opt.params).length > 0) {
+	                Object.keys(opt.params).forEach(function(key) {
+						fileDataForm.append(key, JSON.stringify(opt.params[key]));
+					});
+				}
                 
                 $.ajax({
 					url: opt.uri,
@@ -100,7 +132,8 @@
                     }
 				});
             }
-        },
+        }, // api {}
+        
         /**
          * browser sesstionStorage mangement. 
          */ 
@@ -125,7 +158,8 @@
                 
                 return moveParams;
             }  
-        },
+        }, // storage {}
+        
         movePage : function(uri, params = null) {
             console.log('call -> ' + uri);
             
@@ -288,39 +322,55 @@
             return formParams;
         },
         
+        /**
+		 * Attach file manage object.
+		 */
         file : {
 			dom: `<div class="mb-3">
-	                <label class="form-label fw-bold">file Attch</label>
-	                <input type="file" class="form-control" id="multipleFile" name="multipleFile" multiple="multiple">
+	               	  <label class="form-label fw-bold">file Attch</label>
+	                  <input type="file" class="form-control" id="multipleFile" name="multipleFile" multiple="multiple">
 	              </div>
-	              <div id="fileTxt">
-	              </div>`,
+	              <div id="fileTxt"></div>
+	              `,
 	        validate : {
+				fSExt: ['Bytes', 'KB', 'MB', 'GB', 'TB'],
 				maxLength: 5,
-				maxFileSize: 50,   //100Mbytes
-				fileSize: 10,      //10Mbytes
-				checkFileSize: function(chkFileSize, type = '') {
-				    let check = false;
-				    let sizeinbytes = chkFileSize;
-				    let fSExt = new Array('Bytes', 'KB', 'MB', 'GB');
-				    let i = 0;
-				    
-				    let fileSize = 1024 * 1024 * this.fileSize;
-				    if (type == 'ALL') {
-						fileSize = 1024 * 1024 * this.maxFileSize;
+				maxFileSize: (1024 * 1024) * 50,   //Mbytes
+				fileSize: (1024 * 1024) * 10,      //Mbytes
+				getFileSizeStr: function(bytes) {
+					if (bytes == 0) { return '0 Bytes'; }
+					
+					const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+					if (i === 0) {
+						return `${bytes} ${sizes[i]})`;
 					}
-				    let checkSize = fileSize;
-				    
-				    while (checkSize > 900) {
-				        checkSize /= 1024;
+					
+					return `${(bytes / (1024 ** i)).toFixed(1)} ${this.fSExt[i]}`;
+				},
+				getAllowFileSizeStr: function(bytes) {
+					if (bytes == 0) { return '0 Bytes'; }
+					
+				    let i = 0;
+				    while (bytes > 900) {
+				        bytes /= 1024;
 				        i++;
 				    }
 				    
-				    checkSize = (Math.round(checkSize * 100) / 100) + ' ' + fSExt[i];
+				    return (Math.round(bytes * 100) / 100) + ' ' + this.fSExt[i];
+				},
+				checkFileSize: function(chkFileSize, type = '') {
+				    let check = false;
+				    let sizeinbytes = chkFileSize;
 				    let fSize = sizeinbytes;
 				    
+				    let fileSize = this.fileSize;
+				    if (type == 'ALL') {
+						fileSize = this.maxFileSize;
+					}
+				    
 				    if (fSize > fileSize) {
-				        alert("첨부파일은 " + checkSize + " 이하로 첨부 바랍니다.");
+				        alert("Please attach files no larger than " + this.getAllowFileSizeStr(fileSize));
+				        //TODO swal.
 				        check = false;
 				    } else {
 				        check = true;
@@ -330,8 +380,34 @@
 				}
 			},
 			render: function() {
+				const self = this;
 				let triggerFileEle = document.querySelector('[data-trigger="file"]');
 				triggerFileEle.innerHTML = this.dom;
+				
+                let fileEle = triggerFileEle.querySelector(`[type="file"][id="multipleFile"]`);
+                
+                //view string - fileName(fileSize)
+                fileEle.onchange = function() {
+					let fileTxt = '';
+					let files = fileEle.files;
+					for (let i=0; i<files.length; i++) {
+						if (i > 0) {
+							fileTxt += '<br>';
+						}
+						let color = '#000'; 
+						let isChkSize = self.validate.checkFileSize(files[i].size);
+						if (!isChkSize) {
+							color = '#dc3545';
+						}
+						
+						fileTxt += `<span style="color: ${color}">
+										${files[i].name}(${self.validate.getFileSizeStr(files[i].size)})
+									</span>`;
+					}
+					
+					let fileTxtEle = triggerFileEle.querySelector(`[id="fileTxt"]`);
+					fileTxtEle.innerHTML = fileTxt;
+				}
 			},
 			getFileData: function() {
 				let formData = new FormData();
@@ -367,8 +443,8 @@
 				}
 				
 				return formData;
-			}
-		}
+			},
+		} // file {}
     }
     
     wg.f = g.function;

@@ -69,7 +69,6 @@
         // 2.function area.
         ;(function(co, fn, trigger) {
             fn.search = function() {
-            	
             	let opt = {
             		uri : co.uriMap.search,
             		params : co.initParams
@@ -82,14 +81,9 @@
             	});
             }
             fn.save = function() {
-            	// data-trigger="form" 속성 하위 dom.
-            	//   - id가 지정 되어 있는 모든 dom의 key value를 가져온다.
-            	//let data = fn.getFormData();
-            	//console.log('save data ==== ', data);
-            	
             	let opt = {
                		uri : co.uriMap.save,
-               		//params : data
+               		params : { aa: {bb : 'bb'}}
                	}
             	fn.api.saveForm(opt, function() {
                     console.log('save callback fnc!!');

@@ -136,4 +136,19 @@ public class SampleBoardController extends BasicController {
 
         return new ResponseEntity<>(ResultResponse(result), HttpStatus.OK);
     }
+    
+    @RequestMapping(value = "/sample/board/register/saveForm", method = { RequestMethod.GET, RequestMethod.POST })
+    public ResponseEntity<ResultResponseDto> sampleBoardRegisterSaveForm(HttpServletRequest req, Model model, ParamMap pMap)
+    		throws Exception {
+    	logger.debug(">> sampleBoardRegisterSaveForm <<");
+    	logger.debug("pMap => {}", pMap.getMap().toString());
+        
+        @SuppressWarnings("unchecked")
+		Map<String,Object> aa = (Map<String, Object>) pMap.getMap().get("aa");
+        logger.debug("aa bb => {}", aa.get("bb"));
+    	
+    	boolean result = true;
+    	
+    	return new ResponseEntity<>(ResultResponse(result), HttpStatus.OK);
+    }
 }
