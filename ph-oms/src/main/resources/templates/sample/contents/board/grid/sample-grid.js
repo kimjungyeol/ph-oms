@@ -163,7 +163,7 @@
             
             if (rowData.title == '' || rowData.title == null) { return; }
             
-            fn.moveDetailPage(co.moveMap.write, rowData);  //page move.
+            fn.move.detail(co.moveMap.write, rowData);  //page move.
         },
         afterChange : function(ev) {
             console.log(gridId + ' afterChange ==', ev);

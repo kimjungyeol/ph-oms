@@ -83,14 +83,14 @@
             	fn.api.search(opt, function(res) {
             		if (res.result) {
             			// set data value on based searched data.
-            			fn.setFormData(res.data);
+            			fn.form.setData(res.data);
             		}
             	});
             }
             fn.save = function() {
             	// data-trigger="form" 속성 하위 dom.
             	//   - id가 지정 되어 있는 모든 dom의 key value를 가져온다.
-            	let data = fn.getFormData();
+            	let data = fn.form.getData();
             	console.log('save data ==== ', data);
             	
             	let opt = {
@@ -113,7 +113,7 @@
                 });
                 //move page.
                 $(trigger.button.prevBtn).click(function() {
-                    fn.movePage(co.moveMap.boardList);
+                    fn.move.page(co.moveMap.boardList);
                 });
             }
         })(wg.c, wg.f, wg.t);

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.common.mapper.FileMapper">
+	
+	<!-- FILE DETAIL SEARCH -->
+    <select id="selectFileInfo" parameterType="Map" resultType="camelMap">
+        /*pgmId=FileMapper.selectFileInfo*/
+        SELECT FILE_ID
+	          ,FILE_SN
+	          ,FILE_NM
+	          ,FILE_ORIGN_NM
+	          ,FILE_EXTESION
+	          ,FILE_SIZE
+	          ,FILE_UPLOAD_PATH
+	          ,FILE_CLSF_CD
+          FROM COMM_ATCH_FILE
+         WHERE FILE_ID = #{fileId}
+           AND FILE_SN = #{fileSn}
+    </select>
+
+    <!-- FILE LIST INFO SAERCH -->
+    <select id="selectFileInfoList" parameterType="Map" resultType="camelMap">
+        /*pgmId=FileMapper.selectFileInfoTxList*/
+        SELECT FILE_ID
+	          ,FILE_SN
+	          ,FILE_NM
+	          ,FILE_ORIGN_NM
+	          ,FILE_EXTESION
+	          ,FILE_SIZE
+	          ,FILE_UPLOAD_PATH
+	          ,FILE_CLSF_CD
+          FROM COMM_ATCH_FILE
+         WHERE FILE_ID = #{fileId}
+    </select>
+    
+    <select id="selectAttachFileSn" parameterType="String" resultType="Integer">
+        /*pgmId=FileMapper.selectAttachFileSn*/
+        SELECT NVL(MAX(CAST(FILE_SN AS INTEGER)), 0)+1 AS FILE_SN  
+          FROM COMM_ATCH_FILE 
+         WHERE FILE_ID = #{fileId}
+    </select>
+
+    <!-- FILE INFO -->
+    <insert id="insertUploadFileInfo" parameterType="Map">
+        /*pgmId=FileMapper.insertUploadFileInfo*/
+        INSERT INTO COMM_ATCH_FILE
+        (
+            FILE_ID
+           ,FILE_SN
+           ,FILE_NM
+           ,FILE_ORIGN_NM
+           ,FILE_EXTESION
+           ,FILE_SIZE
+           ,FILE_UPLOAD_PATH
+           ,FILE_CLSF_CD
+           ,CRTN_ID
+           ,CRTN_DTTM
+           ,UPDT_ID
+           ,UPDT_DTTM
+        )
+        VALUES
+        (
+            #{fileId}
+           ,#{fileSn}
+           ,#{fileNm}
+           ,#{fileOrignNm}
+           ,#{fileExtension}
+           ,#{fileSize}
+           ,#{fileUploadPath}
+           ,#{fileClsfCd}
+           ,#{loginUserId}
+           ,NOW()
+           ,#{loginUserId}
+           ,NOW()
+        )
+    </insert>
+
+    <!-- FILE DELETE -->
+    <delete id="deleteUploadFileInfo" parameterType="Map">
+        /*pgmId=FileMapper.deleteUploadFileInfo*/
+        DELETE
+          FROM COMM_ATCH_FILE
+         WHERE FILE_ID = #{fileId}
+           AND FILE_SN = #{fileSn}
+    </delete>
+
+    <!-- FILE ALL DELETE -->
+    <delete id="deleteAllFileInfo" parameterType="Map">
+        /*pgmId=FileMapper.deleteFile*/
+        DELETE
+          FROM COMM_ATCH_FILE
+         WHERE FILE_ID = #{fileId}
+    </delete>
+
+</mapper>

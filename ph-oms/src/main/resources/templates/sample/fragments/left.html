@@ -102,7 +102,7 @@
     
     ;(function(co, fn) {
     	fn.left.movePage = function(uri) {
-    		fn.movePage(co.left.moveMap[uri]);
+    		fn.move.page(co.left.moveMap[uri]);
     	}
     	fn.left.activeMenu = function() {
     		Object.keys(co.left.moveMap).forEach(function(key) {

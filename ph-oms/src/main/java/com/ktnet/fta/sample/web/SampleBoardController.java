@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ktnet.common.dto.ResultResponseDto;
 import com.ktnet.common.dto.ToastUiResponseDto;
 import com.ktnet.core.map.ParamMap;
+import com.ktnet.fta.common.service.FileService;
 import com.ktnet.fta.common.web.BasicController;
 import com.ktnet.fta.sample.service.SampleBoardService;
 
@@ -31,6 +33,9 @@ public class SampleBoardController extends BasicController {
 
     @Resource(name = "sampleBoardService")
     private SampleBoardService sampleBoardService;
+    
+    @Autowired
+    private FileService fileService;
 
     @RequestMapping(value = "/sample/board/list/search", method = { RequestMethod.GET, RequestMethod.POST })
     public ResponseEntity<ToastUiResponseDto> sampleBoardListSearch(HttpServletRequest req, Model model, ParamMap pMap)
@@ -146,6 +151,8 @@ public class SampleBoardController extends BasicController {
         @SuppressWarnings("unchecked")
 		Map<String,Object> aa = (Map<String, Object>) pMap.getMap().get("aa");
         logger.debug("aa bb => {}", aa.get("bb"));
+        
+        fileService.saveFileData(pMap);
     	
     	boolean result = true;
     	

@@ -1,6 +1,7 @@
 package com.ktnet.core.resolver;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,6 +56,9 @@ public class MapArgumentResolver implements HandlerMethodArgumentResolver {
         		fileUtil.uploadFileConfig(request, collector);
         	}
         }
+        
+        //set session info.
+        setSessionInfo(request, collector);
 
         logger.debug("contentType \t: {}", contentType);
         logger.debug("collector.getMap() \t: {}", collector.getMap().toString());
@@ -78,7 +82,13 @@ public class MapArgumentResolver implements HandlerMethodArgumentResolver {
                 } else {
                 	
                 	String value = values[0]+"";
-                	if (value.indexOf("{") > -1) {
+                	if (value.indexOf("[{") > -1) {
+                		@SuppressWarnings("rawtypes")
+						//Map[] mapData = mapper.readValue(values[0], Map[].class);
+                		List mapData = mapper.readValue(values[0], List.class);
+                		collector.put(key, mapData);
+                		
+                	} else if (value.indexOf("{") > -1) {
             			@SuppressWarnings("unchecked")
             			Map<String, Object> mapData = mapper.readValue(value, Map.class);  //use saveForm - multipart/form-data
             			collector.put(key, mapData);
@@ -101,6 +111,12 @@ public class MapArgumentResolver implements HandlerMethodArgumentResolver {
             collector.clear();
             collector.putAll(mapData);
         }
+    }
+    
+    private void setSessionInfo(HttpServletRequest request, ParamMap collector) throws Exception {
+    	collector.put("loginUserId", "testUser");
+    	
+    	//TODO: set session login user object.
     }
 
     @Override

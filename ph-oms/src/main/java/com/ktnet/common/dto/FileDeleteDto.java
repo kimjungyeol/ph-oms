@@ -1,5 +1,8 @@
 package com.ktnet.common.dto;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import groovy.transform.ToString;
 
 /**
@@ -11,8 +14,11 @@ import groovy.transform.ToString;
  */
 @ToString
 public class FileDeleteDto {
+	Logger logger = LoggerFactory.getLogger(getClass());
+	
 	private String fileId;
-    private String filePath;
+	private String fileSn;
+    private String fileUploadPath;
     
 	public String getFileId() {
 		return fileId;
@@ -20,10 +26,22 @@ public class FileDeleteDto {
 	public void setFileId(String fileId) {
 		this.fileId = fileId;
 	}
-	public String getFilePath() {
-		return filePath;
+	public String getFileSn() {
+		return fileSn;
 	}
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setFileSn(String fileSn) {
+		this.fileSn = fileSn;
+	}
+	public String getFileUploadPath() {
+		return fileUploadPath;
+	}
+	public void setFileUploadPath(String fileUploadPath) {
+		this.fileUploadPath = fileUploadPath;
+	}
+	
+	public void printData() {
+		logger.debug("fileId: {}", this.fileId);
+		logger.debug("fileSn: {}", this.fileSn);
+		logger.debug("fileUploadPath: {}", this.fileUploadPath);
 	}
 }

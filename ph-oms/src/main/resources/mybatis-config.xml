@@ -14,6 +14,7 @@
 	<typeAliases>
 		<typeAlias alias="map" type="java.util.Map"/>
 		<typeAlias alias="camelMap" type="com.ktnet.core.map.CamelMap"/>
+		<typeAlias alias="fileUploadDto" type="com.ktnet.common.dto.FileUploadDto"/>
 	</typeAliases>
 	
 </configuration>

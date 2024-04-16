@@ -37,7 +37,18 @@
             </div>
         </div>
         
-        <div data-trigger="file"></div>
+        <div class="mb-3">
+        	<label class="form-label fw-bold">파일 첨부 영역1</label>
+	        <div data-file="user"></div>
+        </div>
+        
+        <br>
+        <br>
+        
+        <div class="mb-3">
+        	<label class="form-label fw-bold">파일 첨부 영역2</label>
+	        <div data-file="company"></div>
+        </div>
         
         <div data-trigger="button">
             <div class="float-end">
@@ -76,14 +87,29 @@
             	fn.api.search(opt, function(res) {
             		if (res.result) {
             			// set data value on based searched data.
-            			fn.setFormData(res.data);
+            			fn.form.setData(res.data);
+            			
+            			//test용 fileId.
+            			res.data.userFileId = 'f4e55ed4705745ffb2cfa48cdfef4b53';
+            			res.data.companyFileId = 'ad9703fbe4ee451aac47adbaf95d29a6';
+            			
+            			//fn.file.view('user', res.data.userFile);
+            			//fn.file.view('company', res.data.companyFile);
+            			
+            			let fileParams = {
+           					'user' : res.data.userFileId,         //<div data-file="user"></div>
+           					'company' : res.data.companyFileId    //<div data-file="company"></div>
+            			}
+            			fn.file.load(fileParams);
             		}
             	});
             }
             fn.save = function() {
             	let opt = {
                		uri : co.uriMap.save,
-               		params : { aa: {bb : 'bb'}}
+               		params : { 
+               			aa: {bb : 'bb'},
+               		}
                	}
             	fn.api.saveForm(opt, function() {
                     console.log('save callback fnc!!');
@@ -101,7 +127,7 @@
                 });
                 //move page.
                 $(trigger.button.prevBtn).click(function() {
-                    fn.movePage(co.moveMap.boardList);
+                    fn.move.page(co.moveMap.boardList);
                 });
             }
         })(wg.c, wg.f, wg.t);
@@ -109,12 +135,10 @@
     <script th:inline="javascript">
         'use strict';
         $(document).ready(async() => {
-            const co = wg.c;
             const fn = wg.f;
             
-            // event load.
-            await fn.event();
             await fn.file.render();
+            await fn.event();
             await fn.search();
         });
     </script>

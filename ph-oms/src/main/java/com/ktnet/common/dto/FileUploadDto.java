@@ -1,5 +1,8 @@
 package com.ktnet.common.dto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,13 +21,14 @@ public class FileUploadDto {
 	Logger logger = LoggerFactory.getLogger(getClass());
 	
     private MultipartFile fileObj;
-    private String fileOrgnNm;
-    private String fileExtension;
     private String fileId;
+    private int fileSn;
+    private String fileNm;
     private long fileSize;
+    private String fileOrignNm;
+    private String fileExtension;
     private String fileUploadPath;
     private String fileClsfCd;
-    private String fileCstdyPath;
     
     public FileUploadDto() {
     }
@@ -35,11 +39,11 @@ public class FileUploadDto {
 	public void setFileObj(MultipartFile fileObj) {
 		this.fileObj = fileObj;
 	}
-	public String getFileOrgnNm() {
-		return fileOrgnNm;
+	public String getFileOrignNm() {
+		return fileOrignNm;
 	}
-	public void setFileOrgnNm(String fileOrgnNm) {
-		this.fileOrgnNm = fileOrgnNm;
+	public void setFileOrignNm(String fileOrignNm) {
+		this.fileOrignNm = fileOrignNm;
 	}
 	public String getFileExtension() {
 		return fileExtension;
@@ -53,6 +57,21 @@ public class FileUploadDto {
 	public void setFileId(String fileId) {
 		this.fileId = fileId;
 	}
+	public int getFileSn() {
+		return fileSn;
+	}
+
+	public void setFileSn(int fileSn) {
+		this.fileSn = fileSn;
+	}
+	public String getFileNm() {
+		return fileNm;
+	}
+
+	public void setFileNm(String fileNm) {
+		this.fileNm = fileNm;
+	}
+
 	public long getFileSize() {
 		return fileSize;
 	}
@@ -71,20 +90,30 @@ public class FileUploadDto {
 	public void setFileClsfCd(String fileClsfCd) {
 		this.fileClsfCd = fileClsfCd;
 	}
-	public String getFileCstdyPath() {
-		return fileCstdyPath;
-	}
-	public void setFileCstdyPath(String fileCstdyPath) {
-		this.fileCstdyPath = fileCstdyPath;
+	
+	public Map<String, Object> getDataMap() {
+		Map<String, Object> paramMap = new HashMap<String,Object>();
+    	paramMap.put("fileId", this.fileId);
+    	paramMap.put("fileSn", this.fileSn);
+    	paramMap.put("fileNm", this.fileNm);
+    	paramMap.put("fileOrignNm", this.fileOrignNm);
+    	paramMap.put("fileExtension", this.fileExtension);
+    	paramMap.put("fileSize", this.fileSize);
+    	paramMap.put("fileUploadPath", this.fileUploadPath);
+    	paramMap.put("fileClsfCd", this.fileClsfCd);
+    	
+    	return paramMap;
 	}
 	
 	public void printData() {
-		logger.debug("fileOrgnNm: {}", this.fileOrgnNm);
 		logger.debug("fileExtension: {}", this.fileExtension);
 		logger.debug("fileId: {}", this.fileId);
+		logger.debug("fileSn: {}", this.fileSn);
+		logger.debug("fileNm: {}", this.fileNm);
+		logger.debug("fileOrignNm: {}", this.fileOrignNm);
+		logger.debug("fileExtension: {}", this.fileExtension);
 		logger.debug("fileSize: {}", this.fileSize);
 		logger.debug("fileUploadPath: {}", this.fileUploadPath);
 		logger.debug("fileClsfCd: {}", this.fileClsfCd);
-		logger.debug("fileCstdyPath: {}", this.fileCstdyPath);
 	}
 }

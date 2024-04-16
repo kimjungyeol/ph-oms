@@ -29,13 +29,23 @@ public class BasicController {
     }
 
     /**
-     * Form search response DTO.
+     * Form search Map response DTO.
      * 
      * @param map
      * @return
      */
     public ResultResponseDto ResultResponse(Map<String, Object> map) {
         return new ResultResponseDto(true, map);
+    }
+    
+    /**
+     * Form search List response DTO.
+     * 
+     * @param map
+     * @return
+     */
+    public ResultResponseDto ResultResponse(List<Map<String, Object>> list) {
+    	return new ResultResponseDto(true, list);
     }
 
     /**
@@ -47,4 +57,5 @@ public class BasicController {
     public ResultResponseDto ResultResponse(boolean result) {
         return new ResultResponseDto(result);
     }
+    
 }
