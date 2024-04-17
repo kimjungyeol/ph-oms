@@ -329,11 +329,14 @@
 					}
 				},
 				basic: {
-					dom: `<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-				              <input type="text" id="$pickerid">
-				              <span class="tui-ico-date"></span>
-				          </div>
-				          <div id="$pickerid_wrapper" style="margin-top: -1px;"></div>`,
+					replaceId: '$pickerid',
+					dom: function() {
+						return `<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+					              <input type="text" id="${this.replaceId}">
+					              <span class="tui-ico-date"></span>
+					            </div>
+					            <div id="${this.replaceId}_wrapper" style="margin-top: -1px;"></div>`;
+					},
 			        load: function(id) {
 						let datepicker = new tui.DatePicker(`#${id}_wrapper`, {
 			                //date: new Date(),  //default date.
@@ -350,23 +353,26 @@
 							let id = ele.getAttribute('id');
 							ele.setAttribute('id', '');
 							
-							ele.innerHTML = basic.dom.replaceAll('$pickerid', `${id}`);
+							ele.innerHTML = basic.dom().replaceAll(basic.replaceId, `${id}`);
 							basic.load(id);
 						});
 					}
 				}, // basic
 				range: {
-					dom: `<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-					          <input type="text" id="start_$pickerid">
-					          <span class="tui-ico-date"></span>
-					          <div id="start_$pickerid_container" style="margin-left: -1px;"></div>
-					      </div>
-					      <span>~</span>
-					      <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
-					          <input id="end_$pickerid" type="text">
-					          <span class="tui-ico-date"></span>
-					          <div id="end_$pickerid_container" style="margin-left: -1px;"></div>
-					      </div>`,
+					replaceId: '$pickerid',
+					dom: function() {
+						return `<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+						            <input type="text" id="start_${this.replaceId}">
+						            <span class="tui-ico-date"></span>
+						            <div id="start_${this.replaceId}_container" style="margin-left: -1px;"></div>
+						        </div>
+						        <span>~</span>
+						        <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+						            <input id="end_${this.replaceId}" type="text">
+						            <span class="tui-ico-date"></span>
+						            <div id="end_${this.replaceId}_container" style="margin-left: -1px;"></div>
+						        </div>`;
+					},
 					load: function(id) {
 						//var today = new Date();
 					    var picker = tui.DatePicker.createRangePicker({
@@ -398,7 +404,7 @@
 							let id = ele.getAttribute('id');
 							ele.setAttribute('id', '');
 							
-							ele.innerHTML = range.dom.replaceAll('$pickerid', `${id}`);
+							ele.innerHTML = range.dom().replaceAll(range.replaceId, `${id}`);
 							range.load(id);
 						});
 					}
