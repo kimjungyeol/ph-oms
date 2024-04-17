@@ -70,6 +70,7 @@
             	
             	//grid 검색.
             	//grid id 정보, 파라메터를 세팅하여 호출.
+            	//특별한 이유가 없으면 해당 함수 사용.
                 grid.api.search(grid.id.sampleGrid, params);
                 grid.api.search(grid.id.testGrid, params);
             }
@@ -96,6 +97,9 @@
                		uri : co.uriMap.save,
                		params : { data : rows }
                	}
+                
+                //default 저장 함수 호출.
+        		//특별한 이유가 없으면 해당 함수 사용.
                 fn.api.save(opt, function() {
                     console.log('save callback fnc!!');
                 });
@@ -109,14 +113,10 @@
             	
             	//search.
             	$(trigger.button.searchBtn).click(function() {
-            		//default 검색 함수 호출.
-            		//특별한 이유가 없으면 해당 함수 사용.
             		fn.search();
                 });
             	//save.
             	$(trigger.button.saveBtn).click(function() {
-            		//default 저장 함수 호출.
-            		//특별한 이유가 없으면 해당 함수 사용.
             		fn.save();
                 });
             	//move writepage.
