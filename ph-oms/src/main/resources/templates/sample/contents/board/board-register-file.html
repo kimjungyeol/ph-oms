@@ -83,7 +83,7 @@
         })(wg.c, wg.f);
         
         // 2.function area.
-        ;(function(co, fn, trigger, cp) {
+        ;(function(co, fn, trigger, cpnt) {
             fn.search = function() {
             	let opt = {
             		uri : co.uriMap.search,
@@ -102,10 +102,11 @@
             			co.fileId.user = res.data.userFileId,         
             			co.fileId.company = res.data.companyFileId    
             			
-            			cp.file.load(co.fileId);
+            			cpnt.file.load(co.fileId);
             		}
             	});
             }
+            
             fn.save = function() {
             	let opt = {
                		uri : co.uriMap.save,
@@ -118,7 +119,7 @@
                 });
             }
             
-        })(wg.c, wg.f, wg.t, wg.cp);
+        })(wg.c, wg.f, wg.t, wg.cpnt);
         
         // 3.event area.
         ;(function(co, fn, trigger) {
@@ -138,9 +139,9 @@
         'use strict';
         $(document).ready(async() => {
             const fn = wg.f;
-            const cp = wg.cp;
+            const cpnt = wg.cpnt;
             
-            await cp.file.render();
+            await cpnt.file.render();
             await fn.event();
             await fn.search();
         });

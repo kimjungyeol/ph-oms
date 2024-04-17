@@ -413,7 +413,7 @@
 		}// datepicker {}
     }
     
-    wg.cp = g.component;
+    wg.cpnt = g.component;
     
     console.log("============= wg.cp =============", wg.cp); 
     
