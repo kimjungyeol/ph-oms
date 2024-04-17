@@ -7,11 +7,10 @@
  * 4. Grid 관련된 속성 지정 및 event 사용시 해당소스에 작성한다.
  */
 ;(function(g, trigger, fn, grid, co) {
-    console.log('===== sampleGrid.js =====', grid.id.sampleGrid);
 	
 	//해당 소스를 include한 html에 지정되어있는 Grid ID 정보.
 	//필수!!
-    let gridId = grid.id.sampleGrid;  // grid id.
+    let gridId = grid.id.grid;  // grid id.
 
     let options = {
 		autoSearch : true,   // 자동조회 여부.
@@ -149,7 +148,17 @@
 	        max: 20000,
 	        regExp: g.regExp.number,
 	      }
-	    }
+	    },
+	    {
+          header: 'DatePicker',
+          name: 'dateymd',
+          editor: {
+            type: 'datePicker',
+            options: {
+                format: 'yyyy-MM-dd'
+            }
+          }
+        },
     ];
     
     /**

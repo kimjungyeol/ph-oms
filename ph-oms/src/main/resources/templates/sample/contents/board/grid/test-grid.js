@@ -1,7 +1,6 @@
 ;(function(g, co, fn, grid) {
-    console.log('===== testGrid.js =====', grid.id.testGrid);
 
-    let gridId = grid.id.testGrid;
+    let gridId = grid.id.grid2;
     
     let options = {
 		autoSearch : true,   // 자동조회 여부.

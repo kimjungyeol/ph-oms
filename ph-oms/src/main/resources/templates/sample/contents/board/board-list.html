@@ -52,8 +52,8 @@
             }
             
             grid.id = {
-            	sampleGrid : 'sampleGrid',
-        		testGrid : 'testGrid',
+            	grid  : 'sampleGrid',
+        		grid2 : 'testGrid',
             }
             
         })(wg.c, wg.gr);
@@ -71,12 +71,12 @@
             	//grid 검색.
             	//grid id 정보, 파라메터를 세팅하여 호출.
             	//특별한 이유가 없으면 해당 함수 사용.
-                grid.api.search(grid.id.sampleGrid, params);
-                grid.api.search(grid.id.testGrid, params);
+                grid.api.search(grid.id.grid, params);
+                grid.api.search(grid.id.grid2, params);
             }
             
             fn.save = function() {
-            	let sampleGrid = grid.context[grid.id.sampleGrid];
+            	let sampleGrid = grid.context[grid.id.grid];
             	
             	//modified rows.
             	let rows = sampleGrid.getModifiedRows();
@@ -161,10 +161,10 @@
             const grid = wg.gr;
             
             // sampleGrid load.
-            grid.render(grid.id.sampleGrid, co.initParams);
+            grid.render(grid.id.grid, co.initParams);
             
             // testGrid load.
-            grid.render(grid.id.testGrid, {
+            grid.render(grid.id.grid2, {
                 param1 : 'testparam1',
                 param2 : 'testparam2',
             });

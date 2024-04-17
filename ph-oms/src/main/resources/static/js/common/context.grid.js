@@ -52,7 +52,8 @@
             ],
         },
         /**
-         * grid render init.
+		 * render
+         *   - grid init.
          */
         render : function(gridId, params = {}, apiOpt = null) {
             const self = this;
@@ -64,7 +65,8 @@
             self.gridLoadProc(gridId, render_option);
         },
         /**
-         * grid load proc.
+		 * render
+         *   - grid load proc.
          */
         gridLoadProc : function(id, render_option) {
             const self = this;
@@ -103,7 +105,8 @@
             });
         },
         /**
-         * grid load.
+		 * render
+         *   - grid load.
          */
         load : function(id, opt = null) {
             const self = this;
@@ -195,6 +198,7 @@
             const {response} = ev.xhr;
             const responseObj = JSON.parse(response);
             
+            /*
             if (responseObj.result) {
                 const {result, data: {contents}} = responseObj;
                 
@@ -211,8 +215,9 @@
             } else {
                 alert("This has not been processed.\n Please contact the administrator.")
             }
-            
-            console.log('result : ', responseObj.result, " data: ", responseObj.data);
+            */
+		   
+            //console.log('result : ', responseObj.result, " data: ", responseObj.data);
             
             if (callbackFnc != null && typeof callbackFnc == 'function') {
                 callbackFnc(responseObj);

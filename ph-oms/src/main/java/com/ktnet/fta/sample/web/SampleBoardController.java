@@ -64,6 +64,7 @@ public class SampleBoardController extends BasicController {
             map.put("email", "name" + i + "@gmail.com");
             map.put("useYn", "Y");
             map.put("nameEng", "name" + i + "_eng");
+            map.put("dateymd", "2014-04-16");
             rtList.add(map);
         }
 
