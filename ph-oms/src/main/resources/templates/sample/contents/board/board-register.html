@@ -36,6 +36,20 @@
                 </div>
             </div>
             <div class="mb-3 row">
+            	<div class="col">
+                	<label class="form-label fw-bold">date - ymd.</label>
+            		<div>
+                		<div data-datepicker="basic" id="dateymd"></div>
+                	</div>
+		        </div>
+            	<div class="col">
+            		<label class="form-label fw-bold">rage date - ymd.</label>
+            		<div>
+	            		<div data-datepicker="range" id="ragedateymd"></div>
+            		</div>
+            	</div>
+	        </div>
+            <div class="mt-5 row">
                 <div class="col">
                     <label class="fw-bold">Register ID.</label>
                     <span id="registerId" style='background-color: #c7c5c5'></span>
@@ -46,12 +60,16 @@
                 </div>
             </div>
         </div>
-        <div data-trigger="button">
-            <div class="float-start">
-                <button type="button" class="btn btn-success" id="prevBtn">List</button>
-            </div> 
-            <div class="float-end">
-                <button type="button" class="btn btn-danger" id="saveBtn">Save</button>
+        <div data-trigger="button" class="mt-5 row">
+        	<div class="col">
+	            <div class="float-start">
+	                <button type="button" class="btn btn-success" id="prevBtn">List</button>
+	            </div> 
+        	</div>
+        	<div class="col">
+	            <div class="float-end">
+	                <button type="button" class="btn btn-danger" id="saveBtn">Save</button>
+	            </div>
             </div>
         </div>
     </div>
@@ -127,6 +145,14 @@
         $(document).ready(async() => {
             const co = wg.c;
             const fn = wg.f;
+            
+            /* var datepicker = new tui.DatePicker('#dateymd_wrapper', {
+                //date: new Date(),
+                input: {
+                    element: '#dateymd',
+                    format: 'yyyy-MM-dd'
+                }
+            }); */
             
             // event load.
             await fn.event();

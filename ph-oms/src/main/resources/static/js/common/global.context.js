@@ -24,15 +24,24 @@ var wg = {};
         }
     }; 
     
+    
+    
 })(window);
 
 console.log('==== Context Load Start ====');
 
 document.writeln("<script type='text/javascript' src='/js/common/context.contants.js'></script>");
 document.writeln("<script type='text/javascript' src='/js/common/context.function.js'></script>");
+document.writeln("<script type='text/javascript' src='/js/common/context.component.js'></script>");
 document.writeln("<script type='text/javascript' src='/js/common/context.grid.js'></script>");
 
 document.addEventListener("DOMContentLoaded", function() {
-    window.global.contants.init();
-    window.global.triggers.init();
+	const g = window.global;
+	
+	//context init.
+    g.contants.init();
+    g.triggers.init();
+    
+    //tui datepicker load.
+    g.component.datepicker.tui.load();
 });

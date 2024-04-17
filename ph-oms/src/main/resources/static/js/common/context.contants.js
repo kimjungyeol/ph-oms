@@ -44,31 +44,38 @@
             
             self.setChilds();
         },
+        appendObject: function(type, target) {
+			const self = this;
+            const warpper = document.querySelectorAll(`[${self.name}="${type}"]`);
+            let childsObj = {};
+            
+            if (warpper.length == 0) {
+				return;
+			}
+            
+            warpper.forEach((ele) => {
+                let ObjEle = ele.querySelectorAll(target);
+                ObjEle.forEach((ele) => {
+                    let id = ele.getAttribute("id");
+                    let name = ele.getAttribute("name");
+                    
+                    if ((id == '' || id == null) && (name == '' || name == null)) {
+                        return; //continue.
+                    }
+                    
+                    childsObj[id] = ele;
+                });
+            });
+            
+            Object.assign(self.childs[type], childsObj);
+            
+            //console.log('self.childs', self.childs);
+        },
         setChilds : function() {
             const self = this;
             
-            function appendObject(type, target) {
-                const warpper = document.querySelectorAll(`[${self.name}="${type}"]`);
-                let childsObj = {};
-                warpper.forEach((ele) => {
-                    let ObjEle = ele.querySelectorAll(target);
-                    ObjEle.forEach((ele) => {
-                        let id = ele.getAttribute("id");
-                        let name = ele.getAttribute("name");
-                        
-                        if ((id == '' || id == null) && (name == '' || name == null)) {
-                            return; //continue.
-                        }
-                        
-                        childsObj[id] = ele;
-                    });
-                });
-                
-                Object.assign(self.childs[type], childsObj);
-            }
-            
             //append trigger.button object.
-            appendObject('button', '[id]');
+            self.appendObject('button', '[id]');
             
             //append trigger.form object.
             //appendObject('form', '[id][name]');
@@ -78,6 +85,6 @@
     wg.c = g.contants;
     wg.t = g.triggers.childs;
     
-    console.log("============= wg.t =============", wg.t); 
+    console.log("============= wg.t =============", wg.t);
     
 })(window.global);
