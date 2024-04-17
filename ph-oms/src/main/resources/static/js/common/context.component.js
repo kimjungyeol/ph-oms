@@ -402,7 +402,7 @@
 							range.load(id);
 						});
 					}
-				}// rage
+				}// range
 			}// tui
 		}// datepicker {}
     }
