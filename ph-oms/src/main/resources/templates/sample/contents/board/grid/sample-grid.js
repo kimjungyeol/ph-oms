@@ -1,6 +1,6 @@
 /**
  * 1. Grid별로 js파일을 생성하여 사용.
- * 		- *.html/grid/*-grid.js
+ * 		- [html]/grid/*-grid.js
  * 2. html에 include하여 사용.
  * 3. Toust UI Grid의 API를 참고하여 기본 속성을 그대로 사용한다.
  * 		- 참고 : https://github.com/nhn/tui.grid/blob/master/packages/toast-ui.grid/docs/ko/validation.md
