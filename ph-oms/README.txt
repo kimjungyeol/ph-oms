@@ -18,5 +18,4 @@
     3. swal message
 2. Toast Grid 공통 기능 추가 및 수정
     1. 공통 소스 수정
-3. Form 공통 기능 추가 및 수정
-    1. Session Manager 공통
+3. Session Manager 공통
