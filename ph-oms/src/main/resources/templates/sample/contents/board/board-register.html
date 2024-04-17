@@ -59,6 +59,8 @@
         'use strict';
         // 1.page init area.
         ;(function(co, fn) {
+        	//storeage에 저장되어있는 해당 페이지의 파라메터를 가져온다.
+        	//이전 page에서 세팅후 사용.
             co.initParams = fn.storage.getMoveParams();
             
             co.uriMap = {
@@ -113,6 +115,8 @@
                 });
                 //move page.
                 $(trigger.button.prevBtn).click(function() {
+                	
+                	//이동하는 page의 storage 데이터를 삭제 후 이동.
                     fn.move.page(co.moveMap.boardList);
                 });
             }

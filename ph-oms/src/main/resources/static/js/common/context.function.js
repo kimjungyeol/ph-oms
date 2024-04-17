@@ -144,6 +144,8 @@
                     if (fileDataForm != null) {
 	                    g.function.file.reload();
 					}
+					
+					alert('Success save.');
                     
                     if (callbackFnc != null && typeof callbackFnc == 'function') {
                         callbackFnc(response.data);
@@ -558,7 +560,8 @@
 				//append loaded attached fileId.
 				if (Object.keys(self.loadParam).length > 0) {
 					Object.keys(self.loadParam).forEach((key) => {
-						formData.append(`${key}_atchFile`, self.loadParam[key]);
+						let fileId = self.loadParam[key] == undefined || self.loadParam[key] == null ? "" : self.loadParam[key];
+						formData.append(`${key}_atchFile`, fileId);
 					});
 				}
 				
@@ -582,7 +585,8 @@
 				self.loadParam = params;
 				
 				Object.keys(params).forEach(function(key) {
-					self.view(key, params[key]);
+					let fileId = params[key] == undefined || params[key] == null ? '' : params[key];
+					self.view(key, fileId);
 				});
 			},
 			/**

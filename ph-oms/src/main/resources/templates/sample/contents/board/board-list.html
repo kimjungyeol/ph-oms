@@ -67,6 +67,9 @@
                     param1 : 'new p1',
                     param2 : 'new p2',
                 }
+            	
+            	//grid 검색.
+            	//grid id 정보, 파라메터를 세팅하여 호출.
                 grid.api.search(grid.id.sampleGrid, params);
                 grid.api.search(grid.id.testGrid, params);
             }
@@ -89,7 +92,6 @@
 	                return;
                 }
                 
-                
                 let opt = {
                		uri : co.uriMap.save,
                		params : { data : rows }
@@ -107,14 +109,21 @@
             	
             	//search.
             	$(trigger.button.searchBtn).click(function() {
+            		//default 검색 함수 호출.
+            		//특별한 이유가 없으면 해당 함수 사용.
             		fn.search();
                 });
             	//save.
             	$(trigger.button.saveBtn).click(function() {
+            		//default 저장 함수 호출.
+            		//특별한 이유가 없으면 해당 함수 사용.
             		fn.save();
                 });
             	//move writepage.
                 $(trigger.button.writeBtn).click(function() {
+                	
+                	//이동하는 page의 storage 데이터를 삭제 후 이동.
+                	//특별한 이유가 없으면 해당 함수 사용.
                     fn.move.page(co.moveMap.write, {});
                 });
             	

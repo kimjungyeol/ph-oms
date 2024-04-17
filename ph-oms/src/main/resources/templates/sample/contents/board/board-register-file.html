@@ -75,6 +75,11 @@
             co.moveMap = {
             }
             
+            co.fileId = {
+            	user: '',   //<div data-file="user"></div>
+            	company: '' //<div data-file="company"></div> 
+            }
+            
         })(wg.c, wg.f);
         
         // 2.function area.
@@ -90,17 +95,14 @@
             			fn.form.setData(res.data);
             			
             			//test용 fileId.
-            			res.data.userFileId = 'f4e55ed4705745ffb2cfa48cdfef4b53';
-            			res.data.companyFileId = 'ad9703fbe4ee451aac47adbaf95d29a6';
+            			res.data.userFileId = 'c221f738-73e8-44d4-9c8d-3fd8c3b2f02e';
+            			res.data.companyFileId = 'de5990d6-dbbc-4e63-bdc3-31b3b77fa4b5';
             			
-            			//fn.file.view('user', res.data.userFile);
-            			//fn.file.view('company', res.data.companyFile);
+            			//파일 리스트 조회.
+            			co.fileId.user = res.data.userFileId,         
+            			co.fileId.company = res.data.companyFileId    
             			
-            			let fileParams = {
-           					'user' : res.data.userFileId,         //<div data-file="user"></div>
-           					'company' : res.data.companyFileId    //<div data-file="company"></div>
-            			}
-            			fn.file.load(fileParams);
+            			fn.file.load(co.fileId);
             		}
             	});
             }

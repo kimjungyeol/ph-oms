@@ -1,7 +1,14 @@
 ;(function(g, co, fn, grid) {
+    console.log('===== testGrid.js =====', grid.id.testGrid);
+
     let gridId = grid.id.testGrid;
     
-    console.log('===== testGrid.js =====', gridId);
+    let options = {
+		autoSearch : true,   // 자동조회 여부.
+        uriMap : {           // grid transaction uri.
+            search : '/sample/board/list2/search',
+        }
+    }
     
     let gridColumns = [
         {
@@ -62,13 +69,10 @@
     ];
     
     let event = {
+		
     }
     
-    grid.wrapper[gridId] = {
-        autoSearch : true,
-        uriMap : {
-            search : '/sample/board/list2/search',
-        },
+    let gridOption = {
         option : {
             columns : gridColumns,
             pageOptions : {
@@ -77,5 +81,7 @@
         },
         event : event
     }
+    
+    grid.wrapper[gridId] = Object.assign({}, gridOption, options);
     
 })(window.global, wg.c, wg.f, wg.gr);
