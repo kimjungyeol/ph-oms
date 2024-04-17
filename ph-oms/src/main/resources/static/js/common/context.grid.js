@@ -3,8 +3,7 @@
  * https://ui.toast.com/tui-grid
  */
 ;(function(g) {
-    console.log('context.grid load!!');
-    
+	
     function optValidation(id, opt) {
         if (id == null || id == undefined) {
             console.log('empty id.');
@@ -236,6 +235,6 @@
     
     wg.gr = g.grid;
     
-    console.log("============= wg.gr =============", wg.gr); 
+    console.log("=== wg.gr (grid) ===", wg.gr); 
     
 })(window.global);

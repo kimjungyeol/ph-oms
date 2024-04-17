@@ -1,6 +1,4 @@
 ;(function(g) {
-    console.log('context.contants load!!');
-    
     /**
      * contents object.
      */
@@ -85,6 +83,7 @@
     wg.c = g.contants;
     wg.t = g.triggers.childs;
     
-    console.log("============= wg.t =============", wg.t);
+    console.log("=== wg.c (contants) ===", wg.c);
+    console.log("=== wg.t (triggers) ===", wg.t);
     
 })(window.global);

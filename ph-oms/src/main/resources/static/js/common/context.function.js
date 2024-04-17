@@ -1,6 +1,4 @@
 ;(function(g, trigger) {
-    console.log('context.function load!!');
-    
     function validation() {
         if (g.contants.uriMap.search == '') {
             return false;
@@ -357,6 +355,6 @@
     
     wg.f = g.function;
     
-    console.log("============= wg.f =============", wg.f); 
+    console.log("=== wg.f (function) ===", wg.f); 
     
 })(window.global, wg.t);

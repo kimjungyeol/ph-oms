@@ -1,6 +1,4 @@
 ;(function(g, trigger) {
-    console.log('context.component load!!');
-    
     /**
 	 * file : html attach file management.
 	 * datepicker : html datepicker management.
@@ -8,7 +6,7 @@
     g.component = {
         /**
 		 * html attach file management.
-		 * create target : <div data-file="xxxx"></div>
+		 * create target : <div data-component-file="xxxx"></div>
 		 */	
         file : {
 			uri : {
@@ -109,8 +107,8 @@
 				self.deleteData.list = [];
 			},
 			/**
-			 * HTML with data-file attribute create an file area
- 			 *   - data-file="user"
+			 * HTML with data-component-file attribute create an file area
+ 			 *   - data-component-file="user"
 			 */
 			render: function(id = 'fileId') {
 				const self = this;
@@ -141,10 +139,10 @@
 					fileTxtEle.innerHTML = fileTxt;
 				}
 				
-				let dataFileEleArr = document.querySelectorAll('[data-file]');
+				let dataFileEleArr = document.querySelectorAll('[data-component-file]');
 				dataFileEleArr.forEach((dataFileEle) => {
 					dataFileEle.innerHTML = self.dom.area;
-					let fileId = dataFileEle.getAttribute('data-file');
+					let fileId = dataFileEle.getAttribute('data-component-file');
 					
 					let fileEle = dataFileEle.querySelector(`[type="file"]`);
 					fileEle.id = fileId + '_atchFile';
@@ -170,7 +168,7 @@
 				let formData = new FormData();
 				
 				//append new file info.
-				let dataFileEle = document.querySelectorAll('[data-file]');
+				let dataFileEle = document.querySelectorAll('[data-component-file]');
 				dataFileEle.forEach((ele) => {
 	                let fileEle = ele.querySelector(`[type="file"]`);
 	                let fileId = fileEle.id;
@@ -237,16 +235,12 @@
 					self.view(key, fileId);
 				});
 			},
-			/**
-			 * view file list after save.
-			 */
+			//view file list after save.
 			reload: function() {
 				const self = this;
 				self.load(self.loadParam);
 			},
-			/**
-			 * view data file list.
-			 */
+			//view data file list.
 			view : function(fileIdNm = '', fileId = '') {
 				const self = this;
 				
@@ -314,8 +308,8 @@
 		 * datepicker component mangement.
 		 *   - https://nhn.github.io/tui.date-picker/latest/tutorial-example08-daterangepicker 
 		 *   - create target
-		 * 		<div data-datepicker="basic" id="[basicId]"></div>
-		 * 		<div data-datepicker="range" id="[rageId]"></div>
+		 * 		<div data-component-datepicker="basic" id="[basicId]"></div>
+		 * 		<div data-component-datepicker="range" id="[rageId]"></div>
 		 */
 		datepicker: {
 			tui: {
@@ -323,16 +317,16 @@
 					basic: {},
 					range: {}
 				},
-				load: function() {
+				render: function() {
 					const tui = this;
-					tui.context.basic = document.querySelectorAll('[data-datepicker="basic"]');
+					tui.context.basic = document.querySelectorAll('[data-component-datepicker="basic"]');
 					if (tui.context.basic.length > 0) {
-						tui.basic.load();
+						tui.basic.render();
 					}
-					tui.context.range = document.querySelectorAll('[data-datepicker="range"]');
+					tui.context.range = document.querySelectorAll('[data-component-datepicker="range"]');
 					if (tui.context.range.length > 0) {
+						tui.range.render();
 					}
-						tui.range.load();
 				},
 				basic: {
 					dom: `<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
@@ -340,7 +334,7 @@
 				              <span class="tui-ico-date"></span>
 				          </div>
 				          <div id="$pickerid_wrapper" style="margin-top: -1px;"></div>`,
-			        render: function(id) {
+			        load: function(id) {
 						let datepicker = new tui.DatePicker(`#${id}_wrapper`, {
 			                //date: new Date(),  //default date.
 			                input: {
@@ -349,7 +343,7 @@
 			                }
 			            });
 					},
-		            load: function() {
+		            render: function() {
 						const basic = this;
 						const tui = g.component.datepicker.tui;
 						tui.context.basic.forEach(function(ele) {
@@ -357,7 +351,7 @@
 							ele.setAttribute('id', '');
 							
 							ele.innerHTML = basic.dom.replaceAll('$pickerid', `${id}`);
-							basic.render(id);
+							basic.load(id);
 						});
 					}
 				}, // basic
@@ -373,7 +367,7 @@
 					          <span class="tui-ico-date"></span>
 					          <div id="end_$pickerid_container" style="margin-left: -1px;"></div>
 					      </div>`,
-					render: function(id) {
+					load: function(id) {
 						//var today = new Date();
 					    var picker = tui.DatePicker.createRangePicker({
 					        startpicker: {
@@ -397,7 +391,7 @@
 					        //console.log('end date change.');
 					    })
 					},
-					load: function() {
+					render: function() {
 						const range = this;
 						const tui = g.component.datepicker.tui;
 						tui.context.range.forEach(function(ele) {
@@ -405,7 +399,7 @@
 							ele.setAttribute('id', '');
 							
 							ele.innerHTML = range.dom.replaceAll('$pickerid', `${id}`);
-							range.render(id);
+							range.load(id);
 						});
 					}
 				}// rage
@@ -415,6 +409,6 @@
     
     wg.cpnt = g.component;
     
-    console.log("============= wg.cp =============", wg.cp); 
+    console.log("=== wg.cpnt (component) ===", wg.cpnt); 
     
 })(window.global, wg.t);
