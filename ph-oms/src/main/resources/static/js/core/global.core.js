@@ -36,10 +36,10 @@ var wg = {};
     
     //wg[contents, triggers, function, component, grid]
 	const js = [
-		{src : '/js/common/context.contants.js'},
-		{src : '/js/common/context.function.js'},
-		{src : '/js/common/context.component.js'}, 
-		{src : '/js/common/context.grid.js'},
+		{src : '/js/core/core.contants.js'},
+		{src : '/js/core/core.function.js'},
+		{src : '/js/core/core.component.js'}, 
+		{src : '/js/core/core.grid.js'},
 	];
 	js.forEach(function(obj) {
 		document.writeln(`<script type='text/javascript' src='${obj.src}'></script>`);
