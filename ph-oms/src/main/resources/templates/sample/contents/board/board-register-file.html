@@ -3,6 +3,16 @@
 <th:block layout:fragment="content">
     <div class="container">
         <h2>Board - Register - File</h2>
+        
+        <div class="mb-5" data-trigger="button">
+            <div class="float-start">
+                <a href="javascript:void(0);" class="btn btn-primary" id="searchBtn">Search</a> 
+                <button type="button" class="btn btn-danger" id="saveBtn">Save</button>
+            </div>
+            <div class="float-end">
+            </div>
+        </div>
+        
         <div data-trigger="form">
             <div class="mb-3">
                 <label class="form-label fw-bold">Title.</label>
@@ -37,23 +47,13 @@
             </div>
         </div>
         
-        <div class="mb-3">
+        <div class="mt-5">
         	<label class="form-label fw-bold">파일 첨부 영역1</label>
 	        <div data-component-file="user"></div>
         </div>
-        
-        <br>
-        <br>
-        
-        <div class="mb-3">
+        <div class="mt-5">
         	<label class="form-label fw-bold">파일 첨부 영역2</label>
 	        <div data-component-file="company"></div>
-        </div>
-        
-        <div data-trigger="button">
-            <div class="float-end">
-                <button type="button" class="btn btn-danger" id="saveBtn">Save</button>
-            </div>
         </div>
     </div>
     <script th:inline="javascript">
@@ -108,15 +108,17 @@
             }
             
             fn.save = function() {
-            	let opt = {
-               		uri : co.uriMap.save,
-               		params : { 
-               			aa: {bb : 'bb'},
-               		}
-               	}
-            	fn.api.saveForm(opt, function() {
-                    console.log('save callback fnc!!');
-                });
+            	fn.msg.confirm.save(function() {
+	            	let opt = {
+	               		uri : co.uriMap.save,
+	               		params : { 
+	               			aa: {bb : 'bb'},
+	               		}
+	               	}
+	            	fn.api.saveForm(opt, function(res) {
+	                    console.log('save callback fnc!!', res);
+	                });
+            	});
             }
             
         })(wg.c, wg.f, wg.t, wg.cpnt);
@@ -124,6 +126,10 @@
         // 3.event area.
         ;(function(co, fn, trigger) {
             fn.event = function() {
+                //search.
+                $(trigger.button.searchBtn).click(function() {
+                    fn.search();
+                });
                 //save.
                 $(trigger.button.saveBtn).click(function() {
                     fn.save();

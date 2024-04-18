@@ -120,8 +120,8 @@
 	               		uri : co.uriMap.save,
 	               		params : data
 	               	}
-	            	fn.api.save(opt, function() {
-	                    console.log('save callback fnc!!');
+	            	fn.api.save(opt, function(res) {
+	                    console.log('save callback fnc!!', res);
 	                });
             	});
             }

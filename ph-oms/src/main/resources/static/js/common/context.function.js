@@ -44,7 +44,7 @@
 					}
                     
                     if (callbackFnc != null && typeof callbackFnc == 'function') {
-                        callbackFnc(response.data);
+                        callbackFnc(response);
                     }
                 })
                 .fail(function(data, textStatus, errorThrown) {
@@ -90,7 +90,7 @@
                     msg.alert.successSave();
                     
                     if (callbackFnc != null && typeof callbackFnc == 'function') {
-                        callbackFnc(response.data);
+                        callbackFnc(response);
                     }
                 })
                 .fail(function(data, textStatus, errorThrown) {
@@ -104,7 +104,7 @@
                 console.log('call -> ' + opt.uri);
                 
                 //get file data.
-                let fileDataForm = g.function.file.getFileData();
+                let fileDataForm = g.component.file.getFileData();
                 if (fileDataForm == null) {
 					return;
 				}
@@ -153,13 +153,13 @@
                     }*/
                     
                     if (fileDataForm != null) {
-	                    g.function.file.reload();
+	                    g.component.file.reload();
 					}
 					
 					msg.alert.successSave();
                     
                     if (callbackFnc != null && typeof callbackFnc == 'function') {
-                        callbackFnc(response.data);
+                        callbackFnc(response);
                     }
                 })
                 .fail(function(data, textStatus, errorThrown) {
