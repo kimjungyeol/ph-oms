@@ -25,6 +25,24 @@
                 ele.setAttribute('autocomplete', 'off');
             });
         },
+        /**
+		 * js file to apply to current page. 
+		 */
+        require: function(t) {
+			if (t == undefined) { return; }
+			
+			function writeln(path) {
+				document.writeln(`<script type='text/javascript' src='${path}'></script>`);
+			}
+			
+			if (typeof t === 'object' && Array.isArray(t)) {
+				t.forEach(function(path) {
+					writeln(path);
+				});
+			} else if (typeof t === 'string') {
+					writeln(t);
+			}
+		}
     }
     
     /**
@@ -41,6 +59,15 @@
             const self = this;
             
             self.setChilds();
+        },
+        setChilds : function() {
+            const self = this;
+            
+            //append trigger.button object.
+            self.appendObject('button', '[id]');
+            
+            //append trigger.form object.
+            //appendObject('form', '[id][name]');
         },
         appendObject: function(type, target) {
 			const self = this;
@@ -66,17 +93,7 @@
             });
             
             Object.assign(self.childs[type], childsObj);
-            
             //console.log('self.childs', self.childs);
-        },
-        setChilds : function() {
-            const self = this;
-            
-            //append trigger.button object.
-            self.appendObject('button', '[id]');
-            
-            //append trigger.form object.
-            //appendObject('form', '[id][name]');
         },
     }
     

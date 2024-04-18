@@ -51,10 +51,15 @@
             	write : '/sample/contents/board/board-register',
             }
             
+            //grid id 지정.
+            //grid 갯수만큼 지정 되어야 함.
             grid.id = {
-            	grid  : 'sampleGrid',
-        		grid2 : 'testGrid',
+            	grid  : 'sampleGrid',   //<div class="mt-2" id="sampleGrid"></div>
+        		grid2 : 'testGrid',     //<div class="mt-2" id="testGrid"></div>
             }
+            
+            //grid js include.
+            co.require(['./grid/test-grid.js', './grid/sample-grid.js']);
             
         })(wg.c, wg.gr);
         
@@ -151,8 +156,6 @@
             
         })(wg.c, wg.f, wg.t, wg.gr);
     </script>
-    <script th:inline="javascript" th:src="@{./grid/test-grid.js}"></script>
-    <script th:inline="javascript" th:src="@{./grid/sample-grid.js}"></script>
     <script th:inline="javascript">
         'use strict';
         $(document).ready(async() => {
