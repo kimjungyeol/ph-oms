@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="sample/layouts/default-layout">
+<th:block layout:fragment="content">
+    <div class="container">
+        <h2>Swal - Message</h2>
+        <div data-trigger="button" class="mt-5 row">
+        	<div class="col">
+	            <div class="float-start">
+	                <button type="button" class="btn btn-success" id="defaultSuccessSaveBtn">default SAVE success alert</button>
+	                <button type="button" class="btn btn-success" id="defaultSuccessBtn">default success alert</button>
+	                <button type="button" class="btn btn-success" id="defaultWarningBtn">default warning alert</button>
+	                <button type="button" class="btn btn-danger"  id="defaultErrorBtn">default error alert</button>
+	            </div> 
+            </div>
+        </div>
+        <div data-trigger="button" class="mt-5 row">
+        	<div class="col">
+	            <div class="float-start">
+	                <button type="button" class="btn btn-success" id="successBtn">success message alert</button>
+	                <button type="button" class="btn btn-success" id="warningBtn">warning message alert</button>
+	                <button type="button" class="btn btn-danger" id="errorBtn">error message alert</button>
+	            </div> 
+            </div>
+        </div>
+        <div data-trigger="button" class="mt-5 row">
+        	<div class="col">
+	            <div class="float-start">
+	                <button type="button" class="btn btn-success" id="confirmSave">default save confirm</button>
+	                <button type="button" class="btn btn-success" id="confirmSwal">custom message confirm</button>
+	            </div> 
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        'use strict';
+        // 1.page init area.
+        ;(function(co, fn) {
+            co.initParams = {}
+            co.uriMap = {}
+            co.moveMap = {}
+        })(wg.c, wg.f);
+        
+        // 2.function area.
+        ;(function(co, fn, trigger) {
+            fn.search = function() {
+            }
+            fn.save = function() {
+            }
+        })(wg.c, wg.f, wg.t);
+        
+        // 3.event area. 
+        ;(function(co, fn, trigger) {
+        	
+        	//message object.
+        	let msg = fn.msg;
+        	
+            fn.event = function() {
+            	/**
+            	 * alert 메세지 처리.
+            	 */
+                $(trigger.button.defaultSuccessSaveBtn).click(function() {
+                	//default save success message.
+                	msg.alert.successSave();
+                });
+                $(trigger.button.defaultSuccessBtn).click(function() {
+                	//default success message.
+                	msg.alert.success();
+                });
+                $(trigger.button.defaultWarningBtn).click(function() {
+                	//default warning message.
+                	msg.alert.warning();
+                });
+                $(trigger.button.defaultErrorBtn).click(function() {
+                	//default error message.
+                	msg.alert.error();
+                });
+                
+                $(trigger.button.successBtn).click(function() {
+                	msg.alert.success(
+               			'success custom title', 
+               			'success custom subtitle', 
+               			function() {
+            				alert('success callback function!!');
+               			}
+                	);
+                });
+                $(trigger.button.warningBtn).click(function() {
+                	msg.alert.warning(
+               			'warning custom title', 
+               			'warning custom subtitle', 
+               			function() {
+            				alert('warning callback function!!');
+               			}
+                	);
+                });
+                $(trigger.button.errorBtn).click(function() {
+                	msg.alert.error(
+               			'error custom title', 
+              			'error custom subtitle', 
+              			function() {
+           					alert('error callback function!!');
+              			}
+                   	);
+                });
+                
+                /**
+                 * confirm 메세지 처리.
+                 *   - confirm.save 메세지와 같이 고정된 메세지인경우 공통 소스에 추가하여 사용 할 수 있도록 한다.
+                 */
+                $(trigger.button.confirmSave).click(function() {
+                	msg.confirm.save(function() {
+                		alert('save callback function!!');
+                	});
+                });
+                $(trigger.button.confirmSwal).click(function() {
+                	msg.confirm.swal(
+                		"Custom Title!", 
+                		"Custom sub title!", 
+                		function() {
+                			alert('confirm callback function!!');
+                		}
+                	);
+                });
+            }
+        })(wg.c, wg.f, wg.t);
+    </script>
+    <script th:inline="javascript">
+        'use strict';
+        $(document).ready(async() => {
+            const fn = wg.f;
+            
+            await fn.event();
+        });
+    </script>
+</th:block>
+</html>

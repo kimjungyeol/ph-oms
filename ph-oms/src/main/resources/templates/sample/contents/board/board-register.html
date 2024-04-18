@@ -108,18 +108,22 @@
             	});
             }
             fn.save = function() {
-            	// data-trigger="form" 속성 하위 dom.
-            	//   - id가 지정 되어 있는 모든 dom의 key value를 가져온다.
-            	let data = fn.form.getData();
-            	console.log('save data ==== ', data);
             	
-            	let opt = {
-               		uri : co.uriMap.save,
-               		params : data
-               	}
-            	fn.api.save(opt, function() {
-                    console.log('save callback fnc!!');
-                });
+            	fn.msg.confirm.save(function() {
+	            	// data-trigger="form" 속성 하위 dom.
+	            	//   - id가 지정 되어 있는 모든 dom의 key value를 가져온다.
+	            	let data = fn.form.getData();
+	            	
+	            	console.log('save data ==== ', data);
+	            	
+	            	let opt = {
+	               		uri : co.uriMap.save,
+	               		params : data
+	               	}
+	            	fn.api.save(opt, function() {
+	                    console.log('save callback fnc!!');
+	                });
+            	});
             }
             
         })(wg.c, wg.f, wg.t);

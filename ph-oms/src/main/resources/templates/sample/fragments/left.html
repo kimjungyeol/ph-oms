@@ -35,9 +35,9 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li>
-        <a href="#" class="nav-link text-white">
+        <a href="#javascript:void(0);" class="nav-link text-white" id="message">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-          Products
+          Message
         </a>
       </li>
       <li>
@@ -96,7 +96,8 @@
     	co.left.moveMap = {
    			boardList : '/sample/contents/board/board-list',
    			boardRegister : '/sample/contents/board/board-register',
-			boardRegisterFile : '/sample/contents/board/board-register-file'
+			boardRegisterFile : '/sample/contents/board/board-register-file',
+			message : '/sample/contents/other/swal-message',
     	}
     })(wg.c);
     
@@ -125,6 +126,9 @@
 	        });
 	     	$(trigger.button.boardRegisterFile).click(function() {
 	     		fn.left.movePage('boardRegisterFile');
+	        });
+	     	$(trigger.button.message).click(function() {
+	     		fn.left.movePage('message');
 	        });
     	}
     })(wg.f, wg.t);

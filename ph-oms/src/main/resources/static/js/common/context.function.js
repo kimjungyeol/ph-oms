@@ -10,8 +10,7 @@
 	 * api  : defulat transaction management.
 	 * move : page move management.
 	 * form : html form data management.
-	 * file : html attach file management.
-	 * datepicker : html datepicker management.
+	 * msg  : alert, confirm common message mangement.
 	 */
     g.function = {
         /**
@@ -32,22 +31,30 @@
                     dataType: "json",
                     data: JSON.stringify(opt.params),
                     success: function(result) {
-                        
-                        console.log('search result!!', result);
-                        
-                        if (callbackFnc != null && typeof callbackFnc == 'function') {
-                            callbackFnc(result);
-                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        alert('search Eerror occurred.');
-                        
-                        console.log(jqXHR, textStatus, errorThrown);
                     }
+                })
+                .done(function (response, textStatus, xhr) {
+                    console.log('done response', response);
+                    
+                    if (response.status == 500) {
+						swal(response.reason, "You clicked the button!", "warning");
+						return;
+					}
+                    
+                    if (callbackFnc != null && typeof callbackFnc == 'function') {
+                        callbackFnc(response.data);
+                    }
+                })
+                .fail(function(data, textStatus, errorThrown) {
+                    swal("server Error occurred!", "You clicked the button!", "warning");
                 });
                 
             },
             save : function(opt = {}, callbackFnc = null) {
+				const msg = g.function.msg;
+				
                 console.log('call -> ' + opt.uri);
                 
                 let saveParams = {};
@@ -63,30 +70,36 @@
 					Object.assign(saveParams, opt.params);
 				}
 				
-				console.log('saveParams===',saveParams);
-                
                 $.ajax({
                     url: opt.uri,
                     method: "post",
                     dataType: "json",
                     data: JSON.stringify(saveParams),
                     success: function(result) {
-                        
-                        console.log('save result!!', result);
-                        
-                        if (callbackFnc != null && typeof callbackFnc == 'function') {
-                            callbackFnc(result);
-                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
-                        alert('search Eerror occurred.');
-                        
-                        console.log(jqXHR, textStatus, errorThrown);
                     }
+                })
+                .done(function (response, textStatus, xhr) {
+                    console.log('done response', response);
+                    
+                    if (response.status == 500) {
+	                    swal(response.reason, "server Error occurred!", "error");
+						return;
+					}
+                    msg.alert.successSave();
+                    
+                    if (callbackFnc != null && typeof callbackFnc == 'function') {
+                        callbackFnc(response.data);
+                    }
+                })
+                .fail(function(data, textStatus, errorThrown) {
+                    msg.alert.error();
                 });
             },
             saveForm : function(opt = {}, callbackFnc = null) {
 				const self = this;
+				const msg = g.function.msg;
 				
                 console.log('call -> ' + opt.uri);
                 
@@ -127,7 +140,7 @@
                     //console.log('done xhr', xhr);
                     
                     if (response.status == 500) {
-						alert(response.reason);
+						swal(response.reason, 'server Error occurred!', 'error');
 						return;
 					}
                     
@@ -143,14 +156,14 @@
 	                    g.function.file.reload();
 					}
 					
-					alert('Success save.');
+					msg.alert.successSave();
                     
                     if (callbackFnc != null && typeof callbackFnc == 'function') {
                         callbackFnc(response.data);
                     }
                 })
-                .fail(function(data, textStatus, errorThrown){
-                    console.log("fail in get addr");
+                .fail(function(data, textStatus, errorThrown) {
+                    msg.alert.error();
                 });
             }
         }, // api {}
@@ -351,6 +364,116 @@
 	            return formParams;
 	        },
 		}, // form
+		
+		/**
+		 * 공통 메세지.
+		 */
+		msg : {
+			alert: {
+				//고정된 default 메시지가 필요한경우 추가하여 사용.
+				message: {
+					successSave: {
+						title: 'Success save!',
+						subtitle: 'Save is complete.'
+					},
+					success: {
+						title: 'Success!',
+						subtitle: 'Processing has been completed.'
+					},
+					warning: {
+						title: 'Warning!',
+						subtitle: 'Confirmation is required.'
+					},
+					error: {
+						title: 'Server Error occurred!',
+						subtitle: 'Please contact the administrator.'
+					}
+				},
+				//save success message.
+				//exists default message.
+				successSave: function(title = null, subtitle = null, callbackFnc = null) {
+					this.swalFnc(title, subtitle, 'successSave', 'success', callbackFnc);
+				},
+				//error icon message.
+				//exists default message.
+				error: function(title = null, subtitle = null, callbackFnc = null) {
+					this.swalFnc(title, subtitle, 'error', 'error', callbackFnc);
+				},
+				//success icon message.
+				//exists default message.
+				success: function(title = null, subtitle = null, callbackFnc = null) {
+					this.swalFnc(title, subtitle, 'success', 'success', callbackFnc);
+				},
+				//warning icon message.
+				//exists default message.
+				warning: function(title = null, subtitle = null, callbackFnc = null) {
+					this.swalFnc(title, subtitle, 'warning', 'warning', callbackFnc);
+				},
+				swalFnc: function(title, subtitle, message, icon, callbackFnc) {
+					this.swal({
+						title: title,
+						subtitle: subtitle,
+						message: message,
+						icon: icon,
+						callbackFnc: callbackFnc
+					});
+				},
+				swal: function(params) {
+					const self = this;
+					let title = params.title;
+					let subtitle = params.subtitle;
+					let icon = params.icon;
+					
+					//default message.
+					if (title == null) {
+						title = self.message[params.message].title;
+					}
+					if (subtitle == null) {
+						subtitle = self.message[params.message].subtitle;
+					}
+					if (icon == null) {
+						icon = self.message[params.message].subtitle;
+					}
+					
+					swal(title, subtitle, icon)
+	           		.then(() => {
+						if (params.callbackFnc != null && typeof params.callbackFnc == 'function') {
+	                        params.callbackFnc();
+	                    }
+					});
+				},
+			},
+			
+			/**
+			 * confirm message.
+			 */
+			confirm: {
+				//고정된 default 메시지가 필요한경우 추가하여 사용.
+				message: {
+					save : {
+						title: 'Save!',
+						subtitle: 'Do you want to save?'
+					},
+				},
+				save: function(callbackFnc = null) {
+					const self = this;
+					this.swal(self.message.save.title, self.message.save.subtitle, callbackFnc);
+				},
+				swal: function(title, message, callbackFnc) {
+					swal(title, message, "warning", {
+	           		  buttons: true,
+	           		  dangerMode: false  //true : OK button color change to red.
+	           		})
+	           		.then((isOk) => {
+					    if (isOk) {
+							if (callbackFnc != null && typeof callbackFnc == 'function') {
+		                        callbackFnc();
+		                    }
+					    }
+					});
+				},
+			},
+		}
     }
     
     wg.f = g.function;
