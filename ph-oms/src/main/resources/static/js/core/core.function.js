@@ -367,6 +367,7 @@
 		
 		/**
 		 * 공통 메세지.
+		 * swal - https://sweetalert.js.org/guides/
 		 */
 		msg : {
 			alert: {
