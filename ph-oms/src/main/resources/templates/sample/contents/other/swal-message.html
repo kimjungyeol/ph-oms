@@ -18,6 +18,7 @@
 	            <div class="float-start">
 	                <button type="button" class="btn btn-success" id="successBtn">success message alert</button>
 	                <button type="button" class="btn btn-success" id="warningBtn">warning message alert</button>
+	                <button type="button" class="btn btn-success" id="infoBtn">info message alert</button>
 	                <button type="button" class="btn btn-danger" id="errorBtn">error message alert</button>
 	            </div> 
             </div>
@@ -31,6 +32,7 @@
             </div>
         </div>
     </div>
+    
     <script th:inline="javascript">
         'use strict';
         // 1.page init area.
@@ -93,6 +95,15 @@
                			}
                 	);
                 });
+                $(trigger.button.infoBtn).click(function() {
+                	msg.alert.info(
+               			'info custom title', 
+               			'info custom subtitle', 
+               			function() {
+            				alert('info callback function!!');
+               			}
+                	);
+                });
                 $(trigger.button.errorBtn).click(function() {
                 	msg.alert.error(
                			'error custom title', 
@@ -116,8 +127,12 @@
                 	msg.confirm.swal(
                 		"Custom Title!", 
                 		"Custom sub title!", 
-                		function() {
-                			alert('confirm callback function!!');
+                		function(isOk) {
+                			if (isOk) {
+	                			alert('ok');
+                			} else {
+	                			alert('cancel');
+                			}
                 		}
                 	);
                 });

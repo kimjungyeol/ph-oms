@@ -41,33 +41,9 @@
         </a>
       </li>
       <li>
-        <a href="#" class="nav-link text-white">
+        <a href="#" class="nav-link text-white" id="popup">
           <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-          Customers
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-          Products
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-          Customers
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-          Products
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-          Customers
+          Popup
         </a>
       </li>
     </ul>
@@ -98,6 +74,7 @@
    			boardRegister : '/sample/contents/board/board-register',
 			boardRegisterFile : '/sample/contents/board/board-register-file',
 			message : '/sample/contents/other/swal-message',
+			popup : '/sample/contents/other/popup',
     	}
     })(wg.c);
     
@@ -129,6 +106,9 @@
 	        });
 	     	$(trigger.button.message).click(function() {
 	     		fn.left.movePage('message');
+	        });
+	     	$(trigger.button.popup).click(function() {
+	     		fn.left.movePage('popup');
 	        });
     	}
     })(wg.f, wg.t);

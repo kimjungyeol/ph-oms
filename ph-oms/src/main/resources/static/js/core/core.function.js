@@ -11,6 +11,7 @@
 	 * move : page move management.
 	 * form : html form data management.
 	 * msg  : alert, confirm common message mangement.
+	 * popup : 
 	 */
     g.function = {
         /**
@@ -251,7 +252,7 @@
 	            document.body.appendChild(form);
 	            form.submit();
 	        },
-		}, // move
+		}, // move {}
 		
 		/**
 		 * html form data management.
@@ -363,13 +364,14 @@
 	            
 	            return formParams;
 	        },
-		}, // form
+		}, // form {}
 		
 		/**
-		 * 공통 메세지.
+		 * common message management.
 		 * swal - https://sweetalert.js.org/guides/
 		 */
 		msg : {
+			//alert message.
 			alert: {
 				//고정된 default 메시지가 필요한경우 추가하여 사용.
 				message: {
@@ -385,10 +387,14 @@
 						title: 'Warning!',
 						subtitle: 'Confirmation is required.'
 					},
+					info: {
+						title: 'Info!',
+						subtitle: 'Infomation.'
+					},
 					error: {
 						title: 'Server Error occurred!',
 						subtitle: 'Please contact the administrator.'
-					}
+					},
 				},
 				//save success message.
 				//exists default message.
@@ -409,6 +415,11 @@
 				//exists default message.
 				warning: function(title = null, subtitle = null, callbackFnc = null) {
 					this.swalFnc(title, subtitle, 'warning', 'warning', callbackFnc);
+				},
+				//info icon message.
+				//exists default message.
+				info: function(title = null, subtitle = null, callbackFnc = null) {
+					this.swalFnc(title, subtitle, 'info', 'info', callbackFnc);
 				},
 				swalFnc: function(title, subtitle, message, icon, callbackFnc) {
 					this.swal({
@@ -445,9 +456,7 @@
 				},
 			},
 			
-			/**
-			 * confirm message.
-			 */
+			//confirm message.
 			confirm: {
 				//고정된 default 메시지가 필요한경우 추가하여 사용.
 				message: {
@@ -463,18 +472,98 @@
 				swal: function(title, message, callbackFnc) {
 					swal(title, message, "warning", {
 	           		  buttons: true,
-	           		  dangerMode: false  //true : OK button color change to red.
+	           		  dangerMode: false,  //true : OK button color change to red.
+	           		  //closeOnClickOutside : false
 	           		})
 	           		.then((isOk) => {
-					    if (isOk) {
-							if (callbackFnc != null && typeof callbackFnc == 'function') {
-		                        callbackFnc();
-		                    }
-					    }
+						if (callbackFnc != null && typeof callbackFnc == 'function') {
+	                        callbackFnc(isOk);
+	                    }
 					});
 				},
 			},
-		}
+		}, // msg {}
+		
+		/**
+		 * 1.layer popup management.
+		 * 2.window popup management.
+		 */
+		popup : {
+			//swal layer popup
+			layerOpt: {
+				title: '',
+				content: '',
+				buttons: ['Cancel', {text: 'OK', className: 'cs-swal-button'}],
+				closeOnClickOutside : false // true: Close on background click, false: Does not close when clicking on the background
+			},
+			layer_setTitle: function() {
+				let title_ele = document.querySelector('[class="swal-title"]');
+				title_ele.style = 'margin: 0px;font-size: 16px;box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.21);margin-bottom: 28px;';
+			},
+			layer: function(p, callbackFnc) {
+				const self = this;
+				
+				let opt = Object.assign({}, self.layerOpt);	
+				if (typeof p === 'object') {
+					Object.assign(opt, p);
+				} else {
+					opt.content = p;
+				}
+				
+				const ele = document.getElementById(opt.content);
+				opt.content = ele;
+				ele.style.display = '';  //show popup html.
+            	
+            	swal(opt)
+           		.then((isOk) => {
+					if (callbackFnc != null && typeof callbackFnc == 'function') {
+                        callbackFnc(isOk);
+                    }
+				});
+				
+				if (opt.title != '') {
+					self.layer_setTitle();
+				}
+			},
+			
+			//window popup
+			winOpt: {
+				url: '',
+				name: '_blank',
+				width: 500,
+				height: 500,
+				top: 100,
+				left: 200,
+				scrollbars: 'yes',
+				location: 'no',
+				toolbars: 'no',
+				status: 'no',
+				titlebar: 'no',
+				menubar: 'no',
+				resizable: 'no',
+				getOptions: function() {
+					let opt = `width=${this.width},height=${this.height},left=${this.left},top=${this.top},`
+					        + `scrollbars=${this.scrollbars},location=${this.location},`
+					        + `toolbars=${this.toolbars},status=${this.status},`
+					        + `titlebar=${this.titlebar},menubar=${this.menubar},`
+					        + `resizable=${this.resizable}`;
+					return opt;
+				}
+			},
+			win: function(p, callbackFnc) {
+				const self = this;
+				
+				let opt = Object.assign({}, self.winOpt, p);
+				opt.left = Math.round(window.screenX + (window.outerWidth/2) - (opt.width/2));
+    			opt.top = Math.round(window.screenY + (window.outerHeight/2) - (opt.height/2));
+				
+				const popWin = window.open(opt.url, opt.name, opt.getOptions());
+				
+				if (callbackFnc != null && typeof callbackFnc == 'function') {
+                    callbackFnc(popWin);
+                }
+			}
+		} // popup {}
     }
     
     wg.f = g.function;

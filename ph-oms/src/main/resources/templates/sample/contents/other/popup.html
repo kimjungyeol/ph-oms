@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="sample/layouts/default-layout">
+<th:block layout:fragment="content">
+    <div class="container">
+        <h2>POPUP</h2>
+        <div data-trigger="button" class="mt-5 row">
+        	<div class="col">
+	            <div class="float-start">
+	                <button type="button" class="btn btn-dark" id="layerPop">LayerPopup</button>
+	                <button type="button" class="btn btn-dark" id="layerPop2">LayerPopup2</button>
+	            </div> 
+            </div>
+        </div>
+	    <div data-trigger="button" class="mt-5 row">
+	    	<div class="col">
+		         <div class="float-start">
+		             <button type="button" class="btn btn-dark" id="windowPop">WindowPopup</button>
+		         </div> 
+	        </div>
+	    </div>
+    </div>
+    
+    <!-- LAYER POPUP HTML -->
+    <div id="layerPopWrapper" style="display:none;">
+    	<b>LayerPopup</b>
+    	<div class="mt-5 row">
+             <div class="col">
+                 <label class="fw-bold">id.</label>
+                 <input type="text" id="id"></input>
+             </div>
+             <div class="col">
+                 <label class="fw-bold">name.</label>
+                 <input type="text" id="name"></input>
+             </div>
+         </div>
+    	<div class="mt-5 row">
+             <div class="col">
+                 <label class="fw-bold">age.</label>
+                 <input type="text" id="id"></input>
+             </div>
+             <div class="col">
+                 <label class="fw-bold">email.</label>
+                 <input type="text" id="name"></input>
+             </div>
+         </div>
+    </div>
+    <script th:inline="javascript">
+        'use strict';
+        // 1.page init area.
+        ;(function(co, fn) {
+            co.initParams = {}
+            co.uriMap = {}
+            co.moveMap = {}
+        })(wg.c, wg.f);
+        
+        // 2.function area.
+        ;(function(co, fn, trigger) {
+            fn.search = function() {
+            }
+            fn.save = function() {
+            }
+            
+            fn.layerPop = function() {
+            	fn.popup.layer('layerPopWrapper', function(isOk) {
+            		if (isOk) {
+            			alert('ok');
+            		} else {
+            			alert('cancel');
+            		}
+            	});
+            }
+            fn.layerPop2 = function() {
+            	fn.popup.layer({
+            		title: 'Layer Popup Open title!',
+            		content: 'layerPopWrapper',
+            		buttons: ['Close', 'Save']
+            	}, function(isOk) {
+            		if (isOk) {
+            			alert('save');
+            		} else {
+            			alert('close');
+            		}
+            	});
+            }
+            
+            fn.windowPop = function() {
+            	fn.popup.win({
+            		url: './popup/popup-sample.html',
+            		width: '1000',
+            		height: '700' 
+            	}, function(popWin) {
+            		console.log('popWin', popWin);
+            	});
+            }
+        })(wg.c, wg.f, wg.t);
+        
+        // 3.event area. 
+        ;(function(co, fn, trigger) {
+        	
+            fn.event = function() {
+                $(trigger.button.layerPop).click(function() {
+                    fn.layerPop();
+                });
+                $(trigger.button.layerPop2).click(function() {
+                    fn.layerPop2();
+                });
+                $(trigger.button.windowPop).click(function() {
+                    fn.windowPop();
+                });
+            }
+        })(wg.c, wg.f, wg.t);
+    </script>
+    <script th:inline="javascript">
+        'use strict';
+        $(document).ready(async() => {
+            const fn = wg.f;
+            
+            await fn.event();
+        });
+    </script>
+</th:block>
+</html>

@@ -3,6 +3,18 @@
 <th:block layout:fragment="content">
     <div class="container">
         <h2>Board - Register</h2>
+        <div data-trigger="button" class="mb-5 row">
+        	<div class="col">
+	            <div class="float-start">
+	                <button type="button" class="btn btn-success" id="prevBtn">List</button>
+	                <button type="button" class="btn btn-danger" id="saveBtn">Save</button>
+	            </div> 
+        	</div>
+        	<div class="col">
+	            <div class="float-end">
+	            </div>
+            </div>
+        </div>
         <div data-trigger="form">
             <div class="mb-3">
                 <label class="form-label fw-bold">Title.</label>
@@ -60,19 +72,8 @@
                 </div>
             </div>
         </div>
-        <div data-trigger="button" class="mt-5 row">
-        	<div class="col">
-	            <div class="float-start">
-	                <button type="button" class="btn btn-success" id="prevBtn">List</button>
-	            </div> 
-        	</div>
-        	<div class="col">
-	            <div class="float-end">
-	                <button type="button" class="btn btn-danger" id="saveBtn">Save</button>
-	            </div>
-            </div>
-        </div>
     </div>
+    
     <script th:inline="javascript">
         'use strict';
         // 1.page init area.
@@ -95,7 +96,6 @@
         // 2.function area.
         ;(function(co, fn, trigger) {
             fn.search = function() {
-            	
             	let opt = {
             		uri : co.uriMap.search,
             		params : co.initParams
@@ -108,7 +108,6 @@
             	});
             }
             fn.save = function() {
-            	
             	fn.msg.confirm.save(function() {
 	            	// data-trigger="form" 속성 하위 dom.
 	            	//   - id가 지정 되어 있는 모든 dom의 key value를 가져온다.
@@ -131,15 +130,15 @@
         // 3.event area.
         ;(function(co, fn, trigger) {
             fn.event = function() {
-                //save.
-                $(trigger.button.saveBtn).click(function() {
-                    fn.save();
-                });
                 //move page.
                 $(trigger.button.prevBtn).click(function() {
                 	
                 	//이동하는 page의 storage 데이터를 삭제 후 이동.
                     fn.move.page(co.moveMap.boardList);
+                });
+                //save.
+                $(trigger.button.saveBtn).click(function() {
+                    fn.save();
                 });
             }
         })(wg.c, wg.f, wg.t);
