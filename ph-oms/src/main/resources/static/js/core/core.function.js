@@ -11,7 +11,7 @@
 	 * move : page move management.
 	 * form : html form data management.
 	 * msg  : alert, confirm common message mangement.
-	 * popup : 
+	 * popup : layer, window popup management.
 	 */
     g.function = {
         /**
