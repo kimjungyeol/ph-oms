@@ -22,16 +22,11 @@ public class LogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	@Resource
-	private SessionUserDto sessionUser;
- 
     @Override
     public void onLogoutSuccess(HttpServletRequest request,HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
     	logger.info("==================== LogoutSuccessHandler ====================");
         
-    	logger.debug("Logout User = {} ", sessionUser.getUserId());
-    	
     	HttpSession session = request.getSession(false);
     	if(session != null) {
     		session.invalidate();

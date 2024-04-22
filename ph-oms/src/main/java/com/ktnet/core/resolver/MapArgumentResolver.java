@@ -16,9 +16,11 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ktnet.common.dto.SessionUserDto;
 import com.ktnet.common.util.FileUtil;
 import com.ktnet.core.map.ParamMap;
 
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Component
@@ -31,6 +33,9 @@ public class MapArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Autowired
     private FileUtil fileUtil;
+    
+    @Resource
+	private SessionUserDto sessionUser;
 
     @Override
     public Object resolveArgument(MethodParameter prameter, ModelAndViewContainer mavContainer,
@@ -113,10 +118,12 @@ public class MapArgumentResolver implements HandlerMethodArgumentResolver {
         }
     }
     
+    //set login user info.
     private void setSessionInfo(HttpServletRequest request, ParamMap collector) throws Exception {
-    	collector.put("loginUserId", "testUser");
-    	
-    	//TODO: set session login user object.
+    	if (sessionUser != null) {
+    		collector.put("loginUserId", sessionUser.getUserId());
+    		collector.put("loginUserNm", sessionUser.getUserNm());
+    	}
     }
 
     @Override

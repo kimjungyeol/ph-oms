@@ -67,8 +67,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         //	throw new BadCredentialsException(securityUserDetails.getUsername() + "Invalid password");
         //}
         
-        sessionUser.setUserId("999999");
-        sessionUser.setUserNm("testLoginUser");
+        sessionUser.setUserId(loginId);
+        sessionUser.setUserNm(loginId+"Name");
         
         // 인증이 성공하면 인증된 사용자의 정보와 권한을 담은 새로운 UsernamePasswordAuthenticationToken을 반환한다.
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(securityUserDetails, userPassword, securityUserDetails.getAuthorities());

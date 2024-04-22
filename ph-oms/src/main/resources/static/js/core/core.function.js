@@ -80,6 +80,7 @@
                     url: opt.uri,
                     method: "post",
                     dataType: "json",
+                    contentType: 'application/x-www-form-urlencoded',
                     data: JSON.stringify(saveParams),
                     success: function(result) {
                     },
