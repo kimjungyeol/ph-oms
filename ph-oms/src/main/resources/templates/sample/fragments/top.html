@@ -1,32 +1,106 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="naviFragment">
-    <nav class="py-2 bg-body-tertiary border-bottom">
-	    <div class="container d-flex flex-wrap">
-	        <ul class="nav me-auto">
-	            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">S</a></li>
-	            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">A</a></li>
-	            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">M</a></li>
-	            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">P</a></li>
-	            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">L</a></li>
-	            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">E</a></li>
-	        </ul>
-	        <ul class="nav">
-	            <li class="nav-item" data-login><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">Login</a></li>
-	            <li class="nav-item" data-join><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">Signup</a></li>
-	        </ul>
-	    </div>
-	</nav>
-	<script th:inline="javascript">
-	    'use strict';
-	    console.log('top');
-	   
-        $("li[data-login]").click(function() {
-            window.location.href = '/sample/contents/login';
-        });
-        $("li[data-join]").click(function() {
-            window.location.href = '/sample/contents/join';
-        });
-    </script>
+<nav class="py-2 bg-body-tertiary border-bottom">
+    <div class="container d-flex flex-wrap">
+        <ul class="nav me-auto">
+            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">S</a></li>
+            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">A</a></li>
+            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">M</a></li>
+            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">P</a></li>
+            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">L</a></li>
+            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">E</a></li>
+        </ul>
+        <ul class="nav" data-trigger="button">
+        	<li><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="userId"></a></li>
+            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="loginBtn">Login</a></li>
+            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="logoutBtn">Logout</a></li>
+<!--             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="signupBtn">Signup</a></li> -->
+        </ul>
+    </div>
+</nav>
+<script th:inline="javascript">
+    'use strict';
+    console.log('top');
+    wg.c.top =  {};
+    wg.f.top =  {};
+    
+    ;(function(co) {
+    	co.top.uriMap = {
+            search : '/common/session/user',
+        }
+    	co.top.moveMap = {
+   			login  : '/sample/contents/login',
+   			logout : '/logout',
+   			join   : '/sample/contents/join',
+    	}
+    	
+    	co.top.userKey = 'userInfo';
+    })(wg.c);
+    
+    ;(function(co, fn) {
+    	fn.top.movePage = function(uri) {
+    		fn.move.page(co.top.moveMap[uri]);
+    	}
+    	
+    	fn.top.search = function() {
+    		const userInfo = sessionStorage.getItem(co.top.userKey);
+    		if (userInfo != null) {
+    			fn.top.setUserInfo();
+    			return;
+    		}
+    		
+        	let opt = {
+        		uri : co.top.uriMap.search,
+        	}
+        	fn.api.search(opt, function(res) {
+        		if (res.result) {
+        			console.log('res.data.userInfo============ ', res.data.userInfo);
+        			
+        			if (res.data.userInfo.userId != null) {
+	        			sessionStorage.setItem(co.top.userKey, JSON.stringify(res.data.userInfo));
+	        			fn.top.setUserInfo();
+        			}
+        		}
+        	});
+        }
+    	
+    	fn.top.setUserInfo = function() {
+    		let userInfo = sessionStorage.getItem(co.top.userKey);
+    		userInfo = JSON.parse(userInfo);
+    		
+    		$('#userId').html('[' + userInfo.userNm + ']');
+    	}
+    	
+    	fn.top.logout = function() {
+    		
+    		sessionStorage.removeItem(co.top.userKey);
+     		fn.top.movePage('logout');
+    	}
+    })(wg.c, wg.f);
+    
+    ;(function(fn, trigger) {
+    	fn.top.event = function() {
+	     	$(trigger.button.loginBtn).click(function() {
+	             fn.top.movePage('login');
+	        });
+	     	$(trigger.button.signupBtn).click(function() {
+	     		fn.top.movePage('join');
+	        });
+	     	$(trigger.button.logoutBtn).click(function() {
+	     		fn.top.logout('logout');
+	        });
+    	}
+    })(wg.f, wg.t);
+</script>
+<script th:inline="javascript">
+    'use strict';
+    $(document).ready(async() => {
+        const fn = wg.f;
+        
+        await fn.top.event();
+        await fn.top.search();
+    });
+</script>
 </th:block>
 </html>

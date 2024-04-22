@@ -16,6 +16,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.ktnet.common.dto.SessionUserDto;
+
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -26,6 +29,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	
 	@Autowired
     private UserDetailsService userDetailsService;
+	
+	@Resource
+	private SessionUserDto sessionUser;
 
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -60,7 +66,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         //if (!bCryptPasswordEncoder().matches(userPassword, securityUserDetails.getPassword())) {
         //	throw new BadCredentialsException(securityUserDetails.getUsername() + "Invalid password");
         //}
-		
+        
+        sessionUser.setUserId("999999");
+        sessionUser.setUserNm("testLoginUser");
+        
         // 인증이 성공하면 인증된 사용자의 정보와 권한을 담은 새로운 UsernamePasswordAuthenticationToken을 반환한다.
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(securityUserDetails, userPassword, securityUserDetails.getAuthorities());
         return authToken;

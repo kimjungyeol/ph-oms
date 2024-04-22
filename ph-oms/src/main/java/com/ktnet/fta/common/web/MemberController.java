@@ -28,14 +28,15 @@ public class MemberController {
      */
     @GetMapping("/login")
     public String login(HttpServletRequest req) throws Exception {
-    	logger.info("login page move.");
+    	logger.info(">> login page move <<");
     	
         return "member/login";
     }
     
     @GetMapping("/join")
     public String join(HttpServletRequest req, Model model) throws Exception {
-    	logger.info(">>> jion<<<");
+    	logger.info(">>> join <<<");
     	return "member/join";
     }
+    
 }

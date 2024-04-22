@@ -1,6 +1,6 @@
 ;(function(g, trigger) {
-    function validation() {
-        if (g.contants.uriMap.search == '') {
+    function validation(opt) {
+        if (opt.uri == '') {
             return false;
         }
         return true;
@@ -22,9 +22,13 @@
             search : function(opt = {}, callbackFnc = null) {
                 console.log('call -> ' + opt.uri);
                 
-                if (!validation()) {
+                if (!validation(opt)) {
                     return;
                 }
+                
+                if (opt.params == undefined || typeof opt.params != 'object') {
+					opt.params = {};
+				}
                 
                 $.ajax({
                     url: opt.uri,

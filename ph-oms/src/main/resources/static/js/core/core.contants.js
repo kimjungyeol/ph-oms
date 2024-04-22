@@ -4,7 +4,7 @@
      */
     g.contants = {
         name    : 'data-contants',
-        context : {},
+        context : [],
         uriMap : {
             search : '',
             save : '',
@@ -12,18 +12,20 @@
         },
         initParams : {},
         init : function() {
-            this.context = document.querySelector(`[${this.name}]`);
+            this.context = document.querySelectorAll(`[${this.name}]`);
             
             this.init_dom();
         },
         init_dom : function() {
             const self = this;
             
-            //input autocomplete off.
-            const inputObjArr = self.context.querySelectorAll('input');
-            inputObjArr.forEach((ele) => {
-                ele.setAttribute('autocomplete', 'off');
-            });
+            if (this.context.length > 0) {
+	            //input autocomplete off.
+	            const inputObjArr = self.context[0].querySelectorAll('input');
+	            inputObjArr.forEach((ele) => {
+	                ele.setAttribute('autocomplete', 'off');
+	            });
+			}
         },
         /**
 		 * js file to apply to current page. 

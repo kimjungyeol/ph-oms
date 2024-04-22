@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ktnet.common.dto.ResultResponseDto;
+import com.ktnet.common.dto.SessionUserDto;
 import com.ktnet.common.dto.ToastUiResponseDto;
 import com.ktnet.core.map.ParamMap;
 import com.ktnet.fta.common.service.FileService;
