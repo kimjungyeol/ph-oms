@@ -136,20 +136,20 @@
                 /* === grid event === */
                 //clear row
                 $(trigger.button.clearRow).click(function() {
-                	grid.context[grid.id.sampleGrid].clear();
+                	grid.context[grid.id.grid].clear();
                 });
                 //append row
                 $(trigger.button.appendRow).click(function() {
-                	grid.context[grid.id.sampleGrid].appendRow({name: 'addName', age: '20'}, {at: 0});
+                	grid.context[grid.id.grid].appendRow({name: 'addName', age: '20'}, {at: 0});
                 });
                 //delete row
                 $(trigger.button.deleteRow).click(function() {
                 	//true : 삭제여부 alert 사용., false : 삭제여부 alert 미사용.
-                	grid.context[grid.id.sampleGrid].removeCheckedRows(false);  
+                	grid.context[grid.id.grid].removeCheckedRows(false);  
                 });
                 //modified row data.
                 $(trigger.button.modifiedRow).click(function() {
-                	let rows = grid.context[grid.id.sampleGrid].getModifiedRows();
+                	let rows = grid.context[grid.id.grid].getModifiedRows();
                 	console.log(rows);
                 });
             }
