@@ -34,6 +34,7 @@
                     url: opt.uri,
                     method: "post",
                     dataType: "json",
+                    contentType: 'application/x-www-form-urlencoded',
                     data: JSON.stringify(opt.params),
                     success: function(result) {
                     },
