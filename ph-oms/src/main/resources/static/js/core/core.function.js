@@ -264,10 +264,8 @@
 		 * html form data management.
 		 */
 		form : {
-	        /**
-	         * Setting data on the form.
-	         *  - Based on 'data' parameter key value.
-	         */
+			//Setting data on the form.
+			//- Based on 'data' parameter key value.
 	        setData : function(data = {}) {
 	            if (Object.keys(data).length == 0) {
 	                return;
@@ -316,16 +314,16 @@
 	                }
 	            });
 	        },
-	        /**
-	         * Get parameters of dom in 'data-form' attribute.
-	         */
+	        
+	        //Get parameters of dom in 'data-form' attribute.
 	        getData : function() {
 	            let formParams = {};
 	            
 	            function getChildNodeData(fele) {
-	                if (fele.nodeName.includes('text')) {
-	                    return;
-	                }
+					const notAllowTag = ['#text', '#comment'];
+					if (notAllowTag.includes(fele.nodeName)) {
+						return;
+					}
 	                
 	                const childNodes = fele.childNodes;
 	                if (childNodes != undefined) {
@@ -334,30 +332,36 @@
 	                    });
 	                }
 	                
+	                if (fele.tagName == undefined) {
+						console.log('fele undefined ', fele);
+					}
 	                let tagName = fele.tagName.toLowerCase();
-	                if (tagName == 'option') {
+	                const allowTag = ['input', 'select', 'select', 'textarea'];
+	                if (!allowTag.includes(tagName)) {
 	                    return;
 	                }
 	                 
-	                 if (tagName === 'input') {
-	                     if (fele.type.toLowerCase() == 'radio') {
-	                         if (formParams[fele.name] != undefined) {
-	                             return;
-	                         }
-	                         const raiodObjs = document.querySelectorAll(`[name="${fele.name}"]`);
-	                         raiodObjs.forEach((ele) => {
-	                             if (ele.checked) {
-	                                 formParams[ele.name] = ele.value;
-	                             }
-	                         });
-	                     } else {
-	                         formParams[fele.id] = fele.value;
-	                     }
-	                 } else {
-	                     if (fele.value != undefined) {
-	                         formParams[fele.id] = fele.value;
-	                     }
-	                 }
+	                if (tagName === 'input') {
+	                    if (fele.type.toLowerCase() == 'radio') {
+	                        if (formParams[fele.name] != undefined) {
+	                            return;
+	                        }
+	                        const raiodObjs = document.querySelectorAll(`[name="${fele.name}"]`);
+	                        formParams[raiodObjs[0].name] = '';
+	                        
+	                        raiodObjs.forEach((ele) => {
+	                            if (ele.checked) {
+	                                formParams[ele.name] = ele.value;
+	                            }
+	                        });
+	                    } else {
+	                        formParams[fele.id] = fele.value;
+	                    }
+	                } else {
+	                    if (fele.value != undefined) {
+	                        formParams[fele.id] = fele.value;
+	                    }
+	                }
 	            }
 	            
 	            // target form object.
@@ -370,6 +374,115 @@
 	            
 	            return formParams;
 	        },
+	        
+	        //validation check.
+	        validation : function(vObj = {}) {
+				const self = this;
+				
+				let rb = true;
+				if (Object.keys(vObj).length == 0) {
+					return rb;
+				}
+				
+	            const fData = self.getData();
+	            let errCnt = 0;
+	            let errKeyArr = [];
+	            
+	            //append html error style.
+	            function viewDomStyle(key, regExpKey, color = 'red') {
+					let ele = document.getElementById(key);
+					ele = ele == null ? document.getElementsByName(key)[0] : ele;
+					
+					if (ele == undefined) { return; }
+					
+					const pele = ele.parentNode;
+					let title = color == 'red' ? `Please Check '${regExpKey}'` : '';
+					let tagName = ele.tagName.toLowerCase();
+					let type = ele.type.toLowerCase();
+					if (tagName == 'input' && type == 'radio') {
+						//radio.
+						if (pele != undefined && color === 'red') {
+							pele.style['border'] = `solid 1px ${color}`;
+						} else {
+							pele.style['border'] = `0px`;
+						}
+						pele.title = title;
+					} else {
+						
+						ele.style['border-color'] = color;
+						ele.title = title;
+					}
+					
+					//if datepicker.
+					if (pele != undefined) {
+						const p_class = pele.getAttribute('class');
+						if (p_class != null && p_class.includes('datepicker')) {
+							pele.style['border-color'] = color;
+							pele.title = title
+						}
+					}
+				}
+				
+	            //check regExp.
+	            function chkRegx(key) {
+					vObj[key].forEach(function(regExpKey) {
+						if (regExpKey == 'required') { return; }
+						if (g.regExp[regExpKey] == undefined) {
+							console.log('============ not exists validation regExp ==>>', regExpKey);
+						}
+						
+						if(!g.regExp[regExpKey].test(fData[key])) {
+							//console.log(`validation error!! - ${key}`, regExpKey);
+							
+							viewDomStyle(key, regExpKey);
+							
+							errCnt++;
+							errKeyArr.push(key);
+						}
+					});
+				}
+	            
+	            let emptyIdArr = [];
+	            
+	            //1.Change dom style back to original.
+				Object.keys(vObj).forEach(function(key) {
+					vObj[key].forEach(function(regExpKey) {
+						viewDomStyle(key, regExpKey, '#dee2e6');
+					});
+				});
+	            
+	            //2.Check regular expressions excluding 'required'.
+	            Object.keys(vObj).forEach(function(key) {
+					if (fData[key] == undefined) {
+						return;
+					}
+					
+					if (fData[key].trim() != '') {
+						chkRegx(key);
+					} else {
+						emptyIdArr.push(key);
+					}
+				});
+				
+				//3.'required' regular expressions check.
+				let regExpKey = 'required';
+				emptyIdArr.forEach(function(key) {
+					if (vObj[key].includes(regExpKey)) {
+						viewDomStyle(key, regExpKey);
+						
+						errCnt++;
+						errKeyArr.push(key);
+					}
+				});
+				
+				console.log('validation error === ', errKeyArr);
+				
+				if (errCnt > 0) {
+					rb = false;
+				}
+	            
+	            return rb;
+			},
 		}, // form {}
 		
 		/**

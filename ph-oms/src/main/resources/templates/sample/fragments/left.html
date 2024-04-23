@@ -31,6 +31,12 @@
           Board-Register-file
         </a>
       </li>
+      <li>
+        <a href="javascript:void(0);" class="nav-link text-white" id="boardRegisterVali">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Board-Register-validation
+        </a>
+      </li>
     </ul>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
@@ -82,6 +88,7 @@
    			boardList : '/sample/contents/board/board-list',
    			boardRegister : '/sample/contents/board/board-register',
 			boardRegisterFile : '/sample/contents/board/board-register-file',
+			boardRegisterVali : '/sample/contents/board/board-register-validation',
 			message : '/sample/contents/other/swal-message',
 			popup : '/sample/contents/other/popup',
 			invoice : '/sample/contents/invoice/invoice-list',
@@ -113,6 +120,9 @@
 	        });
 	     	$(trigger.button.boardRegisterFile).click(function() {
 	     		fn.left.movePage('boardRegisterFile');
+	        });
+	     	$(trigger.button.boardRegisterVali).click(function() {
+	     		fn.left.movePage('boardRegisterVali');
 	        });
 	     	$(trigger.button.message).click(function() {
 	     		fn.left.movePage('message');

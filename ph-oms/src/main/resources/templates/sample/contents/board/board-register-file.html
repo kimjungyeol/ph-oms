@@ -103,7 +103,9 @@
             }
             
             fn.save = function() {
-            	fn.msg.confirm.save(function() {
+            	fn.msg.confirm.save(function(isOk) {
+            		if (!isOk) { return; }
+            		
 	            	let opt = {
 	               		uri : co.uriMap.save,
 	               		params : { 
