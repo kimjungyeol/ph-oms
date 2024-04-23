@@ -73,14 +73,14 @@
         },
         appendObject: function(type, target) {
 			const self = this;
-            const warpper = document.querySelectorAll(`[${self.name}="${type}"]`);
+            const wrapper = document.querySelectorAll(`[${self.name}="${type}"]`);
             let childsObj = {};
             
-            if (warpper.length == 0) {
+            if (wrapper.length == 0) {
 				return;
 			}
             
-            warpper.forEach((ele) => {
+            wrapper.forEach((ele) => {
                 let ObjEle = ele.querySelectorAll(target);
                 ObjEle.forEach((ele) => {
                     let id = ele.getAttribute("id");
