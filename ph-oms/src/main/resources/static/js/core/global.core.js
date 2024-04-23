@@ -30,7 +30,7 @@ var wg = {};
         init : function() {
 			
 			//context init.
-		    this.contants.init();
+		    this.contents.init();
 		    this.triggers.init();
 		    
 		    //file area render.
@@ -42,7 +42,7 @@ var wg = {};
     
     //wg[contents, triggers, function, component, grid]
 	const js = [
-		{src : '/js/core/core.contants.js'},
+		{src : '/js/core/core.contents.js'},
 		{src : '/js/core/core.function.js'},
 		{src : '/js/core/core.component.js'}, 
 		{src : '/js/core/core.grid.js'},

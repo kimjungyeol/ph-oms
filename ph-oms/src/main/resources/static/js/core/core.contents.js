@@ -2,8 +2,8 @@
     /**
      * contents object.
      */
-    g.contants = {
-        name    : 'data-contants',
+    g.contents = {
+        name    : 'data-contents',
         context : [],
         uriMap : {
             search : '',
@@ -99,10 +99,10 @@
         },
     }
     
-    wg.c = g.contants;
+    wg.c = g.contents;
     wg.t = g.triggers.childs;
     
-    console.log("=== wg.c (contants) ===", wg.c);
+    console.log("=== wg.c (contents) ===", wg.c);
     console.log("=== wg.t (triggers) ===", wg.t);
     
 })(window.global);
