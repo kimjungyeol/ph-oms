@@ -6,3 +6,20 @@
     border: 1px solid #3e549a;
     text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
 }
+
+
+.tui-calendar-body {
+	height: 233px
+}
+.tui-calendar {
+    width: 210px;
+    height: 275px;
+}
+.tui-datepicker-type-date {
+    width: 210px;
+} 
+.tui-calendar td {
+    height: 30px;
+    text-align: center;
+    color: #999;
+}

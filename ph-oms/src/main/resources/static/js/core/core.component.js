@@ -317,6 +317,29 @@
 					basic: {},
 					range: {}
 				},
+				//screen 아래쪽에 있는경우 위치 조정.
+				renderLocationChange: function(type) {
+					const tui = this;
+					const clientRect = tui.context[type][0].getBoundingClientRect(); // DomRect 구하기 (각종 좌표값이 들어있는 객체)
+					const relativeTop = clientRect.top; // Viewport의 시작지점을 기준으로한 상대좌표 Y 값.
+					const topVariableH = 290;
+					
+					const targetClass = {
+						basic: '[class="tui-datepicker tui-hidden"]',
+						range: '[class="tui-datepicker tui-hidden tui-rangepicker"]'
+					}
+					
+					if (window.innerHeight < (relativeTop + topVariableH)) {
+						let ele = document.querySelectorAll(targetClass[type]);
+						//let marginTop = window.screen.availHeight - relativeTop.toFixed() + 34;
+						let marginTop = 305;
+						
+						ele.forEach(function(el) {
+							el.parentNode.style['marginTop'] = '-' + marginTop + 'px';
+						});
+					}
+				},
+				//all tui datepicker render.
 				render: function() {
 					const tui = this;
 					tui.context.basic = document.querySelectorAll('[data-component-datepicker="basic"]');
@@ -328,6 +351,8 @@
 						tui.range.render();
 					}
 				},
+				
+				//basic tui datepicker
 				basic: {
 					replaceId: '$pickerid',
 					dom: function() {
@@ -342,8 +367,10 @@
 			                //date: new Date(),  //default date.
 			                input: {
 			                    element: `#${id}`,
-			                    format: 'yyyy-MM-dd'
-			                }
+			                    format: 'MM-dd-yyyy'
+			                },
+			                timePicker: false,
+					        language: 'en',
 			            });
 					},
 		            render: function() {
@@ -356,8 +383,12 @@
 							ele.innerHTML = basic.dom().replaceAll(basic.replaceId, `${id}`);
 							basic.load(id);
 						});
+						
+						g.component.datepicker.tui.renderLocationChange('basic');
 					}
 				}, // basic
+				
+				//rage tui datepicker
 				range: {
 					replaceId: '$pickerid',
 					dom: function() {
@@ -386,8 +417,19 @@
 					            input: `#end_${id}`,
 					            container: `#end_${id}_container`
 					        },
-					        format: 'YYYY-MM-dd',
-					        timePicker: false
+					        format: 'MM-dd-yyyy',
+					        timePicker: false,
+					        language: 'en',
+					        selectableRanges: [
+		                        [
+		                            new Date(2019, 3, 1),
+		                            new Date(2019, 5, 1)
+		                        ],
+		                        [
+		                            new Date(2019, 3, 1),
+		                            new Date(2019, 10, 5)
+		                        ]
+		                    ]
 					    });
 					
 					    picker.on('change:start', () => {
@@ -407,6 +449,8 @@
 							ele.innerHTML = range.dom().replaceAll(range.replaceId, `${id}`);
 							range.load(id);
 						});
+						
+						g.component.datepicker.tui.renderLocationChange('range');
 					}
 				}// range
 			}// tui
