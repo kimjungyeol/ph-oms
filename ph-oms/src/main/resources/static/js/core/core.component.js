@@ -434,10 +434,10 @@
 					
 					    picker.on('change:start', () => {
 					        //console.log('start date change.');
-					    })
+					    });
 					    picker.on('change:end', () => {
 					        //console.log('end date change.');
-					    })
+					    });
 					},
 					render: function() {
 						const range = this;
