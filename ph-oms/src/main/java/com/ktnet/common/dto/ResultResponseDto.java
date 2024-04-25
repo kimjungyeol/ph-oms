@@ -3,7 +3,6 @@ package com.ktnet.common.dto;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Getter;
 import lombok.ToString;
 
 /**
@@ -14,13 +13,36 @@ import lombok.ToString;
  * @since : 2024/04/03
  */
 @ToString
-@Getter
 public class ResultResponseDto {
     public boolean result;
     public Map<String, Object> data;
     public List<Map<String, Object>> dataList;
 
-    public ResultResponseDto(boolean result) {
+    public boolean isResult() {
+		return result;
+	}
+
+	public void setResult(boolean result) {
+		this.result = result;
+	}
+
+	public Map<String, Object> getData() {
+		return data;
+	}
+
+	public void setData(Map<String, Object> data) {
+		this.data = data;
+	}
+
+	public List<Map<String, Object>> getDataList() {
+		return dataList;
+	}
+
+	public void setDataList(List<Map<String, Object>> dataList) {
+		this.dataList = dataList;
+	}
+
+	public ResultResponseDto(boolean result) {
         this.result = result;
     }
 
