@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="sample/layouts/default-layout">
 <th:block layout:fragment="content">
     <div class="container">
-        <h2>Search</h2>
+        <h2>Board - list</h2>
         <div class="mt-3" data-trigger="button">
             <a href="javascript:void(0);" class="btn btn-primary" id="searchBtn">Search</a> 
             <a href="javascript:void(0);" class="btn btn-danger"  id="saveBtn">Save</a> 
@@ -12,11 +12,11 @@
         
         <div class="mt-3" data-trigger="form">
             <div class="form-floating mb-3">
-                <input class="form-control" id="username" name="username" type="text" required>
-                <label for="username">username</label>
+                <input class="form-control" id="username" name="username" type="text" style="width:500px;">
+                <label for="username">User name</label>
             </div>
             <div class="form-floating mb-3">
-                <input class="form-control" id="email" name="email" type="email" required>
+                <input class="form-control" id="email" name="email" type="email" style="width:500px;">
                 <label for="email">Email address</label>
             </div>
         </div>

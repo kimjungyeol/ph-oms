@@ -19,7 +19,7 @@ import org.springframework.test.annotation.Commit;
 import com.ktnet.fta.sample.service.SampleService;
 
 @SpringBootTest
-class SampleApplicationTests {
+class sampleApplicationTest {
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	

@@ -1,8 +1,10 @@
 package com.ktnet.fta.sample.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +17,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ktnet.common.exception.BizzException;
+import com.ktnet.core.jasper.JasperPDFViewer;
 import com.ktnet.core.map.ParamMap;
 import com.ktnet.fta.common.scheduler.TestDynamicScheduler;
+import com.ktnet.fta.common.web.BasicController;
 import com.ktnet.fta.sample.service.SampleService;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
-public class SampleController {
+public class SampleController extends BasicController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -32,6 +37,9 @@ public class SampleController {
 
     @Autowired
     public TestDynamicScheduler testDynamicScheduler;
+    
+    @Autowired
+    public JasperPDFViewer jasperPDFViewer;
 
     @GetMapping("/sample/search")
     public String searchSample(HttpServletRequest req, Model model, ParamMap pMap) throws Exception {
@@ -108,5 +116,44 @@ public class SampleController {
         testDynamicScheduler.startScheduler();
 
         return "sample/main";
+    }
+    
+    
+    /**
+     * Sample Jasper
+     *  - create pdf.
+     *
+     * @param req
+     * @param model
+     * @param map
+     * @return Map<String, Object>
+     * @throws Exception
+     */
+    @GetMapping("/sample/jasper/pdf")
+    public void sampleJasperPdf(HttpServletRequest req, HttpServletResponse res) throws Exception {
+        logger.info("Sample Jasper Pdf.");
+        
+        Map<String, Object> jMap = new HashMap<String, Object>();
+
+        List<Map<String,Object>> dList = new ArrayList<Map<String,Object>>();
+        Map<String, Object> dMap = null;
+        int idx = 1;
+
+        Random rng = new Random();
+        double r = rng.nextDouble();
+
+        for (int i=1; i<=100; i++ ) {
+            dMap = new HashMap<String, Object>();
+            dMap.put("rnum", idx++);
+            dMap.put("userId", "Id_" + Math.floor(r * 100));
+            dMap.put("name", "name_" + i);
+            dList.add(dMap);
+        }
+
+        jMap.put("detailList", dList);
+        jMap.put("currDate", "2022/08/24");
+        jMap.put("containerNo", "container"+ + Math.floor(r * 100));
+        
+        jasperPDFViewer.getJasperView(jMap, "SAMPLE", req, res);
     }
 }

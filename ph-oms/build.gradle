@@ -35,6 +35,10 @@ dependencies {
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     implementation 'commons-io:commons-io:2.6'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'net.sf.jasperreports:jasperreports:6.19.0'
+    implementation 'net.sf.jasperreports:jasperreports-functions:6.19.0'
+    implementation 'net.sf.jasperreports:jasperreports-fonts:6.0.0'
+    implementation 'com.lowagie:itext:2.1.7'
     
     //xss
     implementation 'org.apache.commons:commons-text:1.8' //StringEscapeUtils

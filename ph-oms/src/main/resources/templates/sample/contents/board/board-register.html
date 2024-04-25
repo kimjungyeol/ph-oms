@@ -8,6 +8,7 @@
 	            <div class="float-start">
 	                <button type="button" class="btn btn-success" id="prevBtn">List</button>
 	                <button type="button" class="btn btn-danger" id="saveBtn">Save</button>
+	                <button type="button" class="btn btn-info" id="jasperBtn">Jasper PDF Download</button>
 	            </div> 
         	</div>
         	<div class="col">
@@ -129,6 +130,10 @@
             	});
             }
             
+            fn.getPdf = function() {
+            	window.location.href = "/sample/jasper/pdf";
+            }
+            
         })(wg.c, wg.f, wg.t);
         
         // 3.event area.
@@ -143,6 +148,9 @@
                 //save.
                 $(trigger.button.saveBtn).click(function() {
                     fn.save();
+                });
+                $(trigger.button.jasperBtn).click(function() {
+                    fn.getPdf();
                 });
             }
         })(wg.c, wg.f, wg.t);
