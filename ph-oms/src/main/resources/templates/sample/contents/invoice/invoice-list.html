@@ -5,32 +5,38 @@
         <!-- 검색 영역 -->
         <div class="search-box be-light border mb-1">
             <form class="form-horizontal form-search m-1">
-                <div class="row">
+                <div class="row" data-trigger="form">
                     <div class="row col-md-4">
                         <label class="col-md-4 col-form-label"> 인보이스일자 </label>
                         <div class="col-md-8">
                             <div class="input-group">
-                                <input class="form-control" type="date" max="9999-12-31" placeholder="YYYY-MM-DD" name="beginDate" />
-                                <input class="form-control" type="date" max="9999-12-31" placeholder="YYYY-MM-DD" name="endDate" />
+                                <input class="form-control" type="date" max="9999-12-31" placeholder="YYYY-MM-DD" id="beginDate" name="beginDate"/>
+                                <input class="form-control" type="date" max="9999-12-31" placeholder="YYYY-MM-DD" id="endDate" name="endDate"/>
                             </div>
                         </div>
                     </div>
+                    <!-- <div class="row col-md-4">
+                        <label class="col-md-4 col-form-label"> 인보이스일자 </label>
+                        <div>
+                            <div data-component-datepicker="range" id="ragedateymd"></div>
+                        </div>    
+                    </div> -->
                     <div class="row col-md-4">
                         <label class="col-md-4 col-form-label"> 인보이스번호 </label>
                         <div class="col-md-8">
-                            <input type="search" name="invoiceNo" class="form-control" placeholder="인보이스번호" />
+                            <input type="text" class="form-control" placeholder="인보이스번호" id="invoiceNo" name="invoiceNo"/>
                         </div>
                     </div>
                     <div class="row col-md-4">
                         <label class="col-md-4 col-form-label"> 목적국 </label>
                         <div class="col-md-8">
-                            <input type="text" name="destNationCode" class="form-control" placeholder="2자리만 입력하세요. 예시) US" title="2자리만 입력하세요. 예시) US" />
+                            <input type="text" class="form-control" placeholder="2자리만 입력하세요. 예시) US" title="2자리만 입력하세요. 예시) US" id="destNationCode" name="destNationCode"/>
                         </div>
                     </div>
                     <div class="row col-md-4">
                         <label class="col-md-4 col-form-label"> 협정 </label>
                         <div class="col-md-8">
-                            <select class="form-select" name="ftaId">
+                            <select class="form-select" id ="ftaId" name="ftaId">
                                 <option value="">전체</option>
                             </select>
                         </div>
@@ -38,7 +44,7 @@
                     <div class="row col-md-4">
                         <label class="col-md-4 col-form-label"> 상태 </label>
                         <div class="col-md-8">
-                            <select class="form-select" name="status">
+                            <select class="form-select" id="status" name="status">
                                 <option value="">전체</option>
                             </select>
                         </div>
@@ -46,7 +52,7 @@
                     <div class="row col-md-4">
                         <label class="col-md-4 col-form-label"> 수하인 </label>
                         <div class="col-md-8">
-                            <input type="search" name="customerName" class="form-control" placeholder="수하인" />
+                            <input type="text" class="form-control" placeholder="수하인" id="customerName" name="customerName"/>
                         </div>
                     </div>
                 </div>
@@ -54,222 +60,158 @@
         </div>
         
         <!-- 버튼 영역 -->
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end" data-trigger="button">
             <div class="btn-group p-1 mr-1" role="group">
-                <button class="btn btn-outline-info">
+                <button class="btn btn-outline-info" id="judgmentBtn">
                     <i class="fa fa-th-large"></i>선택일괄판정
                 </button>
-                <button class="btn btn-outline-danger">
+                <button class="btn btn-outline-danger" id="deleteBtn">
                     <i class="fa fa-trash"></i>삭제
                 </button>
-                <button class="btn btn-outline-success">
+                <button class="btn btn-outline-success" id="issueBtn">
                     <i class="fa fa-edit"></i>원산지증명서 작성
                 </button>
             </div>
 
             <div class="btn-group p-1" role="group">
-                <button type="button" class="btn btn-outline-info">
+                <button type="button" class="btn btn-outline-info" id="downloadBtn">
                     <i class="fas fa-download"></i>다운로드
                 </button>
-                <button type="button" class="btn btn-outline-success">
+                <button type="button" class="btn btn-outline-success" id="searchBtn">
                     <i class="fas fa-search"></i>검색
                 </button>
-                <button type="button" class="btn btn-outline-secondary">
+                <button type="button" class="btn btn-outline-secondary" id="initBtn">
                     <i class="fas fa-sync"></i>초기화
                 </button>
             </div>
         </div>
         
-        <!-- <div class="d-flex justify-content-end">
-          <div class="btn-group p-1 mr-1" role="group">
-            <button
-              class="btn btn-outline-info"
-              ngbTooltip="선택일괄판정"
-              [disabled]="selection.length === 0"
-              (click)="judgment()"
-            >
-              <i class="fa fa-th-large"></i>선택일괄판정
-            </button>
-            <button
-              class="btn btn-outline-danger"
-              [disabled]="selection.length === 0"
-              ngbTooltip="{{ 'button.delete' | translate }}"
-              (click)="delete()"
-            >
-              <i class="fa fa-trash"></i>{{ 'button.delete' | translate }}
-            </button>
-
-            <div
-                class="dropdown d-inline-block"
-                *ngIf="issuTy === 'GOVERNMENT'"
-                ngbDropdown
-              >
-                <button
-                  type="button"
-                  class="btn btn-outline-success"
-                  [disabled]="selection.length === 0 || ableIssue === false || ableIssue2 === false"
-                  ngbTooltip="{{ '원산지증명서 작성' | translate }}"
-                  ngbDropdownToggle
-                >
-                  <i class="fa fa-edit"></i>{{ '원산지증명서 작성' | translate }}
-                </button>
-                <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                  <a
-                    class="dropdown-item"
-                    href="javascript: void(0);"
-                    *ngIf="issuTy === 'GOVERNMENT'"
-                    (click)="issue('KORCHAM')"
-                    >상공회의소</a
-                  >
-                  <a
-                    class="dropdown-item"
-                    href="javascript: void(0);"
-                    *ngIf="issuTy === 'GOVERNMENT'"
-                    (click)="issue('CUSTOMS')"
-                    >관세청</a
-                  >
-                </div>
-              </div>
-              <div
-                  class="dropdown d-inline-block"
-                  *ngIf="issuTy === 'COMPANY' && (ftaCode === 'PKRRC' || ftaCode === 'PKRKH' || ftaCode === 'PKRIL' || ftaCode === 'PKRID')"
-                  ngbDropdown
-                >
-                <button
-                  type="button"
-                  class="btn btn-outline-success"
-                  [disabled]="selection.length === 0 || ableIssue === false || ableIssue2 === false"
-                  ngbTooltip="{{ '원산지증명서 작성' | translate }}"
-                  ngbDropdownToggle
-                >
-                  <i class="fa fa-edit"></i>{{ '원산지증명서 작성' | translate }}
-                </button>
-                <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
-                  <a
-                    class="dropdown-item"
-                    href="javascript: void(0);"
-                    *ngIf="issuTy === 'COMPANY' && (ftaCode === 'PKRRC' || ftaCode === 'PKRKH' || ftaCode === 'PKRIL' || ftaCode === 'PKRID')"
-                    (click)="issue('KORCHAM')"
-                    >상공회의소</a
-                  >
-                  <a
-                    class="dropdown-item"
-                    href="javascript: void(0);"
-                    *ngIf="issuTy === 'COMPANY' && (ftaCode === 'PKRRC' || ftaCode === 'PKRKH' || ftaCode === 'PKRIL' || ftaCode === 'PKRID')"
-                    (click)="issue('CUSTOMS')"
-                    >관세청</a
-                  >
-                  <a
-                    class="dropdown-item"
-                    href="javascript: void(0);"
-                    *ngIf="selection.length === 1 && issuTy === 'COMPANY' && (ftaCode === 'PKRRC' || ftaCode === 'PKRKH' || ftaCode === 'PKRIL' || ftaCode === 'PKRID')"
-                    (click)="issue(null)"
-                    >자율발급</a
-                  >
-                </div>
-              </div>
-              <button
-                class="btn btn-outline-success"
-                ngbTooltip="{{ '원산지증명서 작성' | translate }}"
-                [disabled]="selection.length !== 1 || ableIssue === false || ableIssue2 === false || issuTy === 'GOVERNMENT'"
-                *ngIf="issuTy !== 'GOVERNMENT' && ftaCode !== 'PKRRC' && ftaCode !== 'PKRKH' && ftaCode !== 'PKRIL' && ftaCode !== 'PKRID'"
-                (click)="issue(null)"
-              >
-                <i class="fa fa-edit"></i>{{ '원산지증명서 작성' | translate }}
-              </button>
-
-          </div>
-
-          <div class="btn-group p-1" role="group">
-            <button
-              type="button"
-              class="btn btn-outline-info"
-              ngbTooltip="{{ 'button.download' | translate }}"
-              (click)="download()"
-            >
-              <i class="fas fa-download"></i>{{ 'button.download' | translate }}
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-success"
-              ngbTooltip="{{ 'button.search' | translate }}"
-              (click)="getDatasource()"
-            >
-              <i class="fas fa-search"></i>{{ 'button.search' | translate }}
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              ngbTooltip="{{ 'button.init' | translate }}"
-              (click)="reset()"
-            >
-              <i class="fas fa-sync"></i>{{ 'button.init' | translate }}
-            </button>
-          </div>
-        </div> -->
-        
         <!-- 그리드 영역 -->
         <div class="mt-2" id="invoiceGrid"></div>
-
-        <!-- <h2>Grid 1</h2>
-        <div class="mt-2" data-trigger="button">
-            <a href="javascript:void(0);" class="btn btn-primary" id="clearRow">Clear Row</a> 
-            <a href="javascript:void(0);" class="btn btn-primary" id="appendRow">Append Row</a> 
-            <a href="javascript:void(0);" class="btn btn-primary" id="deleteRow">Delete Row</a> 
-            <a href="javascript:void(0);" class="btn btn-primary" id="modifiedRow">Modified Row</a> 
-        </div>
-        <div class="mt-2" id="sampleGrid"></div>
         
-        <h2>Grid 2</h2>
-        <div class="mt-2" id="testGrid"></div> -->
     </div>
 
     <script th:inline="javascript">
         'use strict';
         // 1.page init area.
-        ;(function(co, grid) {
-            co.initParams = {
-                param1 : 'p1',
-                param2 : 'p2',
+        ;(function(co, fn, grid) {
+        	let today = new Date();
+        	let year = today.getFullYear();
+        	let month = ('0' + (today.getMonth() + 1)).slice(-2);
+        	let day = ('0' + today.getDate()).slice(-2);
+        	let beginDateStr = (year - 1) + '-' + month  + '-' + day;
+        	let endDateStr = year + '-' + month  + '-' + day;
+        	let dateString = year + '-' + month  + '-' + day;
+
+        	co.initParams = {
+                beginDate: beginDateStr,
+                endDate: endDateStr,
+                invoiceNo: 'aaaaaaa',
             }
+            
+            fn.form.setData(co.initParams);
             
             co.uriMap = {
-                search : '/sample/board/list/search',
-                save   : '/sample/board/list/save',
-            }
-            co.moveMap = {
-                write : '/sample/contents/board/board-register',
+                judgment: '/sample/invoice/list/judgment',
+                delete: '/sample/invoice/list/delete',
+                issue: '/sample/invoice/list/issue',
+                search: '/sample/invoice/list/search',
             }
             
-            //grid id 지정.
-            //grid 갯수만큼 지정 되어야 함.
+            co.moveMap = {
+                detail: '/sample/contents/invoice/invoice-detail',
+            }
+            
             grid.id = {
-                grid  : 'invoiceGrid',   //<div class="mt-2" id="sampleGrid"></div>
+                grid: 'invoiceGrid',
             }
             
             //grid js include.
             co.require(['./grid/grid-invoice.js']);
             
-        })(wg.c, wg.gr);
+        })(wg.c, wg.f, wg.gr);
         
         // 2.function area.
         ;(function(co, fn, trigger, grid) {
+        	let msg = fn.msg;
+        	
+        	fn.judgment = function() {
+        		console.log('judgmentBtn');
+        	}
+        	
+        	fn.issue = function() {
+                console.log('issueBtn');
+            }
+        	
+        	fn.init = function() {
+                console.log('initBtn');
+            }
+        	
             fn.search = function() {
-                let params = {
-                    username : $('#username').val(),
-                    email : $('#email').val(),
-                    param1 : 'new p1',
-                    param2 : 'new p2',
+            	let data = fn.form.getData();
+            	//let params = fn.form.getData();
+                
+            	let params = {
+            		beginDate: data['beginDate'],
+                    endDate: data['endDate'],
+                    invoiceNo: data['invoiceNo'],
+                    destNationCode: data['destNationCode'],
+                    ftaId: data['ftaId'],
+                    status: data['status'],
+                    customerName: data['customerName'],
                 }
                 
-                //grid 검색.
-                //grid id 정보, 파라메터를 세팅하여 호출.
-                //특별한 이유가 없으면 해당 함수 사용.
-                //grid.api.search(grid.id.grid, params);
-                //grid.api.search(grid.id.grid2, params);
+                grid.api.search(grid.id.grid, params);
             }
             
-            fn.save = function() {
+            fn.delete = function() {
+            	let invoiceGrid = grid.context[grid.id.grid];
+            	
+            	let checkedRows = invoiceGrid.getCheckedRows();
+            	
+            	if (checkedRows < 1) {
+            		msg.alert.info(
+                        'no data', 
+                        '선택된 데이터가 없습니다.', 
+                    );
+            		return;
+            	}
+            	
+                msg.confirm.swal(
+                    "인보이스 삭제", 
+                    "정말 삭제하시겠습니까?", 
+                    function(isOk) {
+                        if (isOk) {
+                        	let opt = {
+                                uri: co.uriMap.delete,
+                                params: { data : checkedRows }
+                            }
+                        	
+                        	fn.api.save(opt, function(res) {
+                        		console.log('delete res', res);
+                        		
+                        		msg.alert.success(
+                                    'success custom title', 
+                                    '삭제완료', 
+                                );
+                            });
+                        }
+                    }
+                );
+            }
+            
+            fn.download = function() {
+                grid.context[grid.id.grid].export('csv', {
+                    includeHeader: true,
+                    fileName: 'INVOICE LIST',
+                });
+                /* grid.context[grid.id.grid].export('csv', {
+                	includeHeader: true,
+                	fileName: 'INVOICE LIST',
+                }); */
+            }
+            
+            /* fn.save = function() {
                 let sampleGrid = grid.context[grid.id.grid];
                 
                 //modified rows.
@@ -282,8 +224,6 @@
                 let v = sampleGrid.validate();
                 console.log('v ==> ', v);
                 if (v.length > 0) {
-                    // TODO swal confirm 창 작업.
-                    // error message.
                     return;
                 }
                 
@@ -297,7 +237,7 @@
                 fn.api.save(opt, function() {
                     console.log('save callback fnc!!');
                 });
-            }
+            } */
         })(wg.c, wg.f, wg.t, wg.gr);
         
         // 3.event area.
@@ -305,26 +245,48 @@
             fn.event = function() {
                 //wg.t => data-trigger="button" 하위의 id를 가지고 있는 dom이 모두 등록 된다.
                 
-                //search.
+                //judgment
+                $(trigger.button.judgmentBtn).click(function() {
+                    fn.judgment();
+                });
+                
+                //delete
+                $(trigger.button.deleteBtn).click(function() {
+                    fn.delete();
+                });
+                
+                //issue
+                $(trigger.button.issueBtn).click(function() {
+                    fn.issue();
+                });
+                
+                //download
+                $(trigger.button.downloadBtn).click(function() {
+                    fn.download();
+                });
+                
+                //search
                 $(trigger.button.searchBtn).click(function() {
                     fn.search();
                 });
-                //save.
-                $(trigger.button.saveBtn).click(function() {
-                    fn.save();
+                
+                //save
+                $(trigger.button.initBtn).click(function() {
+                    fn.init();
                 });
+                
                 //move writepage.
-                $(trigger.button.writeBtn).click(function() {
+                /* $(trigger.button.writeBtn).click(function() {
                     
                     //이동하는 page의 storage 데이터를 삭제 후 이동.
                     //특별한 이유가 없으면 해당 함수 사용.
                     fn.move.page(co.moveMap.write, {});
                 });
-                
+                 */
                 
                 /* === grid event === */
                 //clear row
-                $(trigger.button.clearRow).click(function() {
+                /* $(trigger.button.clearRow).click(function() {
                     grid.context[grid.id.grid].clear();
                 });
                 //append row
@@ -340,7 +302,7 @@
                 $(trigger.button.modifiedRow).click(function() {
                     let rows = grid.context[grid.id.grid].getModifiedRows();
                     console.log(rows);
-                });
+                }); */
             }
             
         })(wg.c, wg.f, wg.t, wg.gr);
@@ -352,17 +314,12 @@
             const fn = wg.f;
             const grid = wg.gr;
             
-            // sampleGrid load.
+            console.log('co.initParams', co.initParams);
+            
             grid.render(grid.id.grid, co.initParams);
             
-            // testGrid load.
-            /* grid.render(grid.id.grid2, {
-                param1 : 'testparam1',
-                param2 : 'testparam2',
-            }); */
-            
             // event load.
-            //await fn.event();  
+            await fn.event();  
         });
     </script>
 </th:block>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="sample/layouts/default-layout">
+<th:block layout:fragment="content">
+    <div class="container">
+        <div class="h-100 d-flex flex-column">
+            <!-- header box -->
+            <div class="bg-white border-bottom d-flex justify-content-between">
+                <!-- <div>
+                    contents box
+                    <ul
+                      ngbNav
+                      #nav="ngbNav"
+                      [(activeId)]="ftaId"
+                      class="nav-tabs m-2"
+                      *ngIf="data.ftas != null"
+                    >
+                        <a
+                          class="btn fa"
+                          ngbTooltip="펼치기/닫기"
+                          data-bs-toggle="collapse"
+                          data-bs-target="#collapse-01"
+                          aria-expanded="true"
+                          aria-controls="collapse-01"
+                        >
+                            <span class="text-secondary ps-2">펼치기/닫기</span>
+                        </a>
+                        <li
+                          [ngbNavItem]="item.ftaId"
+                          *ngFor="let item of data.ftas"
+                          (click)="goDetail(item.id)"
+                        >
+                            <a ngbNavLink> {{ item.name }} </a>
+                        </li>
+                    </ul>
+                </div> -->
+              
+                <!-- /header right -->
+                <div class="d-flex justify-content-end m-2" data-trigger="button">
+                    <div class="btn-group p-1" role="group">
+                        <button class="btn btn-outline-success" id="issueBtn">
+                            <i class="fa fa-edit"></i>원산지증명서 작성
+                        </button>
+                    </div>
+                    <div class="btn-group p-1" role="group">
+                        <button class="btn btn-outline-danger" id="deleteBtn">
+                            <i class="fa fa-trash"></i>삭제
+                        </button>
+                        <button class="btn btn-outline-info" id="saveBtn">
+                            <i class="fa fa-save"></i>저장
+                        </button>
+                        <button class="btn btn-outline-info" id="judgmentBtn">
+                            <i class="fa fa-th-large"></i>판정
+                        </button>
+                        <button class="btn btn-outline-dark" id="closeBtn">
+                            <i class="fa fa-times-circle"></i>목록으로
+                        </button>
+                    </div>
+                <!-- /header right -->
+                </div>
+            </div>
+            <!-- header box -->
+    
+            <!-- contents box -->
+            <div class="flex-fill">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row collapse show" id="collapse-01">
+                            <div class="col-md-4 mb-3">
+                                <h2 class="h5 border-bottom pb-2 mb-2">기본 정보</h2>
+                                <div class="mb-3">
+                                    <label class="form-label">인보이스 번호</label>
+                                    <!-- <input type="text" class="form-control" id="declarationNo"/> -->
+                                    <input type="text" class="form-control" id="invoiceNo"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">인보이스 일자</label>
+                                    <input type="date" max="9999-12-31" placeholder="YYYY-MM-DD" class="form-control" id="invoiceDate"/>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <h2 class="h5 border-bottom pb-2 mb-2">배송 정보</h2>
+                                <div class="mb-3">
+                                    <label class="form-label">목적국</label>
+                                    <div>
+                                        <select class="form-control" id="destinationA" name="destinationA">
+                                            <option value="">--Select-</option>
+                                            <option value="Y">1</option>
+                                            <option value="N">2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">목적지</label>
+                                    <div>
+                                        <select class="form-control" id="destinationB" name="destinationB">
+                                            <option value="">--Select-</option>
+                                            <option value="Y">1</option>
+                                            <option value="N">2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <h2 class="h5 border-bottom pb-2 mb-2">수하인</h2>
+                                <div class="mb-3">
+                                    <label class="form-label">상호</label>
+                                    <div>
+                                        <select class="form-control" id="destinationC" name="destinationC">
+                                            <option value="">--Select-</option>
+                                            <option value="Y">1</option>
+                                            <option value="N">2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">해외 공급자 부호</label>
+                                    <input type="text" class="form-control" id="customerBusinessNo"/>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <!-- header -->
+                                    <div class="card-header d-flex justify-content-between bg-secondary text-white">
+                                        <div class="p-2">라인 정보</div>
+                                            <!-- header right -->
+                                            <div class="d-flex justify-content-end">
+                                                <div class="btn-group" role="group"></div>
+                                            </div>
+                                            <!-- /header right -->
+                                    </div>
+                                    <!-- /header -->
+                                    <div class="mt-2" id="invoiceLineGrid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /contents box -->
+        </div>
+    </div>
+    
+    <script th:inline="javascript">
+        'use strict';
+        // 1.page init area.
+        ;(function(co, fn, grid) {
+            //storeage에 저장되어있는 해당 페이지의 파라메터를 가져온다.
+            //이전 page에서 세팅후 사용.
+            co.initParams = fn.storage.getMoveParams();
+            
+            co.uriMap = {
+                search: '/sample/invoice/detail/search',
+                issue: '/sample/invoice/issue',
+                delete: '/sample/invoice/detail/delete',
+                save: '/sample/invoice/detail/save',
+                judgment: '/sample/invoice/judgment',
+            }
+            
+            co.moveMap = {
+                list: '/sample/contents/invoice/invoice-list',
+            }
+            
+            co.validation = {
+        		invoiceNo: ['required'],
+        		invoiceDate: ['required'],
+            }
+            
+            grid.id = {
+                grid: 'invoiceLineGrid',
+            }
+            
+            //grid js include.
+            co.require(['./grid/grid-invoice-line.js']);
+            
+        })(wg.c, wg.f, wg.gr);
+        
+        // 2.function area.
+        ;(function(co, fn, trigger, grid) {
+        	
+        	fn.search = function() {
+                let opt = {
+                    uri: co.uriMap.search,
+                    params: co.initParams
+                }
+                
+                fn.api.search(opt, function(res) {
+                    if (res.result) {
+                        let info = res.data.invoiceInfoMap;
+                        let lineList = res.data.invoiceLineList;
+                        
+                        fn.form.setData(info);
+                        
+                        let lineGrid = grid.context[grid.id.grid];
+                        
+                        lineGrid.appendRows(lineList);
+                    }
+                });
+            }
+        	
+            fn.issue = function() {
+            	console.log('issue');   
+            }
+            
+            fn.delete = function() {
+                console.log('delete');            	
+            }
+            
+            fn.save = function() {
+            	console.log('save');
+            }
+            
+            fn.judgment = function() {
+                console.log('judgment');            	
+            }
+            
+            /* fn.save = function() {
+                fn.msg.confirm.save(function(isOk) {
+                    if (!isOk) { return; }
+                    
+                    // data-trigger="form" 속성 하위 dom.
+                    //   - id가 지정 되어 있는 모든 dom의 key value를 가져온다.
+                    let data = fn.form.getData();
+                    
+                    console.log('save data ==== ', data);
+                    
+                    let opt = {
+                        uri : co.uriMap.save,
+                        params : data
+                    }
+                    fn.api.save(opt, function(res) {
+                        console.log('save callback fnc!!', res);
+                    });
+                });
+            } */
+            
+        })(wg.c, wg.f, wg.t, wg.gr);
+        
+        // 3.event area.
+        ;(function(co, fn, trigger) {
+            fn.event = function() {
+                //move page.
+                /* $(trigger.button.prevBtn).click(function() {
+                    
+                    //이동하는 page의 storage 데이터를 삭제 후 이동.
+                    fn.move.page(co.moveMap.boardList);
+                });
+                //save.
+                $(trigger.button.saveBtn).click(function() {
+                    fn.save();
+                }); */
+                
+                $(trigger.button.issueBtn).click(function() {
+                    fn.issue();
+                });
+                
+                $(trigger.button.deleteBtn).click(function() {
+                    fn.delete();
+                });
+                
+                $(trigger.button.saveBtn).click(function() {
+                    fn.save();
+                });
+                
+                $(trigger.button.judgmentBtn).click(function() {
+                    fn.judgment();
+                });
+                
+                //move page.
+                $(trigger.button.closeBtn).click(function() {
+                    console.log('11111');
+                    //이동하는 page의 storage 데이터를 삭제 후 이동.
+                    //특별한 이유가 없으면 해당 함수 사용.
+                    fn.move.page(co.moveMap.list, {});
+                });
+            }
+        })(wg.c, wg.f, wg.t);
+    </script>
+    <script th:inline="javascript">
+        'use strict';
+        $(document).ready(async() => {
+        	const co = wg.c;
+            const fn = wg.f;
+            const grid = wg.gr;
+            
+            // sampleGrid load.
+            grid.render(grid.id.grid, co.initParams);
+            
+            // event load.
+            await fn.event();
+            await fn.search();
+        });
+    </script>
+</th:block>
+</html>

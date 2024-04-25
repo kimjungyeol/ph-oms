@@ -8,8 +8,6 @@
  */
 ;(function(g, trigger, fn, grid, co) {
     
-    //해당 소스를 include한 html에 지정되어있는 Grid ID 정보.
-    //필수!!
     let gridId = grid.id.grid;  // grid id.
 
     let options = {
@@ -24,14 +22,6 @@
      */
     let headerColumns = {
         height: 80,
-        align: 'left',
-        /*columns: [
-            {
-                name: 'item',
-                align: 'right',
-            }
-                
-        ],*/
         complexColumns: [
             {
                 header: '인보이스',
@@ -41,7 +31,6 @@
             {
                 header: '품목',
                 name: 'item',
-                align: 'right',  
                 childNames: ['eee', 'fff'],
             },
         ]
@@ -51,9 +40,17 @@
         {
             header: '번호',
             name: 'invoiceNo',
+            align: 'center',
             //width: 250,
             sortable: true,                // [선택] 컬럼의 정렬 여부
             resizable: true,               // [선택] 컬럼의 리사이즈 여부 옵션
+            formatter: function(e){
+                let val = '';
+                if (e.value != null) {
+                    val = `<span style="cursor:pointer;"><u>${e.value}</u></span>`; 
+                }
+                return val;
+            }, 
         },
         {
             header: '일자',
@@ -62,6 +59,9 @@
             align: 'center',
             sortable: true,
             resizable: true,                // [선택] 컬럼의 리사이즈 여부 옵션
+            formatter: function(e) {
+                return e.value;
+            },
             //editor: 'text',                 // [선택] 수정 옵션
             // [선택] 필터 옵션
             /*filter: {
@@ -80,12 +80,14 @@
         {
             header: 'FTA',
             name: 'ftaName',
+            align: 'center',
             sortable: true,
             resizable: true,
         },
         {
             header: '상태',
             name: 'status',
+            align: 'center',
             sortable: true,
             resizable: true,
         },
@@ -151,21 +153,30 @@
         },
         //grid cell click시 호출.
         click : function(ev) {
-            if (ev.columnName != 'title') { return; }
+            if (ev.columnName == 'invoiceNo') {
+                let rowData = grid.context[gridId].getRow(ev.rowKey);
+                
+                if (rowData.invoiceNo != '' && rowData.invoiceNo != null) {
+                    fn.move.detail(co.moveMap.detail, rowData);    
+                }
+            }
+            
+            
+            //if (ev.columnName != 'title') { return; }
             
             //console.log(gridId + ' click ==', ev);
-            let rowData = grid.context[gridId].getRow(ev.rowKey);
+            //let rowData = grid.context[gridId].getRow(ev.rowKey);
             //console.log('rowData', rowData);
             
             //row checked 여부.
             //let checked = rowData._attributes.checked;
             //console.log('checked', checked);
             
-            if (rowData.title == '' || rowData.title == null) { return; }
+            //if (rowData.title == '' || rowData.title == null) { return; }
             
             //이동하는 page의 storage 데이터를 세팅 후 이동.
             //상세 page로 파라메터 전달 시 사용.
-            fn.move.detail(co.moveMap.write, rowData);
+            //fn.move.detail(co.moveMap.write, rowData);
         },
         //grid cell값 변경시 호출.
         afterChange : function(ev) {
