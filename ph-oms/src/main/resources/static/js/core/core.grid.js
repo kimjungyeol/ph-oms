@@ -195,7 +195,11 @@
          */
         responseProc : function(ev, callbackFnc = null) {
             const {response} = ev.xhr;
-            const responseObj = JSON.parse(response);
+            let responseObj = null;
+            
+            try {
+				responseObj = JSON.parse(response);
+			} catch(e) {}
             
             /*
             if (responseObj.result) {
@@ -218,7 +222,7 @@
 		   
             //console.log('result : ', responseObj.result, " data: ", responseObj.data);
             
-            if (callbackFnc != null && typeof callbackFnc == 'function') {
+            if (responseObj != null && callbackFnc != null && typeof callbackFnc == 'function') {
                 callbackFnc(responseObj);
             }
         },
