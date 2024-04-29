@@ -50,7 +50,7 @@
                  { type : 'rowNum', header : 'No.' },
             ],
         },
-        codeList: [],
+        
         /**
 		 * render
          *   - grid init.
@@ -266,6 +266,7 @@
         /**
 		 * grid selectbox data.
 		 */
+		codeList: [],
         code : {
 			listItems: {},
 			uri: {
