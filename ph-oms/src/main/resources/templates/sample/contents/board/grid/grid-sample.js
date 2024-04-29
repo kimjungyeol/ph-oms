@@ -124,7 +124,7 @@
 	            filter: 'select',               // [선택] 필터 옵션
 	            formatter: 'listItemText',      // [선택] select box 옵션
 	            editor: {
-	                type: 'radio',
+	                type: 'select',				//radio, select
 	                options: {
 	                    listItems: opt.codes.useYn
 	                    //listItems: opt.codes.useYn2
