@@ -50,18 +50,44 @@
                  { type : 'rowNum', header : 'No.' },
             ],
         },
+        codeList: [],
         /**
 		 * render
          *   - grid init.
          */
-        render : function(gridId, params = {}, apiOpt = null) {
+        render : async function(gridId, params = {}, apiOpt = null) {
             const self = this;
             
-            let global_option = JSON.parse(JSON.stringify(this.option));             // default global option.
-            let loadGrid_wrapper = Object.assign({}, self.wrapper[gridId], apiOpt);  // current load grid option.
-            let render_option = Object.assign({}, global_option, loadGrid_wrapper.option, self.dataSource(params, loadGrid_wrapper));
+            const prKey = [];
+            const prArr = [];
             
-            self.gridLoadProc(gridId, render_option);
+            //selectbox obj.
+			Object.keys(self.codeList).forEach(function(key) {
+				prArr.push(self.codeList[key]);
+				prKey.push(key);
+			});
+			
+			Promise.all(prArr).then((res) => {
+                res.map((m, idx) => {
+					if (m.result) {
+						self.code.listItems[prKey[idx]] = m.dataList;
+					} else {
+						self.code.listItems[prKey[idx]] = [];
+					}
+                });
+            })
+            .then(() => {
+                
+                g.grid.wrapper[gridId] = g.grid.gridInitOptions({
+					codes: self.code.listItems
+				});
+                
+                let global_option = JSON.parse(JSON.stringify(self.option));             // default global option.
+	            let loadGrid_wrapper = Object.assign({}, self.wrapper[gridId], apiOpt);  // current load grid option.
+	            let render_option = Object.assign({}, global_option, loadGrid_wrapper.option, self.dataSource(params, loadGrid_wrapper));
+	            
+            	self.gridLoadProc(gridId, render_option);
+            });
         },
         /**
 		 * render
@@ -226,6 +252,7 @@
                 callbackFnc(responseObj);
             }
         },
+        
         /**
          * transaction external call function.
          */
@@ -234,7 +261,42 @@
                 //readData(pageNo-Number, parameter-Object)
                 g.grid.context[gridId].readData(1, gridParams);
             },
-        }
+        },
+        
+        /**
+		 * grid selectbox data.
+		 */
+        code : {
+			listItems: {},
+			uri: {
+				commonCode: '/common/code/grid/search'
+			},
+			search: async function(u, params) {
+				const code = this;
+				
+				return new Promise((resolve) => {
+					$.ajax({
+	                    url: code.uri[u],
+	                    method: "post",
+	                    dataType: "json",
+	                    contentType: 'application/x-www-form-urlencoded',
+	                    data: JSON.stringify(params),
+	                })
+	                .done(function (response, textStatus, xhr) {
+	                    if (response.status == 500) {
+							return;
+						}
+						
+			            resolve(response);
+	                })
+	                .fail(function(data, textStatus, errorThrown) {
+						resolve({
+							result: false
+						});
+	                });
+				});
+			}
+		}
     }
     
     wg.gr = g.grid;

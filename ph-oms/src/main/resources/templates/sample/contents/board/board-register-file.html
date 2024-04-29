@@ -140,11 +140,11 @@
     </script>
     <script th:inline="javascript">
         'use strict';
-        $(document).ready(async() => {
+        $(document).ready(() => {
             const fn = wg.f;
             
-            await fn.event();
-            await fn.search();
+            fn.event();
+            fn.search();
         });
     </script>
 </th:block>
