@@ -68,6 +68,8 @@ public class SampleInvoiceController extends BasicController {
 
         logger.debug("rtMap => {}", rtMap);
 
+        model.addAttribute("ftas", "abcccccc");
+
         return new ResponseEntity<>(ResultResponse(rtMap), HttpStatus.OK);
     }
 }
