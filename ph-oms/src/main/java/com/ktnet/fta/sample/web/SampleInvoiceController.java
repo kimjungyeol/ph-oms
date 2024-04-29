@@ -63,8 +63,6 @@ public class SampleInvoiceController extends BasicController {
         logger.debug("pMap => {}", pMap.getMap().toString());
 
         Map<String, Object> rtMap = sampleInvoiceService.searchInvoiceDetail(pMap);
-        // List<Map<String, Object>> rtList =
-        // sampleInvoiceService.searchInvoiceList(pMap);
 
         logger.debug("rtMap => {}", rtMap);
 
