@@ -127,7 +127,7 @@
 	                type: 'select',				//radio, select
 	                options: {
 	                    listItems: opt.codeList.useYn
-	                    //listItems: opt.codes.useYn2
+	                    //listItems: opt.codeList.useYn2
 	                },
 	            },
 	        },
