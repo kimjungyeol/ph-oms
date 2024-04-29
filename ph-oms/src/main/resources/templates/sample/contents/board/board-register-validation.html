@@ -70,19 +70,19 @@
             	<div class="col">
                 	<label class="form-label fw-bold">date - ymd.</label>
             		<div>
-                		<div data-component-datepicker="basic" id="dateymd"></div>
+                		<div data-component-datepicker="basic" id="dateymd" style="width: 120px;"></div>
                 		<!-- input : id 가 'dateymd' 로 생성 됨. -->
                 	</div>
 		        </div>
             	<div class="col">
             		<label class="form-label fw-bold">rage date - ymd.</label>
             		<div>
-	            		<div data-component-datepicker="range" id="ragedateymd"></div>
+	            		<div data-component-datepicker="range" id="ragedateymd" style="width: 120px;"></div>
 	            		<!-- input ~ input :  id가 'start_ragedateymd', 'end_ragedateymd' 로 생성 됨.-->
             		</div>
             	</div>
 	        </div>
-	        <div class="row col-md-4">
+	        <!-- <div class="row col-md-4">
                 <label class="col-md-4 col-form-label">달력</label>
                 <div class="col-md-8">
                     <div class="input-group">
@@ -91,7 +91,7 @@
                         <input class="form-control" type="datetime-local" id="datetime" style="width:200px;"/>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     
@@ -120,7 +120,7 @@
            		price: ['number'],
            		telno: ['telno'],
            		mobile: ['mobile'],
-           		useYn1: ['required'],
+           		useYn: ['required'],
            		use_select: ['required'],
            		dateymd: ['required', 'dateEn'], 
            		start_ragedateymd: ['dateEn'],

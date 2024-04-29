@@ -329,15 +329,31 @@
 						range: '[class="tui-datepicker tui-hidden tui-rangepicker"]'
 					}
 					
-					if (window.innerHeight < (relativeTop + topVariableH)) {
-						let ele = document.querySelectorAll(targetClass[type]);
-						//let marginTop = window.screen.availHeight - relativeTop.toFixed() + 34;
-						let marginTop = 305;
+					let ele = document.querySelectorAll(targetClass[type]);
+					
+					ele.forEach(function(el) {
+						el.style['zIndex'] = '9999';
 						
-						ele.forEach(function(el) {
+						if (window.innerHeight < (relativeTop + topVariableH)) {
+							//let marginTop = window.screen.availHeight - relativeTop.toFixed() + 34;
+							let marginTop = 305;
 							el.parentNode.style['marginTop'] = '-' + marginTop + 'px';
-						});
-					}
+						}
+					});
+				},
+				renderHtml: function(target) {
+					const tui = this;
+					tui.context[target].forEach(function(ele) {
+						let id = ele.id;
+						let width = ele.style.width;
+						
+						let h = tui[target].dom();
+						ele.innerHTML = h.replaceAll(tui[target].replaceId, `${id}`).replaceAll(tui[target].replaceWidth, width);
+						ele.id = '';
+						ele.style.removeProperty('width');
+						
+						tui[target].load(id);
+					});
 				},
 				//all tui datepicker render.
 				render: function() {
@@ -355,8 +371,9 @@
 				//basic tui datepicker
 				basic: {
 					replaceId: '$pickerid',
+					replaceWidth: '$width',
 					dom: function() {
-						return `<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+						return `<div class="tui-datepicker-input tui-datetime-input tui-has-focus" style="width:${this.replaceWidth}">
 					              <input type="text" id="${this.replaceId}">
 					              <span class="tui-ico-date"></span>
 					            </div>
@@ -374,16 +391,7 @@
 			            });
 					},
 		            render: function() {
-						const basic = this;
-						const tui = g.component.datepicker.tui;
-						tui.context.basic.forEach(function(ele) {
-							let id = ele.getAttribute('id');
-							ele.setAttribute('id', '');
-							
-							ele.innerHTML = basic.dom().replaceAll(basic.replaceId, `${id}`);
-							basic.load(id);
-						});
-						
+						g.component.datepicker.tui.renderHtml('basic');
 						g.component.datepicker.tui.renderLocationChange('basic');
 					}
 				}, // basic
@@ -392,13 +400,13 @@
 				range: {
 					replaceId: '$pickerid',
 					dom: function() {
-						return `<div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+						return `<div class="tui-datepicker-input tui-datetime-input tui-has-focus" style="width:${this.replaceWidth}">
 						            <input type="text" id="start_${this.replaceId}">
 						            <span class="tui-ico-date"></span>
 						            <div id="start_${this.replaceId}_container" style="margin-left: -1px;"></div>
 						        </div>
 						        <span>~</span>
-						        <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+						        <div class="tui-datepicker-input tui-datetime-input tui-has-focus" style="width:${this.replaceWidth}">
 						            <input id="end_${this.replaceId}" type="text">
 						            <span class="tui-ico-date"></span>
 						            <div id="end_${this.replaceId}_container" style="margin-left: -1px;"></div>
@@ -440,16 +448,7 @@
 					    });
 					},
 					render: function() {
-						const range = this;
-						const tui = g.component.datepicker.tui;
-						tui.context.range.forEach(function(ele) {
-							let id = ele.getAttribute('id');
-							ele.setAttribute('id', '');
-							
-							ele.innerHTML = range.dom().replaceAll(range.replaceId, `${id}`);
-							range.load(id);
-						});
-						
+						g.component.datepicker.tui.renderHtml('range');
 						g.component.datepicker.tui.renderLocationChange('range');
 					}
 				}// range
