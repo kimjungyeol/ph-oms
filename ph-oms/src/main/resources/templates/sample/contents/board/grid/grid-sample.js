@@ -10,8 +10,8 @@
 	
 	//grid에 사용될 selectbox list data.
 	grid.codeList = {
-		useYn  : grid.code.search('commonCode', {grpCd: 'CM000'}),
-		useYn2 : grid.code.search('commonCode', {grpCd: 'CM001'}),
+		useYn  : ['commonCode', {grpCd: 'CM000'}],
+		useYn2 : ['commonCode', {grpCd: 'CM001'}],
 	}
     
     grid.gridInitOptions = function(opt) {

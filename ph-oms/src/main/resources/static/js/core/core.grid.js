@@ -63,7 +63,7 @@
             
             //selectbox obj.
 			Object.keys(self.codeList).forEach(function(key) {
-				prArr.push(self.codeList[key]);
+				prArr.push(self.code.search(self.codeList[key][0], self.codeList[key][1]));
 				prKey.push(key);
 			});
 			
