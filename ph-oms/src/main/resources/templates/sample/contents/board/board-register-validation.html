@@ -168,11 +168,11 @@
     </script>
     <script th:inline="javascript">
         'use strict';
-        $(document).ready(async() => {
+        $(document).ready(() => {
             const fn = wg.f;
             
             // event load.
-            await fn.event();
+            fn.event();
         });
     </script>
 </th:block>

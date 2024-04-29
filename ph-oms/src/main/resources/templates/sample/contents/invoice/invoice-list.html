@@ -309,7 +309,7 @@
     </script>
     <script th:inline="javascript">
         'use strict';
-        $(document).ready(async() => {
+        $(document).ready(() => {
             const co = wg.c;
             const fn = wg.f;
             const grid = wg.gr;
@@ -319,7 +319,7 @@
             grid.render(grid.id.grid, co.initParams);
             
             // event load.
-            await fn.event();  
+            fn.event();  
         });
     </script>
 </th:block>
