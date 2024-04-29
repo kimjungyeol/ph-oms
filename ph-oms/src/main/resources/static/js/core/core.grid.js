@@ -79,7 +79,7 @@
             .then(() => {
                 
                 g.grid.wrapper[gridId] = g.grid.gridInitOptions({
-					codes: self.code.listItems
+					codeList: self.code.listItems
 				});
                 
                 let global_option = JSON.parse(JSON.stringify(self.option));             // default global option.

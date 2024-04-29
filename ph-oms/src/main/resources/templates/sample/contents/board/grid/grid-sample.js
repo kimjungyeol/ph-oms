@@ -126,7 +126,7 @@
 	            editor: {
 	                type: 'select',				//radio, select
 	                options: {
-	                    listItems: opt.codes.useYn
+	                    listItems: opt.codeList.useYn
 	                    //listItems: opt.codes.useYn2
 	                },
 	            },
