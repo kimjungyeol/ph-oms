@@ -50,24 +50,40 @@ public class SpringSecurityConfig {
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
     	http.cors(corsConfigurer -> corsConfigurer
-    			.configurationSource(corsConfigurationSource()))
-    		.csrf((csrfConfig) -> csrfConfig
-				.disable())
+    			.configurationSource(corsConfigurationSource())
+    			)
+    		.csrf((csrfConfig) -> csrfConfig.disable()
+				)
         	.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(new MvcRequestMatcher(introspector, "/**")).permitAll()
+                //.requestMatchers(new MvcRequestMatcher(introspector, "/**")).permitAll()
+//                .requestMatchers(new MvcRequestMatcher(introspector, "/sample/**")).hasAnyRole("USER")
+    			.requestMatchers("/").permitAll()  //비로그인시 접근 가능 path, 그 외에는 /login 이동.
+    			
+    			//로그인 이후 설정된 권한 path 외에는 모두 접근 가능
+    			.requestMatchers("/admin", "/user").hasRole("ADMIN")
+    			.requestMatchers("/user").hasRole("USER")
+    			.requestMatchers("/system").hasRole("SYSTEM")
         		.anyRequest()
-                .authenticated())
+                .authenticated()
+                )
 	        .formLogin(login -> login
                 .loginPage("/login").permitAll()
                 .loginProcessingUrl("/login-process").permitAll()
                 .successHandler(loginSuccessHandler)
                 .failureHandler(loginFailureHandler)
                 .usernameParameter("username")
-                .passwordParameter("password"))
+                .passwordParameter("password")
+                )
 	        .logout((logout) -> logout
-        		.logoutSuccessHandler(logoutSuccessHandler))
+        		.logoutSuccessHandler(logoutSuccessHandler)
+        		.deleteCookies("JSESSIONID") // 로그아웃 시 JSESSIONID 제거
+        		.invalidateHttpSession(true) // 로그아웃 시 세션 종료
+				.clearAuthentication(true) // 로그아웃 시 권한 제거
+        		)
 			.exceptionHandling((exceptionConfig) -> exceptionConfig
-				.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler)); // 401 403 관련 예외처리
+				.accessDeniedPage("/accessDenied")
+//				.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler)); // 401 403 관련 예외처리
+				);
         
         return http.build();
     }

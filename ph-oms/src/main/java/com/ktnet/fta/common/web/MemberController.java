@@ -30,13 +30,31 @@ public class MemberController {
     public String login(HttpServletRequest req) throws Exception {
     	logger.info(">> login page move <<");
     	
-        return "member/login";
+        return "securitytest/login";
     }
     
-    @GetMapping("/join")
-    public String join(HttpServletRequest req, Model model) throws Exception {
-    	logger.info(">>> join <<<");
-    	return "member/join";
+    @GetMapping("/user")
+	public String user(HttpServletRequest request) {
+		return "securitytest/user";
+	}
+    
+    @GetMapping("/admin")
+    public String admin(HttpServletRequest request) {
+    	return "securitytest/admin";
     }
     
+    @GetMapping("/system")
+    public String system(HttpServletRequest request) {
+    	return "securitytest/system";
+    }
+    
+    @GetMapping("/hello")
+    public String hello(HttpServletRequest request) {
+    	return "securitytest/hello";
+    }
+ 
+	@GetMapping("/accessDenied")
+	public String accessDenied() {
+		return "securitytest/accessDenied";
+	}
 }

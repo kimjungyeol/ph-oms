@@ -1,18 +1,14 @@
 package com.ktnet.core.config.security;
 
-import java.nio.file.attribute.UserPrincipalNotFoundException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -67,6 +63,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         //	throw new BadCredentialsException(securityUserDetails.getUsername() + "Invalid password");
         //}
         
+        //session 등록.
         sessionUser.setUserId(loginId);
         sessionUser.setUserNm(loginId+"Name");
         

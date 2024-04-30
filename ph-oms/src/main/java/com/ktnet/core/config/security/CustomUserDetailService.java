@@ -1,7 +1,10 @@
 package com.ktnet.core.config.security;
 
+import java.util.Collection;
 import java.util.Map;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,8 +28,9 @@ public class CustomUserDetailService implements UserDetailsService {
     	Map<String, Object> userInfo = null;
     	UserDetails user = null; 
     			
-    	String user_name = "empty";
+    	String user_name = username;
     	String user_password = "empty";
+    	String[] user_roles = new String[]{"ADMIN"};
     	
     	try {
 			userInfo = memberService.searchUserByEmail(username);
@@ -41,9 +45,9 @@ public class CustomUserDetailService implements UserDetailsService {
 		} catch (NullPointerException e) {
 		} catch (Exception e) {}
     	
-    	user = User.builder().username(user_name).password(user_password).build();
+    	
+    	user = User.builder().username(user_name).password(user_password).roles("ADMIN", "SYSTEM").build();
     	
         return user;
-        
     }
 }
