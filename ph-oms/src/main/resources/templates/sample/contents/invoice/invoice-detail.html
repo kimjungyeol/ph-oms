@@ -38,11 +38,11 @@
                     <a class="btn fa" data-bs-toggle="collapse" data-bs-target="#collapse-01" aria-expanded="true" aria-controls="collapse-01">
                         <span class="text-secondary ps-2">펼치기/닫기</span>
                     </a>
-                    <ul class="nav">
+                    <ul class="nav" id="ftaTab">
                         <li class="nav-item"><a class="nav-link" href="#">ftaId-1</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">ftaId-2</a></li>
                         <li class="nav-item"><a class="nav-link" href="#">ftaId-3</a></li>
-                    </ul>                      
+                    </ul>           
                 </div>
               
                 <!-- /header right -->
@@ -201,14 +201,26 @@
                     if (res.result) {
                     	console.log('res :::::', res);
                     	
+                    	// FORM DATA SET
                         let info = res.data.invoiceInfoMap;
-                        let lineList = res.data.invoiceLineList;
-                        
+                    	
                         fn.form.setData(info);
                         
+                        // GRID DATA SET
                         let lineGrid = grid.context[grid.id.grid];
+                        let lineList = res.data.invoiceLineList;
                         
                         lineGrid.appendRows(lineList);
+                        
+                        // FTA 리스트 SET
+                        let ftas = res.data.invoiceFtas;
+                        let liEle = '';
+                        
+                        ftas.forEach((a, i) => {
+                        	liEle += `<li class="nav-item"><a class="nav-link" href="#">${a}</a></li>`;
+                        });
+                        
+                        document.getElementById('ftaTab').innerHTML = liEle;
                     }
                 });
             }

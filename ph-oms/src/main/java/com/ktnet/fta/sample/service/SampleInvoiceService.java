@@ -57,6 +57,7 @@ public class SampleInvoiceService {
 
         Map<String, Object> invoiceInfoMap = new HashMap<String, Object>();
         List<Map<String, Object>> invoiceLineList = new ArrayList<Map<String, Object>>();
+        List<String> invoiceFtas = new ArrayList<String>();
 
         invoiceInfoMap.put("invoiceNo", "aaaaa");
         invoiceInfoMap.put("invoiceDate", "2024-12-31");
@@ -73,8 +74,13 @@ public class SampleInvoiceService {
             i++;
         }
 
+        invoiceFtas.add("RCEP");
+        invoiceFtas.add("한-아세안");
+        invoiceFtas.add("한-베트남");
+
         rtMap.put("invoiceInfoMap", invoiceInfoMap);
         rtMap.put("invoiceLineList", invoiceLineList);
+        rtMap.put("invoiceFtas", invoiceFtas);
 
         return rtMap;
     }
