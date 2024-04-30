@@ -18,7 +18,7 @@
                     <div class="row col-md-4">
                         <label class="col-md-4 col-form-label"> 인보이스일자 </label>
                         <div class="col-md-8">
-                            <div data-component-datepicker="range" id="ragedateymd" style="width: 100px;"></div>
+                            <div data-component-datepicker="range" id="invoiceDate" style="width: 100px;"></div>
                         </div>    
                     </div>
                     <div class="row col-md-4">
@@ -30,7 +30,7 @@
                     <div class="row col-md-4">
                         <label class="col-md-4 col-form-label"> 목적국 </label>
                         <div class="col-md-8">
-                            <input type="text" class="form-control" placeholder="2자리만 입력하세요. 예시) US" title="2자리만 입력하세요. 예시) US" id="destNationCode" name="destNationCode"/>
+                            <input type="text" class="form-control" placeholder="2자리만 입력하세요." title="2자리만 입력하세요" maxlength="2" id="destNationCode" name="destNationCode"/>
                         </div>
                     </div>
                     <div class="row col-md-4">
@@ -68,9 +68,19 @@
                 <button class="btn btn-outline-danger" id="deleteBtn">
                     <i class="fa fa-trash"></i>삭제
                 </button>
-                <button class="btn btn-outline-success" id="issueBtn">
-                    <i class="fa fa-edit"></i>원산지증명서 작성
-                </button>
+                <!-- <button class="btn btn-outline-success" id="issueBtn">
+                        <i class="fa fa-edit"></i>원산지증명서 작성
+                </button> -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-success" id="issueBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-edit"></i>원산지증명서 작성
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#">상공회의소</a>
+                        <a class="dropdown-item" href="#">관세청</a>
+                        <a class="dropdown-item" href="#">자율발급</a>
+                    </div>
+                </div>
             </div>
 
             <div class="btn-group p-1" role="group">
@@ -96,20 +106,18 @@
         // 1.page init area.
         ;(function(co, fn, grid) {
         	let today = new Date();
-        	let year = today.getFullYear();
-        	let month = ('0' + (today.getMonth() + 1)).slice(-2);
-        	let day = ('0' + today.getDate()).slice(-2);
-        	let beginDateStr = (year - 1) + '-' + month  + '-' + day;
-        	let endDateStr = year + '-' + month  + '-' + day;
-        	let dateString = year + '-' + month  + '-' + day;
-
+            let year = today.getFullYear();
+            let month = ('0' + (today.getMonth() + 1)).slice(-2);
+            let day = ('0' + today.getDate()).slice(-2);
+            let beginDateStr = month + '-' + day + '-' + (year - 1);
+            let endDateStr = month + '-' + day + '-' + year;
+        	
         	co.initParams = {
-                beginDate: beginDateStr,
-                endDate: endDateStr,
-                invoiceNo: 'aaaaaaa',
-            }
-            
-            fn.form.setData(co.initParams);
+    			start_invoiceDate: beginDateStr,
+    			end_invoiceDate: endDateStr,
+        	};
+        	
+            //fn.form.setData(co.initParams);
             
             co.uriMap = {
                 judgment: '/sample/invoice/list/judgment',
@@ -136,7 +144,12 @@
         	let msg = fn.msg;
         	
         	fn.judgment = function() {
+        		let invoiceGrid = grid.context[grid.id.grid];
+                let checkedRows = invoiceGrid.getCheckedRows();
+                
+                /* invoiceGrid.disableRowCheck(1);
         		console.log('judgmentBtn');
+        		console.log('checkedRows', checkedRows); */
         	}
         	
         	fn.issue = function() {
@@ -149,8 +162,8 @@
         	
             fn.search = function() {
             	let data = fn.form.getData();
+            	
             	//let params = fn.form.getData();
-                
             	let params = {
             		beginDate: data['beginDate'],
                     endDate: data['endDate'],
@@ -166,7 +179,6 @@
             
             fn.delete = function() {
             	let invoiceGrid = grid.context[grid.id.grid];
-            	
             	let checkedRows = invoiceGrid.getCheckedRows();
             	
             	if (checkedRows < 1) {
@@ -205,10 +217,6 @@
                     includeHeader: true,
                     fileName: 'INVOICE LIST',
                 });
-                /* grid.context[grid.id.grid].export('csv', {
-                	includeHeader: true,
-                	fileName: 'INVOICE LIST',
-                }); */
             }
             
             /* fn.save = function() {
@@ -314,12 +322,16 @@
             const fn = wg.f;
             const grid = wg.gr;
             
-            console.log('co.initParams', co.initParams);
+            // SET DATAPICKER DATA
+            fn.form.setData({
+                start_invoiceDate: co.initParams['start_invoiceDate'],
+                end_invoiceDate: co.initParams['end_invoiceDate'],
+            });
             
             grid.render(grid.id.grid, co.initParams);
             
             // event load.
-            fn.event();  
+            fn.event();
         });
     </script>
 </th:block>

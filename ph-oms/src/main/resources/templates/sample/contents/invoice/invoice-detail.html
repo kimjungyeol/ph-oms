@@ -39,9 +39,9 @@
                         <span class="text-secondary ps-2">펼치기/닫기</span>
                     </a>
                     <ul class="nav" id="ftaTab">
-                        <li class="nav-item"><a class="nav-link" href="#">ftaId-1</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">ftaId-2</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#">ftaId-3</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#"></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#"></a></li>
+                        <li class="nav-item"><a class="nav-link" href="#"></a></li>
                     </ul>           
                 </div>
               
@@ -72,7 +72,7 @@
             <!-- header box -->
     
             <!-- contents box -->
-            <div class="flex-fill">
+            <div class="flex-fill" data-trigger="form">
                 <div class="card">
                     <div class="card-body">
                         <div class="row collapse show" id="collapse-01">
@@ -81,11 +81,15 @@
                                 <div class="mb-3">
                                     <label class="form-label">인보이스 번호</label>
                                     <!-- <input type="text" class="form-control" id="declarationNo"/> -->
-                                    <input type="text" class="form-control" id="invoiceNo"/>
+                                    <input type="text" class="form-control" id="invoiceNo" disabled/>
                                 </div>
-                                <div class="mb-3">
+                                <!-- <div class="mb-3">
                                     <label class="form-label">인보이스 일자</label>
                                     <input type="date" max="9999-12-31" placeholder="YYYY-MM-DD" class="form-control" id="invoiceDate"/>
+                                </div> -->
+                                <div class="mb-3">
+                                    <label class="col-md-4 col-form-label"> 인보이스일자 </label>
+                                    <div data-component-datepicker="basic" style="width: 100%;" id="invoiceDate" name="invoiceDate"></div>
                                 </div>
                             </div>
                             <div class="col-md-4 mb-3">
@@ -93,7 +97,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">목적국</label>
                                     <div>
-                                        <select class="form-control" id="destinationA" name="destinationA">
+                                        <select class="form-control" id="destinationCountry" name="destinationCountry">
                                             <option value="">--Select-</option>
                                             <option value="Y">1</option>
                                             <option value="N">2</option>
@@ -103,7 +107,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">목적지</label>
                                     <div>
-                                        <select class="form-control" id="destinationB" name="destinationB">
+                                        <select class="form-control" id="destinationArea" name="destinationArea">
                                             <option value="">--Select-</option>
                                             <option value="Y">1</option>
                                             <option value="N">2</option>
@@ -116,7 +120,7 @@
                                 <div class="mb-3">
                                     <label class="form-label">상호</label>
                                     <div>
-                                        <select class="form-control" id="destinationC" name="destinationC">
+                                        <select class="form-control" id="customer" name="customer">
                                             <option value="">--Select-</option>
                                             <option value="Y">1</option>
                                             <option value="N">2</option>
@@ -125,7 +129,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">해외 공급자 부호</label>
-                                    <input type="text" class="form-control" id="customerBusinessNo"/>
+                                    <input type="text" class="form-control" id="customerBusinessNo" name="customerBusinessNo"/>
                                 </div>
                             </div>
                             <hr />
@@ -176,7 +180,11 @@
             
             co.validation = {
         		invoiceNo: ['required'],
-        		invoiceDate: ['required'],
+        		invoiceDate: ['required', 'dateEn'],
+        		destinationCountry: ['required'],
+        		destinationArea: ['required'],
+        		customer: ['required'],
+        		customerBusinessNo: ['required'],
             }
             
             grid.id = {
@@ -201,23 +209,23 @@
                     if (res.result) {
                     	console.log('res :::::', res);
                     	
-                    	// FORM DATA SET
+                    	// SET FORM DATA
                         let info = res.data.invoiceInfoMap;
                     	
-                        fn.form.setData(info);
+                        fn.form.setData(info);  // 
                         
-                        // GRID DATA SET
+                        // SET GRID DATA
                         let lineGrid = grid.context[grid.id.grid];
                         let lineList = res.data.invoiceLineList;
                         
                         lineGrid.appendRows(lineList);
                         
-                        // FTA 리스트 SET
+                        // SET FTA LIST
                         let ftas = res.data.invoiceFtas;
                         let liEle = '';
                         
-                        ftas.forEach((a, i) => {
-                        	liEle += `<li class="nav-item"><a class="nav-link" href="#">${a}</a></li>`;
+                        ftas.forEach((fta, i) => {
+                        	liEle += `<li class="nav-item"><a class="nav-link" href="#" onclick="goDetail(${i})">${fta}</a></li>`;
                         });
                         
                         document.getElementById('ftaTab').innerHTML = liEle;
@@ -226,6 +234,10 @@
             }
         	
             fn.issue = function() {
+            	fn.form.setData({
+            		invoiceDate: '2024-04-01',
+        		});
+            	
             	console.log('issue');   
             }
             
@@ -235,6 +247,11 @@
             
             fn.save = function() {
             	console.log('save');
+            	
+            	if (!fn.form.validation(co.validation)) { 
+            		return; 
+        		}
+            	
             }
             
             fn.judgment = function() {
@@ -316,7 +333,31 @@
             // event load.
             fn.event();
             fn.search();
+            
+            console.log('tabIdx init value', tabIdx);
         });
+        
+        //////////////////////////////////////////////////
+        let tabIdx = 0;
+        
+        function goDetail(idx) {
+        	const fn = wg.f;
+        	
+            if (tabIdx != idx) {
+            	console.log('dif idx', tabIdx, idx);
+            	
+            	fn.form.setData({
+            	    invoiceNo: '',
+            	    invoiceData: '',
+            	    customerBusinessNo: '',
+            	});
+            	
+            	fn.search();
+            } else {
+            	console.log('eq idx', tabIdx, idx);
+            }
+            tabIdx = idx;
+        }
     </script>
 </th:block>
 </html>
