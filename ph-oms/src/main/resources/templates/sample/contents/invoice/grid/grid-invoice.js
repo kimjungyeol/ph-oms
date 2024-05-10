@@ -102,10 +102,17 @@
 	        },
 	        {
 	            header: '목적국',
-	            name: 'bbb',
+	            name: 'destinationCountry',
 	            sortable: true,
 	            resizable: true,
 	        },
+	        {
+                header: '목적국코드',
+                name: 'destinationCountryCode',
+                sortable: true,
+                resizable: true,
+                hidden: true,
+            },
 	        {
 	            header: '금액',
 	            name: 'ccc',

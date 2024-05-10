@@ -35,7 +35,9 @@ public class SampleInvoiceService {
             map.put("invoiceNo", 10000 + i);
             map.put("invoiceDate", "20240423");
             map.put("ftaName", "한-미");
-            map.put("status", "판정대기");
+            map.put("destinationCountry", "미국");
+            map.put("destinationCountryCode", "US");
+            map.put("status", i == 2 ? "판정완료" : "판정대기");
             // map.put("age", 10 + i);
             // map.put("email", "name" + i + "@gmail.com");
             // map.put("useYn", "Y");
@@ -60,7 +62,9 @@ public class SampleInvoiceService {
         List<String> invoiceFtas = new ArrayList<String>();
 
         invoiceInfoMap.put("invoiceNo", "aaaaa");
-        invoiceInfoMap.put("invoiceDate", "2024-12-31");
+        // invoiceInfoMap.put("invoiceDate", "2024-12-31");
+        invoiceInfoMap.put("invoiceDate", "12-31-2024");
+        invoiceInfoMap.put("customerBusinessNo", "test");
 
         Map<String, Object> map = null;
         int i = 0;
