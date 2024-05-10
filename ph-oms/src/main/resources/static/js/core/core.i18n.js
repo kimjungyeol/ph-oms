@@ -24,13 +24,12 @@
 		htmlI18n : function(target) {
 			const self = this;
 			const name = self[target].name;
-			const lang = g.lang;  //current selectd language code.
-			
 			const eleArr = document.querySelectorAll(`[${name}]`);
+			
             if (eleArr.length == 0) { return; }
             
             eleArr.forEach((ele) => {
-                self.get(target, {code: ele.getAttribute(`${name}`), lang: lang}, function(res) {
+                self.get(target, {code: ele.getAttribute(`${name}`)}, function(res) {
 					if (res.result) {
 						ele.innerHTML = res.data.name;
 					}
@@ -39,6 +38,8 @@
 		},
 		get : function(target, params = {}, callbackFnc = null) {
 			const self = this;
+			params.lang = g.lang;  //current selectd language code.
+			
 			let options = {
 				url: self[target].uri,
                 method: "get",

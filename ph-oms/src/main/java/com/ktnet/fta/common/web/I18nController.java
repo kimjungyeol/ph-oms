@@ -49,17 +49,15 @@ public class I18nController extends BasicController {
     /**
      * word inquiry ( multiple )
      */
+    @SuppressWarnings("unchecked")
     @PostMapping("/word/list")
     public ResponseEntity<ResultResponseDto> getWordList(HttpServletRequest req, ParamMap pMap) throws Exception {
     	logger.info(">> getWordList <<");
     	Map<String, Object> map = pMap.getMap();
-    	
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        String lang = (String)map.get( "lang" );
-    
-    	@SuppressWarnings("unchecked")
     	Map<String, Object> i18n = (Map<String, Object>)map.get("i18n");
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
     	
+    	String lang = (String)map.get("lang");
     	for (String key : i18n.keySet()) {
     		Map<String, Object> term = i18nService.searchWord(key, lang);
     		
