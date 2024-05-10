@@ -36,6 +36,61 @@
 
     <script th:inline="javascript">
         'use strict';
+        
+        /* 
+        [front 개발 표준] 
+        1. thymeleaf를 사용하지만 layout 구성용도로만 사용한다.
+        2. thymeleaf html 제어는 사용하지 않는다.
+        3. script를 사용하여 html을 제어 하도록 한다.
+        4. 공통 script를 사용하여 개발 하도록 한다.
+        
+		[공통 script]
+		1. 실행함수 영역 구분.
+			- 초기 설정 실행함수 영역.
+				: 1.page init area.
+				: 기능 설정에 필요한 변수, uri, 기준정보를 세팅한다.
+			- 함수 설정 실행함수 영역.
+				: 2.function area.
+				: 모든 기능 함수를 해당영역에 세팅한다.
+			- 이벤트 설정 실행함수 영역.
+				: 3.event area.
+				: 모든 이벤트 설정을 해당 영역에 세팅한다.
+		2. 공통 script global 변수.
+			- wg.c (contents)
+				: 개발시 사용 될 초기 변수를 설정한다.
+			- wg.f (function)
+				: 개발시 사용 될 모든 함수를 설정한다.
+				: 기본적으로 공통으로 사용하는 함수를 사용한다.
+					 api   (defulat transaction management)
+					 	: server transaction function.
+						 	seerch 
+						 		: 공통 조회함수
+						 	save 
+						 		: 공통 저장함수
+						 		: 기본적으로 data-trigger="form" 하위 id가 존재하는 dom의 value를 parameter로 추가한다.
+						 		: 전달한 parameter를 추가한다.
+						 	saveForm 
+						 		: 공통 multipart 저장함수
+						 		: file 정보를 parameter로 추가한다.
+						 	    : 기본적으로 data-trigger="form" 하위 id가 존재하는 dom의 value를 parameter로 추가한다.
+					 		    : 전달한 parameter를 추가한다.
+					 move  (page move management)
+					 	: 화면 이동시 처리를 위하여 사용.
+					 	: 파라메터 전달여부 구분하여 사용.
+					 form  (html form data management)
+					 	: html 제어를위한 공통 object.
+					 msg   (alert, confirm common message mangement)
+					 	: 공통 메세지처리 object.
+					 popup (layer, window popup management)
+					 	: layer popup / window popup 공통 obejct.
+			- wg.t (trigger)
+				: HTML data-trigger="button" 속성 하위 id가 존재하는 DOM Object를 가지고 있다.
+				: 이벤트 영역에서 주로 사용.
+			- wg.gr (grid)
+				: grid 관련 공통 기능.
+		*/ 
+	
+	
         // 1.page init area.
         ;(function(co, grid) {
             co.initParams = {
@@ -81,7 +136,7 @@
             }
             
             fn.save = function() {
-            	let sampleGrid = grid.context[grid.id.grid];
+            	let sampleGrid = grid[grid.id.grid].context;
             	
             	//modified rows.
             	let rows = sampleGrid.getModifiedRows();
@@ -136,20 +191,20 @@
                 /* === grid event === */
                 //clear row
                 $(trigger.button.clearRow).click(function() {
-                	grid.context[grid.id.grid].clear();
+                	grid[grid.id.grid].context.clear();
                 });
                 //append row
                 $(trigger.button.appendRow).click(function() {
-                	grid.context[grid.id.grid].appendRow({name: 'addName', age: '20'}, {at: 0});
+                	grid[grid.id.grid].context.appendRow({name: 'addName', age: '20'}, {at: 0});
                 });
                 //delete row
                 $(trigger.button.deleteRow).click(function() {
                 	//true : 삭제여부 alert 사용., false : 삭제여부 alert 미사용.
-                	grid.context[grid.id.grid].removeCheckedRows(false);  
+                	grid[grid.id.grid].context.removeCheckedRows(false);  
                 });
                 //modified row data.
                 $(trigger.button.modifiedRow).click(function() {
-                	let rows = grid.context[grid.id.grid].getModifiedRows();
+                	let rows = grid[grid.id.grid].context.getModifiedRows();
                 	console.log(rows);
                 });
             }

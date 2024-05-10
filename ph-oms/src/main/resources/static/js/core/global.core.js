@@ -7,6 +7,7 @@
 var wg = {};
 ;(function(w) {
     w.global = {
+		lang: 'en',
 		//상수
         constant : {
             SUPER_ADMIN_USER      : 'S',
@@ -30,6 +31,9 @@ var wg = {};
         //global scope object init.
         init : function() {
 			
+			//i18n
+			this.i18n.apply();
+			
 			//context init.
 		    this.contents.init();
 		    this.triggers.init();
@@ -46,6 +50,7 @@ var wg = {};
 		{src : '/js/core/core.contents.js'},
 		{src : '/js/core/core.function.js'},
 		{src : '/js/core/core.component.js'}, 
+		{src : '/js/core/core.i18n.js'}, 
 		{src : '/js/core/core.grid.js'},
 	];
 	js.forEach(function(obj) {

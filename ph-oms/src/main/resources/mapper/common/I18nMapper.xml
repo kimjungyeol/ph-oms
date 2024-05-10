@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//END" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.common.mapper.I18nMapper">
+
+    <select id="selectWord" resultType="camelMap">
+        /*pgmId=I18nMapper.selectWord*/
+        SELECT WORD_CD AS CODE
+              ,WORD_NM AS NAME
+          FROM COMMON_I18N_WORD
+         WHERE WORD_CD = UPPER(#{code})
+           AND LANG_CD = UPPER(NVL(#{lang},'en'))
+    </select>
+
+    <select id="selectMessage" resultType="camelMap">
+        /*pgmId=I18nMapper.select_message*/
+        SELECT MSG_CD AS CODE
+              ,MSG_NM AS NAME
+          FROM COMMON_I18N_MESSAGE
+         WHERE MSG_CD  = UPPER(#{code})
+           AND LANG_CD = UPPER(NVL(#{lang},'en'))
+    </select>
+
+    <select id="selectMessageList" resultType="camelMap">
+        /*pgmId=I18nMapper.selectMessageList*/
+        SELECT MSG_CD AS CODE
+              ,MSG_NM AS NAME
+          FROM COMMON_I18N_MESSAGE
+         WHERE BASC_MSG_FLAG = UPPER(#{bascMsgFlag})
+           AND LANG_CD = UPPER(NVL(#{lang},'en'))
+    </select>
+
+</mapper>

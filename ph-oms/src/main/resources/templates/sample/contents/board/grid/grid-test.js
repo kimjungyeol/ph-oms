@@ -1,7 +1,9 @@
 ;(function(g, co, fn, grid) {
-
-	grid.gridInitOptions = function() {
-	    let gridId = grid.id.grid2;
+	
+    let gridId = grid.id.grid2;
+    grid.init(gridId);
+	
+	grid[gridId].gridInitOptions = function() {
 	    
 	    let options = {
 			autoSearch : true,   // 자동조회 여부.
@@ -11,7 +13,7 @@
 	    }
 	    
 	    let gridColumns = [
-	        {
+	        { 
 	            header: 'Name',
 	            name: 'name',
 	            sortingType: 'asc',

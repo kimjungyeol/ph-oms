@@ -10,11 +10,16 @@
             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">P</a></li>
             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">L</a></li>
             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">E</a></li>
+            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" data-i18n-m="MS99999"></a></li>
         </ul>
         <ul class="nav" data-trigger="button">
         	<li><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="userId"></a></li>
-            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="loginBtn">Login</a></li>
-            <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="logoutBtn">Logout</a></li>
+            <li class="nav-item">
+            	<a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="loginBtn"  data-i18n-w="BT99999"></a>
+           	</li>
+            <li class="nav-item">
+            	<a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="logoutBtn" data-i18n-w="BT99998"></a>
+           	</li>
 <!--             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="signupBtn">Signup</a></li> -->
         </ul>
     </div>
@@ -22,6 +27,7 @@
 <script th:inline="javascript">
     'use strict';
     console.log('top');
+    
     wg.c.top =  {};
     wg.f.top =  {};
     
@@ -95,11 +101,11 @@
 </script>
 <script th:inline="javascript">
     'use strict';
-    $(document).ready(async() => {
+    $(document).ready(() => {
         const fn = wg.f;
         
-        await fn.top.event();
-        await fn.top.search();
+        fn.top.event();
+        fn.top.search();
     });
 </script>
 </th:block>

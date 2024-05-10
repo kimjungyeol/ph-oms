@@ -1,10 +1,11 @@
 ;(function(g, trigger, fn, grid, co) {
     
-    grid.gridInitOptions = function(opt) {
-		
-	    //해당 소스를 include한 html에 지정되어있는 Grid ID 정보.
-	    //필수!!
-	    let gridId = grid.id.grid;  // grid id.
+    //해당 소스를 include한 html에 지정되어있는 Grid ID 정보.
+    //필수!!
+    let gridId = grid.id.grid;
+    grid.init(gridId);
+    
+    grid[gridId].gridInitOptions = function(opt) {
 	
 	    let options = {
 	        autoSearch : false,   // 자동조회 여부.
@@ -116,7 +117,7 @@
 	        //grid cell click시 호출.
 	        click : function(ev) {
 	            if (ev.columnName == 'invoiceNo') {
-	                let rowData = grid.context[gridId].getRow(ev.rowKey);
+	                let rowData = grid[gridId].context.getRow(ev.rowKey);
 	                
 	                if (rowData.invoiceNo != '' && rowData.invoiceNo != null) {
 	                    fn.move.detail(co.moveMap.detail, rowData);    
@@ -127,14 +128,14 @@
 	        afterChange : function(ev) {
 	            console.log(gridId + ' afterChange ==', ev);
 	            
-	            let rowData = grid.context[gridId].getRow(ev.changes[0].rowKey);
+	            let rowData = grid[gridId].context.getRow(ev.changes[0].rowKey);
 	            console.log('rowData', rowData);
 	        },
 	        //grid check box check event 발생시 호출.
 	        check : function(ev) {
 	            console.log(gridId + ' check ==', ev);
 	            
-	            let rowData = grid.context[gridId].getRow(ev.rowKey);
+	            let rowData = grid[gridId].context.getRow(ev.rowKey);
 	            console.log('rowData', rowData);
 	        }
 	    }

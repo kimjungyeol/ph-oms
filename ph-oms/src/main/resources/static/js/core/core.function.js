@@ -17,6 +17,7 @@
         /**
          * defulat transaction management.
          *   - search, save, saveForm
+		 *   - change to json stringify if use 'post' data.
          */
         api : {
             search : function(opt = {}, callbackFnc = null) {

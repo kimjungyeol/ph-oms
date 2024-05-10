@@ -165,7 +165,7 @@
             }
             
             fn.delete = function() {
-            	let invoiceGrid = grid.context[grid.id.grid];
+            	let invoiceGrid = grid[grid.id.grid].context;
             	
             	let checkedRows = invoiceGrid.getCheckedRows();
             	
@@ -201,18 +201,18 @@
             }
             
             fn.download = function() {
-                grid.context[grid.id.grid].export('csv', {
+                grid[grid.id.grid].context.export('csv', {
                     includeHeader: true,
                     fileName: 'INVOICE LIST',
                 });
-                /* grid.context[grid.id.grid].export('csv', {
+                /* grid[grid.id.grid].context.export('csv', {
                 	includeHeader: true,
                 	fileName: 'INVOICE LIST',
                 }); */
             }
             
             /* fn.save = function() {
-                let sampleGrid = grid.context[grid.id.grid];
+                let sampleGrid = grid[grid.id.grid].context;
                 
                 //modified rows.
                 let rows = sampleGrid.getModifiedRows();
@@ -287,20 +287,20 @@
                 /* === grid event === */
                 //clear row
                 /* $(trigger.button.clearRow).click(function() {
-                    grid.context[grid.id.grid].clear();
+                    grid[grid.id.grid].context.clear();
                 });
                 //append row
                 $(trigger.button.appendRow).click(function() {
-                    grid.context[grid.id.grid].appendRow({name: 'addName', age: '20'}, {at: 0});
+                    grid[grid.id.grid].context.appendRow({name: 'addName', age: '20'}, {at: 0});
                 });
                 //delete row
                 $(trigger.button.deleteRow).click(function() {
                     //true : 삭제여부 alert 사용., false : 삭제여부 alert 미사용.
-                    grid.context[grid.id.grid].removeCheckedRows(false);  
+                    grid[grid.id.grid].context.removeCheckedRows(false);  
                 });
                 //modified row data.
                 $(trigger.button.modifiedRow).click(function() {
-                    let rows = grid.context[grid.id.grid].getModifiedRows();
+                    let rows = grid[grid.id.grid].context.getModifiedRows();
                     console.log(rows);
                 }); */
             }

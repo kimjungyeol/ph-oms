@@ -7,11 +7,12 @@
  * 4. Grid 관련된 속성 지정 및 event 사용시 해당소스에 작성한다.
  */
 ;(function(g, trigger, fn, grid, co) {
-    
-    grid.gridInitOptions = function(opt) {
-			
-	    let gridId = grid.id.grid;  // grid id.
 	
+	let gridId = grid.id.grid;
+    grid.init(gridId);
+    
+    grid[gridId].gridInitOptions = function(opt) {
+			
 	    let options = {
 	        autoSearch : true,   // 자동조회 여부.
 	        uriMap : {           // grid transaction uri.
@@ -156,7 +157,7 @@
 	        //grid cell click시 호출.
 	        click : function(ev) {
 	            if (ev.columnName == 'invoiceNo') {
-	                let rowData = grid.context[gridId].getRow(ev.rowKey);
+	                let rowData = grid[gridId].context.getRow(ev.rowKey);
 	                
 	                if (rowData.invoiceNo != '' && rowData.invoiceNo != null) {
 	                    fn.move.detail(co.moveMap.detail, rowData);    
@@ -167,7 +168,7 @@
 	            //if (ev.columnName != 'title') { return; }
 	            
 	            //console.log(gridId + ' click ==', ev);
-	            //let rowData = grid.context[gridId].getRow(ev.rowKey);
+	            //let rowData = grid[gridId].context.getRow(ev.rowKey);
 	            //console.log('rowData', rowData);
 	            
 	            //row checked 여부.
@@ -184,14 +185,14 @@
 	        afterChange : function(ev) {
 	            console.log(gridId + ' afterChange ==', ev);
 	            
-	            let rowData = grid.context[gridId].getRow(ev.changes[0].rowKey);
+	            let rowData = grid[gridId].context.getRow(ev.changes[0].rowKey);
 	            console.log('rowData', rowData);
 	        },
 	        //grid check box check event 발생시 호출.
 	        check : function(ev) {
 	            console.log(gridId + ' check ==', ev);
 	            
-	            let rowData = grid.context[gridId].getRow(ev.rowKey);
+	            let rowData = grid[gridId].context.getRow(ev.rowKey);
 	            console.log('rowData', rowData);
 	        }
 	    }

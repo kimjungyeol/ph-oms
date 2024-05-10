@@ -50,6 +50,11 @@
                  { type : 'rowNum', header : 'No.' },
             ],
         },
+        init : function(gridId) {
+			const self = this;
+			
+			self[gridId] = {};
+		},
         
         /**
 		 * render
@@ -61,29 +66,46 @@
             const prKey = [];
             const prArr = [];
             
+            //header obj.
+			const header = self[gridId].header;
+            if (header != undefined && Object.keys(header).length > 0) {
+				prArr.push(self.headerI18n.search(header));
+	            prKey.push('header');
+			}
+            
             //selectbox obj.
-			Object.keys(self.codeList).forEach(function(key) {
-				prArr.push(self.code.search(self.codeList[key][0], self.codeList[key][1]));
-				prKey.push(key);
-			});
+            const codeList = self[gridId].codeList;
+            if (codeList != undefined && Object.keys(codeList).length > 0) {
+				Object.keys(codeList).forEach(function(key) {
+					prArr.push(self.code.search(codeList[key][0], codeList[key][1]));
+					prKey.push(key);
+				});
+			}
 			
 			Promise.all(prArr).then((res) => {
                 res.map((m, idx) => {
-					if (m.result) {
-						self.code.listItems[prKey[idx]] = m.dataList;
+					if (prKey[idx] == 'header') {
+						if (m.result) {
+							Object.assign(self.header, m.data);
+						}
 					} else {
-						self.code.listItems[prKey[idx]] = [];
+						if (m.result) {
+							self.code.listItems[prKey[idx]] = m.dataList;
+						} else {
+							self.code.listItems[prKey[idx]] = [];
+						}
 					}
                 });
             })
             .then(() => {
                 
-                g.grid.wrapper[gridId] = g.grid.gridInitOptions({
-					codeList: self.code.listItems
+                self[gridId].wrapper = self[gridId].gridInitOptions({
+					header: self.header,
+					codeList: self.code.listItems,
 				});
                 
                 let global_option = JSON.parse(JSON.stringify(self.option));             // default global option.
-	            let loadGrid_wrapper = Object.assign({}, self.wrapper[gridId], apiOpt);  // current load grid option.
+	            let loadGrid_wrapper = Object.assign({}, self[gridId].wrapper, apiOpt);  // current load grid option.
 	            let render_option = Object.assign({}, global_option, loadGrid_wrapper.option, self.dataSource(params, loadGrid_wrapper));
 	            
             	self.gridLoadProc(gridId, render_option);
@@ -99,33 +121,33 @@
             self.load(id, render_option);
             
             function callbackProc(ev, type) {
-                if (self.wrapper[id].event != undefined && typeof self.wrapper[id].event[type] == 'function') {
-                    self.wrapper[id].event[type](ev);
+                if (self[id].wrapper.event != undefined && typeof self[id].wrapper.event[type] == 'function') {
+                    self[id].wrapper.event[type](ev);
                 }
             }
             
             // response event.
-            self.context[id].on('response', (ev) => self.responseProc(ev, function(resObj) {
+            self[id].context.on('response', (ev) => self.responseProc(ev, function(resObj) {
                 callbackProc(ev, 'response');
             }));
             
             //checkbox check event.
-            self.context[id].on('check', ev => {
+            self[id].context.on('check', ev => {
                 callbackProc(ev, 'check');
             });
             
             //checkbox uncheck event.
-            self.context[id].on('uncheck', ev => {
+            self[id].context.on('uncheck', ev => {
                 callbackProc(ev, 'uncheck');
             });
             
             //cell click event.
-            self.context[id].on('click', ev => {
+            self[id].context.on('click', ev => {
                 callbackProc(ev, 'click');
             });
             
             //cell value change.
-            self.context[id].on('afterChange', ev => {
+            self[id].context.on('afterChange', ev => {
                 callbackProc(ev, 'afterChange');
             });
         },
@@ -140,7 +162,7 @@
             if (!optValidation(id, opt)) { return; }
             
             // if exists grid initialize.
-            if (self.context[id] != undefined) {
+            if (self[id].context != undefined) {
                 document.getElementById(id).innerHTML = ''; 
             }
             
@@ -154,7 +176,7 @@
             self.applyGridTheme();
             
             // create TuiGrid.
-            self.context[id] = new TuiGrid(opt);
+            self[id].context = new TuiGrid(opt);
         },
         /**
          * apply grid theme
@@ -259,14 +281,32 @@
         api : {
             search : function(gridId, gridParams) {
                 //readData(pageNo-Number, parameter-Object)
-                g.grid.context[gridId].readData(1, gridParams);
+                g.grid[gridId].context.readData(1, gridParams);
             },
         },
         
         /**
+		 * grid header i18n data.
+		 */
+		header : {},
+        headerI18n : {
+			search: async function(params) {
+				return new Promise((resolve) => {
+					g.i18n.getWordList(params, function(response) {
+						if (response.status == 500) {
+							resolve({ result: false });
+						} else {
+							resolve(response);
+						}
+					});
+				});
+			}
+		},
+        
+        /**
 		 * grid selectbox data.
 		 */
-		codeList: [],
+		codeList: {},
         code : {
 			listItems: {},
 			uri: {
@@ -287,17 +327,14 @@
 	                    if (response.status == 500) {
 							return;
 						}
-						
 			            resolve(response);
 	                })
 	                .fail(function(data, textStatus, errorThrown) {
-						resolve({
-							result: false
-						});
+						resolve({ result: false });
 	                });
 				});
 			}
-		}
+		},
     }
     
     wg.gr = g.grid;

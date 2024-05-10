@@ -8,16 +8,25 @@
  */
 ;(function(g, trigger, fn, grid, co) {
 	
+	//해당 소스를 include한 html에 지정되어있는 Grid ID 정보.
+	//필수!!
+    let gridId = grid.id.grid;  // grid id.
+    grid.init(gridId);
+	
 	//grid에 사용될 selectbox list data.
-	grid.codeList = {
+	grid[gridId].header = {
+		SP99999 : 'title',
+		SP99998 : 'contents',
+		SP99997 : 'name',
+		SP99996 : 'age',
+		SP99995 : 'email',
+	}
+	grid[gridId].codeList = {
 		useYn  : ['commonCode', {grpCd: 'CM000'}],
 		useYn2 : ['commonCode', {grpCd: 'CM001'}],
 	}
     
-    grid.gridInitOptions = function(opt) {
-		//해당 소스를 include한 html에 지정되어있는 Grid ID 정보.
-		//필수!!
-	    let gridId = grid.id.grid;  // grid id.
+    grid[gridId].gridInitOptions = function(opt) {
 	
 	    let options = {
 			autoSearch : true,   // 자동조회 여부.
@@ -31,7 +40,7 @@
 	     */ 
 		let gridColumns = [
 	        {
-	            header: 'Title',
+	            header: opt.header.SP99999,
 	            name: 'title',
 	            sortable: true,                // [선택] 컬럼의 정렬 여부 
 	            resizable: true,               // [선택] 컬럼의 리사이즈 여부 옵션
@@ -44,14 +53,14 @@
 	            }, 
 	        },
 	        {
-	            header: 'Contents',
+	            header: opt.header.SP99998,
 	            name: 'contents',
 	            width: 250,
 	            sortable: true,                // [선택] 컬럼의 정렬 여부
 	            resizable: true,               // [선택] 컬럼의 리사이즈 여부 옵션
 	        },
 	        {
-	            header: 'Name',
+	            header: opt.header.SP99997,
 	            name: 'name',
 	            sortingType: 'asc',
 	            align: "center",
@@ -73,7 +82,7 @@
 	            },
 	        },
 	        {
-	            header: 'Age',
+	            header: opt.header.SP99996,
 	            name: 'age',
 	            align: "center",
 	            sortable: true,                // [선택] 컬럼의 정렬 여부
@@ -96,7 +105,7 @@
 	            }
 	        },
 	        {
-	            header: 'Email',
+	            header: opt.header.SP99995,
 	            name: 'email',
 	            width: 200,
 	            align: "center",
@@ -185,7 +194,7 @@
 	            if (ev.columnName != 'title') { return; }
 	            
 	            //console.log(gridId + ' click ==', ev);
-	            let rowData = grid.context[gridId].getRow(ev.rowKey);
+	            let rowData = grid[gridId].context.getRow(ev.rowKey);
 	            //console.log('rowData', rowData);
 	            
 	            //row checked 여부.
@@ -202,14 +211,14 @@
 	        afterChange : function(ev) {
 	            console.log(gridId + ' afterChange ==', ev);
 	            
-	            let rowData = grid.context[gridId].getRow(ev.changes[0].rowKey);
+	            let rowData = grid[gridId].context.getRow(ev.changes[0].rowKey);
 	            console.log('rowData', rowData);
 	        },
 	        //grid check box check event 발생시 호출.
 	        check : function(ev) {
 	            console.log(gridId + ' check ==', ev);
 	            
-	            let rowData = grid.context[gridId].getRow(ev.rowKey);
+	            let rowData = grid[gridId].context.getRow(ev.rowKey);
 	            console.log('rowData', rowData);
 	        }
 	    }

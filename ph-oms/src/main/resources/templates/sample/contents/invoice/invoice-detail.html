@@ -207,7 +207,7 @@
                         fn.form.setData(info);
                         
                         // GRID DATA SET
-                        let lineGrid = grid.context[grid.id.grid];
+                        let lineGrid = grid[grid.id.grid].context;
                         let lineList = res.data.invoiceLineList;
                         
                         lineGrid.appendRows(lineList);

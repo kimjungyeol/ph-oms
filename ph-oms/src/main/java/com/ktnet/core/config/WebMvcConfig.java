@@ -1,6 +1,7 @@
 package com.ktnet.core.config;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -8,9 +9,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ktnet.core.config.xss.HTMLCharacterEscapes;
@@ -26,6 +30,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Autowired
 	private HttpInterceptor httpInterceptor;
 	
+    @Bean
+    LocaleResolver localeResolver() {
+        CookieLocaleResolver localeResolver = new CookieLocaleResolver();
+        localeResolver.setDefaultLocale(Locale.KOREA);
+        return localeResolver;
+    }
+//    @Bean    
+//    SessionLocaleResolver localeResolver() {        
+//    	return new SessionLocaleResolver();    
+//	}
+
+    @Bean
+    LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor lci = new LocaleChangeInterceptor();
+        lci.setParamName("lang");
+        return lci;
+    }
+	
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
 	    resolvers.add(this.mapArgumentResolver);
@@ -36,6 +58,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addInterceptor(httpInterceptor)
 				.addPathPatterns("/**")
 				.excludePathPatterns("/css/**", "/images/**", "/js/**", "/error");
+		
+		registry.addInterceptor(localeChangeInterceptor());
 	}
 	
 	@Override 

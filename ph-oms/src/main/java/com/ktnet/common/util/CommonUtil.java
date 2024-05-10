@@ -11,10 +11,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import jakarta.servlet.http.HttpServletRequest;
 
 @Component
@@ -173,4 +175,36 @@ public class CommonUtil {
 
     }
     
+    
+    /**
+     * IS_CACHEABLE
+     * 
+     * @param resource
+     * @return boolean
+     */
+    public static boolean isCacheable(Map<String, Object> param, String cacheAlias) {
+    	if(StringUtil.isEmpty(cacheAlias)) { return false; }
+    	
+    	String cacheableStatus = param.get("cacheableStatus")+"";
+    	if(StringUtil.isEmpty(cacheableStatus)) {
+    		return false;
+    	}
+    	boolean isEnable = false;
+    	
+    	StringTokenizer aliasToken = new StringTokenizer(cacheableStatus, ",");
+    	while(aliasToken.hasMoreTokens()) {
+        	String[] statusToken = StringUtil.split(aliasToken.nextToken().trim(), ":");
+        	String t0 = statusToken[0]+"".replaceAll(" ", "");
+        	String t1 = statusToken[1]+"".replaceAll(" ", "");
+        	
+    		if (cacheAlias.equals(t0)) {
+    			if ("S".equals(t1.toUpperCase())) {
+    				isEnable = true;
+    			}
+    			break;
+    		}
+    	}
+
+    	return isEnable;
+    }
 }
