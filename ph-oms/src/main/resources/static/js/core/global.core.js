@@ -33,7 +33,7 @@ var wg = {};
 			const lang = sessionStorage.getItem('lang');
 			if (lang != null) {
 				this.lang = lang;
-				console.log('lang==>', lang);
+				console.log('lang ==>', lang);
 			}
 			
 			//i18n

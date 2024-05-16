@@ -41,7 +41,10 @@
 		},
 		get : function(target, params = {}, callbackFnc = null) {
 			const self = this;
-			params.lang = global.lang;  //current selectd language code.
+			params.lang = sessionStorage.getItem('lang'); //current selectd language code.
+			if (params.lang == null) {
+				params.lang = 'EN';
+			}
 			
 			let options = {
 				url: self[target].uri,
