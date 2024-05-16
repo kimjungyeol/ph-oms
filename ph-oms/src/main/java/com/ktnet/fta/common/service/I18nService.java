@@ -39,14 +39,19 @@ public class I18nService {
     }
     
     /**
-     * Common messages list inquiry
+     * Default word list inquiry
      */
-    public List<Map<String, Object>> searchMessageList(String bascMsgFlag, String lang) {
-    	if (StringUtil.isEmpty(bascMsgFlag)) {
-    		bascMsgFlag = "Y";
-    	}
-        List<Map<String, Object>> msgList = i18nMapper.selectMessageList(bascMsgFlag, defaultLang(lang));
+    public List<Map<String, Object>> searchDefaultWordList(String bascMsgFlag, String lang) {
+        List<Map<String, Object>> msgList = i18nMapper.selectDefaultWordList(defaultLang(lang));
         return msgList;
+    }
+    
+    /**
+     * Default messages list inquiry
+     */
+    public List<Map<String, Object>> searchDefaultMessageList(String bascMsgFlag, String lang) {
+    	List<Map<String, Object>> msgList = i18nMapper.selectDefaultMessageList(defaultLang(lang));
+    	return msgList;
     }
     
     /**

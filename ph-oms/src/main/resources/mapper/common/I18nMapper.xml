@@ -8,7 +8,7 @@
               ,WORD_NM AS NAME
           FROM COMMON_I18N_WORD
          WHERE WORD_CD = UPPER(#{code})
-           AND LANG_CD = UPPER(NVL(#{lang},'en'))
+           AND LANG_CD = UPPER(#{lang})
     </select>
 
     <select id="selectMessage" resultType="camelMap">
@@ -17,16 +17,25 @@
               ,MSG_NM AS NAME
           FROM COMMON_I18N_MESSAGE
          WHERE MSG_CD  = UPPER(#{code})
-           AND LANG_CD = UPPER(NVL(#{lang},'en'))
+           AND LANG_CD = UPPER(#{lang})
     </select>
 
-    <select id="selectMessageList" resultType="camelMap">
-        /*pgmId=I18nMapper.selectMessageList*/
+    <select id="selectDefaultWordList" resultType="camelMap">
+        /*pgmId=I18nMapper.selectDefaultWordList*/
+        SELECT WORD_CD AS CODE
+              ,WORD_NM AS NAME
+          FROM COMMON_I18N_WORD
+         WHERE DEFAULT_YN = 'Y'
+           AND LANG_CD = UPPER(#{lang})
+    </select>
+
+    <select id="selectDefaultMessageList" resultType="camelMap">
+        /*pgmId=I18nMapper.selectDefaultMessageList*/
         SELECT MSG_CD AS CODE
               ,MSG_NM AS NAME
           FROM COMMON_I18N_MESSAGE
-         WHERE BASC_MSG_FLAG = UPPER(#{bascMsgFlag})
-           AND LANG_CD = UPPER(NVL(#{lang},'en'))
+         WHERE DEFAULT_YN = 'Y'
+           AND LANG_CD = UPPER(#{lang})
     </select>
 
 </mapper>

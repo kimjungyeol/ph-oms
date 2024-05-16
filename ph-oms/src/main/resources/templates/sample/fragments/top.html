@@ -22,6 +22,14 @@
            	</li>
 <!--             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="signupBtn">Signup</a></li> -->
         </ul>
+        <ul class="nav" data-trigger="button">
+        	<li class="nav-item">
+        		<select id="langChange" style="margin-top: 8px;">
+        			<option value="EN">English</option>
+        			<option value="KO">Korea</option>
+        		</select>
+           	</li>
+        </ul>
     </div>
 </nav>
 <script th:inline="javascript">
@@ -79,9 +87,16 @@
     	}
     	
     	fn.top.logout = function() {
-    		
     		sessionStorage.removeItem(co.top.userKey);
      		fn.top.movePage('logout');
+    	}
+    	fn.top.langChange = function() {
+    		window.global.lang = $('#langChange').val();
+    		sessionStorage.setItem('lang', window.global.lang);
+    		
+    		sessionStorage.removeItem('defaultWord');
+    		sessionStorage.removeItem('defaultMessage');
+    		location.reload();
     	}
     })(wg.c, wg.f);
     
@@ -96,6 +111,9 @@
 	     	$(trigger.button.logoutBtn).click(function() {
 	     		fn.top.logout();
 	        });
+	     	$(trigger.button.langChange).change(function() {
+	     		fn.top.langChange();
+	        });
     	}
     })(wg.f, wg.t);
 </script>
@@ -103,6 +121,12 @@
     'use strict';
     $(document).ready(() => {
         const fn = wg.f;
+        
+        let lang = sessionStorage.getItem('lang');
+        if (lang == null) {
+        	lang = 'EN';
+        }
+        $('#langChange').val(lang);
         
         fn.top.event();
         fn.top.search();

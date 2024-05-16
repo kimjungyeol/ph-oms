@@ -7,7 +7,7 @@
 var wg = {};
 ;(function(w) {
     w.global = {
-		lang: 'en',
+		lang: 'EN',
 		//상수
         constant : {
             SUPER_ADMIN_USER      : 'S',
@@ -30,9 +30,17 @@ var wg = {};
         },
         //global scope object init.
         init : function() {
+			const lang = sessionStorage.getItem('lang');
+			if (lang != null) {
+				this.lang = lang;
+				console.log('lang==>', lang);
+			}
 			
 			//i18n
 			this.i18n.apply();
+			
+			this.i18n.setDefaultI18n('word');
+			this.i18n.setDefaultI18n('message');
 			
 			//context init.
 		    this.contents.init();

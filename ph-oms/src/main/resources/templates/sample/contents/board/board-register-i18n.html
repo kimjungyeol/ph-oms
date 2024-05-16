@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="sample/layouts/default-layout">
+<th:block layout:fragment="content">
+    <div class="container">
+        <h2>Board - Register - i18n</h2>
+        <p></p>
+        
+        <h1>[BUTTON]</h1>
+        <h5 data-i18n-w="BT99999"></h5>
+        <h5 data-i18n-w="BT99998"></h5>
+        <h1>[MESSAGE]</h1>
+        <h5 data-i18n-m="MS99999"></h5>
+        <h5 data-i18n-m="MS99998"></h5>
+        
+        <br>
+        <br>
+        <input type="button" value="Word Search" onclick="wg.f.getWord();">
+        <br><br>
+        <input id="word1" style="width:100px;">
+        <input id="word2" style="width:100px;">
+        
+        <br>
+        <br>
+        <input type="button" value="Message Search" onclick="wg.f.getMessage();">
+        <br><br>
+        <input id="message1" style="width:300px;">
+        <input id="message2" style="width:300px;">
+    </div>
+    
+    <script th:inline="javascript">
+        'use strict';
+        // 1.page init area.
+        ;(function(co, fn) {
+            co.initParams = {}
+            
+            co.uriMap = {}
+            
+            co.moveMap = {}
+            
+        })(wg.c, wg.f);
+        
+        // 2.function area.
+        ;(function(co, fn, trigger, i18n) {
+        	
+        	fn.getWord = function() {
+        		i18n.getWord('BT99999').then(function(v) {
+					$('#word1').val(v);
+				});
+        		i18n.getWord('BT99998').then(function(v) {
+					$('#word2').val(v);
+				});
+        	}
+        	fn.getMessage = function() {
+        		i18n.getMessage('MS99999').then(function(v) {
+					$('#message1').val(v);
+				});
+        		i18n.getMessage('MS99998').then(function(v) {
+					$('#message2').val(v);
+				});
+        	}
+            
+        })(wg.c, wg.f, wg.t, wg.i18n);
+        
+        // 3.event area.
+        ;(function(co, fn, trigger) {
+        	
+        })(wg.c, wg.f, wg.t);
+    </script>
+    <script th:inline="javascript">
+        'use strict';
+        $(document).ready(() => {
+            const fn = wg.f;
+            
+        });
+    </script>
+</th:block>
+</html>

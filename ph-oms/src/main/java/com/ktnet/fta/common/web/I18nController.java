@@ -12,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ktnet.common.dto.ResultResponseDto;
 import com.ktnet.common.util.StringUtil;
@@ -88,21 +87,33 @@ public class I18nController extends BasicController {
     }
 
     /**
-     * Message List inquiry
+     * Default Message List inquiry
      */
-    @PostMapping("/message/list")
-    public ResponseEntity<ResultResponseDto> getMessageList(HttpServletRequest req, ParamMap pMap) throws Exception {
+    @PostMapping("/default/word/list")
+    public ResponseEntity<ResultResponseDto> getDefaultWordList(HttpServletRequest req, ParamMap pMap) throws Exception {
     	logger.info( ">> getMessageList <<" );
     	Map<String, Object> map = pMap.getMap();
         String bascMsgFlag = map.get("bascMsgFlag")+"";
         String lang = map.get("lang")+"";
 
-        List<Map<String, Object>> rtnList = i18nService.searchMessageList(bascMsgFlag, lang);
+        List<Map<String, Object>> rtnList = i18nService.searchDefaultWordList(bascMsgFlag, lang);
         
-        Map<String, Object> resultMap = new HashMap<String, Object>();
-        resultMap.put("msgList", rtnList);
-        
-        return new ResponseEntity<>(ResultResponse(resultMap), HttpStatus.OK);
+        return new ResponseEntity<>(ResultResponse(rtnList), HttpStatus.OK);
+    }
+    
+    /**
+     * Default Message List inquiry
+     */
+    @PostMapping("/default/message/list")
+    public ResponseEntity<ResultResponseDto> getDefaultMessageList(HttpServletRequest req, ParamMap pMap) throws Exception {
+    	logger.info( ">> getMessageList <<" );
+    	Map<String, Object> map = pMap.getMap();
+    	String bascMsgFlag = map.get("bascMsgFlag")+"";
+    	String lang = map.get("lang")+"";
+    	
+    	List<Map<String, Object>> rtnList = i18nService.searchDefaultMessageList(bascMsgFlag, lang);
+    	
+    	return new ResponseEntity<>(ResultResponse(rtnList), HttpStatus.OK);
     }
 
 }

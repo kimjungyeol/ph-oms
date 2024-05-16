@@ -550,21 +550,28 @@
 						callbackFnc: callbackFnc
 					});
 				},
-				swal: function(params) {
+				swal: async function(params) {
 					const self = this;
 					let title = params.title;
 					let subtitle = params.subtitle;
 					let icon = params.icon;
 					
+					await g.i18n.getWord(title).then(function(v) {
+						title = v;
+					});
+					await g.i18n.getWord(subtitle).then(function(v) {
+						subtitle = v;
+					});
+					
 					//default message.
-					if (title == null) {
+					if (title == null || title == undefined) {
 						title = self.message[params.message].title;
 					}
-					if (subtitle == null) {
+					if (subtitle == null || subtitle == undefined) {
 						subtitle = self.message[params.message].subtitle;
 					}
 					if (icon == null) {
-						icon = self.message[params.message].subtitle;
+						icon = 'info';
 					}
 					
 					swal(title, subtitle, icon)

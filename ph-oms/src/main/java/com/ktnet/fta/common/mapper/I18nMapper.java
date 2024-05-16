@@ -7,7 +7,8 @@ import org.apache.ibatis.annotations.Param;
 
 public interface I18nMapper {
 
-	public Map<String, Object> selectWord( @Param("code") String code, @Param("lang") String lang );
-    public Map<String, Object> selectMessage( @Param("code") String code, @Param("lang") String lang );
-    public List<Map<String, Object>> selectMessageList( @Param("bascMsgFlag") String bascMsgFlag, @Param("lang") String lang );
+	public Map<String, Object> selectWord(@Param("code") String code, @Param("lang") String lang);
+    public Map<String, Object> selectMessage(@Param("code") String code, @Param("lang") String lang);
+    public List<Map<String, Object>> selectDefaultWordList(@Param("lang") String lang);
+    public List<Map<String, Object>> selectDefaultMessageList(@Param("lang") String lang);
 }

@@ -14,8 +14,11 @@
 		wordList : {
 			uri: '/i18n/word/list'
 		},
-		messageList : {
-			uri : '/i18n/message/list'
+		defaultWord : {
+			uri : '/i18n/default/word/list'
+		},
+		defaultMessage : {
+			uri : '/i18n/default/message/list'
 		},
 		apply : function() {
 			this.htmlI18n('word');
@@ -30,7 +33,7 @@
             
             eleArr.forEach((ele) => {
                 self.get(target, {code: ele.getAttribute(`${name}`)}, function(res) {
-					if (res.result) {
+					if (res.result && res.data != null) {
 						ele.innerHTML = res.data.name;
 					}
 				});
@@ -38,7 +41,7 @@
 		},
 		get : function(target, params = {}, callbackFnc = null) {
 			const self = this;
-			params.lang = g.lang;  //current selectd language code.
+			params.lang = global.lang;  //current selectd language code.
 			
 			let options = {
 				url: self[target].uri,
@@ -63,10 +66,109 @@
                 console.log("server Error occurred!", data);
             });
 		},
+		getWord : function(code) {
+			const self = this;
+			return new Promise((resolve) => {
+				let isRtn = false;
+				
+				if (code == null || code == undefined) {
+					resolve(code);
+					isRtn = true;
+				}
+				
+				//return word default storage.
+				const storageData = sessionStorage.getItem('defaultWord');
+				if (storageData != null) {
+					const dataList = JSON.parse(storageData);
+					dataList.forEach(function(map) {
+						if (map.code == code) {
+							resolve(map.name);
+							isRtn = true;
+						}
+					});
+				}
+				if (isRtn) {
+					return;
+				}
+				
+				//return word db search.
+				self.get('word', {code: code}, function(response) {
+					if (response.data == null) {
+						resolve(code);
+					} else {
+						resolve(response.data.name);
+					}
+				});
+			});
+		},
+		getMessage : function(code) {
+			const self = this;
+			return new Promise((resolve) => {
+				let isRtn = false;
+				
+				if (code == null || code == undefined) {
+					resolve(code);
+					return;
+				}
+				
+				//return message default storage.
+				const storageData = sessionStorage.getItem('defaultMessage');
+				if (storageData != null) {
+					const dataList = JSON.parse(storageData);
+					dataList.forEach(function(map) {
+						if (map.code == code) {
+							resolve(map.name);
+							isRtn = true;
+						}
+					});
+				}
+				if (isRtn) {
+					return;
+				}
+				
+				//return message db search.
+				self.get('message', {code: code}, function(response) {
+					if (response.data == null) {
+						resolve(code);
+					} else {
+						resolve(response.data.name);
+					}
+				});
+			});
+		},
+		setDefaultI18n : function(target) {
+			const self = this;
+			return new Promise((resolve) => {
+				if (target == null || target == undefined) {
+					resolve(null);
+					return;
+				}
+				if (target == 'word') {
+					target = 'defaultWord';
+				} else if (target == 'message') {
+					target = 'defaultMessage';
+				}
+				
+				const storageData = sessionStorage.getItem(target);
+                if (storageData != null) {
+					resolve(null);
+					return;
+				}
+                
+				self.get(target, {}, function(response) {
+					if (response.dataList == null) {
+						resolve(null);
+					} else {
+						sessionStorage.setItem(target, JSON.stringify(response.dataList));
+						resolve(null);
+					}
+				});
+			});
+		},
 		getWordList : function(params = {}, callbackFnc = null) {
 			const self = this;
 			self.get('wordList', {i18n: params}, callbackFnc);
-		}
+		},
     }
     
     wg.i18n = g.i18n;
