@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="naviFragment">
 <nav class="py-2 bg-body-tertiary border-bottom">
-    <div class="container d-flex flex-wrap">
+    <div class="container d-flex flex-wrap" data-trigger="button">
         <ul class="nav me-auto">
             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">S</a></li>
             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">A</a></li>
@@ -11,8 +11,11 @@
             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">L</a></li>
             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2">E</a></li>
             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" data-i18n-m="MS99999"></a></li>
+            <li class="nav-item" style="margin-top: 8px;">
+            	<input type="button" id="cacheClear" value="i18n CacheClear">
+            </li>
         </ul>
-        <ul class="nav" data-trigger="button">
+        <ul class="nav">
         	<li><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="userId"></a></li>
             <li class="nav-item">
             	<a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="loginBtn"  data-i18n-w="BT99999"></a>
@@ -22,7 +25,7 @@
            	</li>
 <!--             <li class="nav-item"><a href="javascript:void(0);" class="nav-link link-body-emphasis px-2" id="signupBtn">Signup</a></li> -->
         </ul>
-        <ul class="nav" data-trigger="button">
+        <ul class="nav">
         	<li class="nav-item">
         		<select id="langChange" style="margin-top: 8px;">
         			<option value="EN">English</option>
@@ -52,7 +55,7 @@
     	co.top.userKey = 'userInfo';
     })(wg.c);
     
-    ;(function(co, fn) {
+    ;(function(co, fn, i18n) {
     	fn.top.movePage = function(uri) {
     		fn.move.page(co.top.moveMap[uri]);
     	}
@@ -86,6 +89,11 @@
     		$('#userId').html('[' + userInfo.userNm + ']');
     	}
     	
+    	fn.top.cacheClear = function() {
+    		i18n.cacheClear('word');
+    		i18n.cacheClear('message');
+    	}
+    	
     	fn.top.logout = function() {
     		sessionStorage.removeItem(co.top.userKey);
      		fn.top.movePage('logout');
@@ -98,7 +106,7 @@
     		
     		location.reload();
     	}
-    })(wg.c, wg.f);
+    })(wg.c, wg.f, wg.i18n);
     
     ;(function(fn, trigger) {
     	fn.top.event = function() {
@@ -110,6 +118,9 @@
 	        });
 	     	$(trigger.button.logoutBtn).click(function() {
 	     		fn.top.logout();
+	        });
+	     	$(trigger.button.cacheClear).click(function() {
+	     		fn.top.cacheClear();
 	        });
 	     	$(trigger.button.langChange).change(function() {
 	     		fn.top.langChange();

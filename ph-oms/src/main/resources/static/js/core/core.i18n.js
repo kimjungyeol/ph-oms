@@ -20,6 +20,10 @@
 		defaultMessage : {
 			uri : '/i18n/default/message/list'
 		},
+		cache : {
+			word : '/cache/clear/i18n/word',
+			message : '/cache/clear/i18n/message'
+		},
 		apply : function() {
 			this.htmlI18n('word');
 			this.htmlI18n('message');
@@ -37,6 +41,24 @@
 						ele.innerHTML = res.data.name;
 					}
 				});
+            });
+		},
+		cacheClear : function(target) {
+			const self = this;
+			
+			console.log(target, self.cache[target]);
+			
+			$.ajax({
+				url: self.cache[target],
+                method: "get",
+                dataType: "json",
+                contentType: 'application/x-www-form-urlencoded',
+                data: {}
+            })
+            .done(function (response, textStatus, xhr) {
+            })
+            .fail(function(data, textStatus, errorThrown) {
+                console.log("cacheClear", "server Error occurred!", data);
             });
 		},
 		get : function(target, params = {}, callbackFnc = null) {
