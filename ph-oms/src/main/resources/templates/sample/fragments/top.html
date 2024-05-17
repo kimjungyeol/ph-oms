@@ -90,6 +90,9 @@
     	}
     	
     	fn.top.cacheClear = function() {
+    		sessionStorage.removeItem('defaultWord');
+    		sessionStorage.removeItem('defaultMessage');
+    		
     		i18n.cacheClear('word');
     		i18n.cacheClear('message');
     	}

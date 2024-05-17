@@ -19,7 +19,7 @@ import jakarta.annotation.PostConstruct;
 @EnableScheduling
 @EnableCaching
 @ComponentScan(basePackages = "com.ktnet.*") 
-@PropertySource(value = { "classpath:environment.properties" })
+@PropertySource(value = { "classpath:application-env.properties" })
 public class FtaServiceApplication {
 	
 	@Value("${spring.profiles.active}")
