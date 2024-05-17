@@ -158,12 +158,12 @@
 </script>
 <script th:inline="javascript">
     'use strict';
-    $(document).ready(async() => {
+    $(document).ready(() => {
         const fn = wg.f;
         
         // event load.
-        await fn.left.event();
-        await fn.left.activeMenu();
+        fn.left.event();
+        fn.left.activeMenu();
     });
 </script>
 </th:block>
