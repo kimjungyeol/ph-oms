@@ -58,8 +58,8 @@ var wg = {};
 		{src : '/js/core/core.contents.js'},
 		{src : '/js/core/core.function.js'},
 		{src : '/js/core/core.component.js'}, 
-		{src : '/js/core/core.i18n.js'}, 
 		{src : '/js/core/core.grid.js'},
+		{src : '/js/core/core.i18n.js'}, 
 	];
 	js.forEach(function(obj) {
 		document.writeln(`<script type='text/javascript' src='${obj.src}'></script>`);
@@ -67,7 +67,7 @@ var wg = {};
 	
 })(window);
 
-console.log('==== Context Load Start ==== wg[contents, triggers, function, component, grid]');
+console.log('==== Context Load Start ==== wg[contents, triggers, function, component, grid, i18n]');
 
 document.addEventListener("DOMContentLoaded", function() {
 	const g = window.global;
