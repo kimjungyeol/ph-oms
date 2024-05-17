@@ -53,7 +53,7 @@ var wg = {};
         },
     }; 
     
-    //wg[contents, triggers, function, component, grid]
+    //wg[contents, triggers, function, component, grid, i18n]
 	const js = [
 		{src : '/js/core/core.contents.js'},
 		{src : '/js/core/core.function.js'},
