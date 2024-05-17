@@ -67,6 +67,12 @@
           Invoice
         </a>
       </li>
+      <li>
+        <a href="#javascript:void(0);" class="nav-link text-white" id="simulation">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Simulation
+        </a>
+      </li>
     </ul>
     <hr>
    <!--  <div class="dropdown">
@@ -99,6 +105,7 @@
 			message : '/sample/contents/other/swal-message',
 			popup : '/sample/contents/other/popup',
 			invoice : '/sample/contents/invoice/invoice-list',
+			simulation : '/sample/contents/judgment/simulation'
     	}
     })(wg.c);
     
@@ -142,6 +149,9 @@
 	        });
 	     	$(trigger.button.invoice).click(function() {
                 fn.left.movePage('invoice');
+            });
+	     	$(trigger.button.simulation).click(function() {
+                fn.left.movePage('simulation');
             });
     	}
     })(wg.f, wg.t);
