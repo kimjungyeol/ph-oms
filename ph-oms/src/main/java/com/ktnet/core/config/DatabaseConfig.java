@@ -35,7 +35,7 @@ public class DatabaseConfig {
 		final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
 		sessionFactory.setDataSource(dbDataSource);
 		sessionFactory.setMapperLocations(applicationContext.getResources("classpath:mapper/**/*Mapper.xml"));
-		sessionFactory.setConfigLocation(applicationContext.getResource("classpath:mybatis-config.xml"));
+		sessionFactory.setConfigLocation(applicationContext.getResource("classpath:config/mybatis-config.xml"));
 		return sessionFactory.getObject();
 	}
 	

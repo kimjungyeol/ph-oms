@@ -29,6 +29,15 @@ public class I18nController extends BasicController {
 	
     @Resource(name = "i18nService")
     private I18nService i18nService;
+    
+    private final String DEFAULT_LANG = "EN";
+    
+    private String defaultLang(String lang) {
+    	if (StringUtil.isEmpty(lang)) {
+    		lang = DEFAULT_LANG;
+    	}
+    	return lang;
+    }
 
     /**
      * word inquiry ( single )
@@ -40,7 +49,7 @@ public class I18nController extends BasicController {
         String code = map.get("code")+"";
         String lang = map.get("lang")+"";
         
-        Map<String, Object> resultMap = i18nService.searchWord(code, lang);
+        Map<String, Object> resultMap = i18nService.searchWord(code, defaultLang(lang));
         
         return new ResponseEntity<>(ResultResponse(resultMap), HttpStatus.OK);
     }
@@ -58,7 +67,7 @@ public class I18nController extends BasicController {
     	
     	String lang = (String)map.get("lang");
     	for (String key : i18n.keySet()) {
-    		Map<String, Object> term = i18nService.searchWord(key, lang);
+    		Map<String, Object> term = i18nService.searchWord(key, defaultLang(lang));
     		
     		String name = term.get("name")+"";
     		if (StringUtil.isEmpty(name)) {
@@ -81,7 +90,7 @@ public class I18nController extends BasicController {
         String code = map.get("code")+"";
         String lang = map.get("lang")+"";
         
-        Map<String, Object> resultMap = i18nService.searchMessage(code, lang);
+        Map<String, Object> resultMap = i18nService.searchMessage(code, defaultLang(lang));
         
         return new ResponseEntity<>(ResultResponse(resultMap), HttpStatus.OK);
     }
@@ -96,7 +105,7 @@ public class I18nController extends BasicController {
         String bascMsgFlag = map.get("bascMsgFlag")+"";
         String lang = map.get("lang")+"";
 
-        List<Map<String, Object>> rtnList = i18nService.searchDefaultWordList(bascMsgFlag, lang);
+        List<Map<String, Object>> rtnList = i18nService.searchDefaultWordList(bascMsgFlag, defaultLang(lang));
         
         return new ResponseEntity<>(ResultResponse(rtnList), HttpStatus.OK);
     }
@@ -108,10 +117,9 @@ public class I18nController extends BasicController {
     public ResponseEntity<ResultResponseDto> getDefaultMessageList(HttpServletRequest req, ParamMap pMap) throws Exception {
     	logger.info( ">> getMessageList <<" );
     	Map<String, Object> map = pMap.getMap();
-    	String bascMsgFlag = map.get("bascMsgFlag")+"";
     	String lang = map.get("lang")+"";
     	
-    	List<Map<String, Object>> rtnList = i18nService.searchDefaultMessageList(bascMsgFlag, lang);
+    	List<Map<String, Object>> rtnList = i18nService.searchDefaultMessageList(defaultLang(lang));
     	
     	return new ResponseEntity<>(ResultResponse(rtnList), HttpStatus.OK);
     }

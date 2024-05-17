@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -16,7 +17,7 @@ import jakarta.annotation.PostConstruct;
  */
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @EnableScheduling
-//@EnableCaching
+@EnableCaching
 @ComponentScan(basePackages = "com.ktnet.*") 
 @PropertySource(value = { "classpath:environment.properties" })
 public class FtaServiceApplication {
