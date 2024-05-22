@@ -1,12 +1,12 @@
 //parameter date value - ISO8601('YMD')
 //return CurrentLang date.
-function getISO8601ToCurrentLang(date, sep = "") {
+function getISO8601ToCurrentLang(date = "", sep = "") {
     const lang = window.global.lang.toLowerCase();
     let rtnDate = "";
 
-    date = date.replace(/[^0-9]/g, "");
-
-    if (date != null && date.length >= 8) {
+    if (date != "" && date != null && date.length >= 8) {
+	    date = date.replace(/[^0-9]/g, "");
+	    
         let y = date.substring(0, 4);
         let m = date.substring(4, 6);
         let d = date.substring(6, 8);
@@ -25,10 +25,9 @@ function getISO8601ToCurrentLang(date, sep = "") {
     return rtnDate;
 }
 //return ISO8601('YMD')
-function getCurrentLangToISO8601(date = null, sep = "") {
-	date = date.replace(/[^0-9]/g, "");
-	
-    if (date != null && date.length == 8) {
+function getCurrentLangToISO8601(date = "", sep = "") {
+    if (date != "" && date != null && date.length == 8) {
+		date = date.replace(/[^0-9]/g, "");
         lang = window.global.lang.toLowerCase();
         
         let y = "";
