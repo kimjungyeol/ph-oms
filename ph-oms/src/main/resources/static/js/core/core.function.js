@@ -95,7 +95,8 @@
 	                    swal(response.reason, "server Error occurred!", "error");
 						return;
 					}
-                    msg.alert.successSave();
+					
+                    msg.alert.successSave(opt.message);
                     
                     if (callbackFnc != null && typeof callbackFnc == 'function') {
                         callbackFnc(response);

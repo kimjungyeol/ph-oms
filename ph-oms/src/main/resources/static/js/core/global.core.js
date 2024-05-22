@@ -71,5 +71,8 @@ console.log('==== Context Load Start ==== wg[contents, triggers, function, compo
 
 document.addEventListener("DOMContentLoaded", function() {
 	const g = window.global;
+    wg.g = g;
+    
     g.init();
+    
 });

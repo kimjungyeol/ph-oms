@@ -380,14 +380,18 @@
 					            <div id="${this.replaceId}_wrapper" style="margin-top: -1px;"></div>`;
 					},
 			        load: function(id) {
+						let dateFormat = 'yyyy-MM-dd';
+						if (global.lang == 'EN') {
+							dateFormat = 'MM-dd-yyyy';
+						}
 						let datepicker = new tui.DatePicker(`#${id}_wrapper`, {
 			                //date: new Date(),  //default date.
 			                input: {
 			                    element: `#${id}`,
-			                    format: 'MM-dd-yyyy'
+			                    format: dateFormat
 			                },
 			                timePicker: false,
-					        language: 'en',
+					        language: 'en',  //calendar text language.
 			            });
 					},
 		            render: function() {
@@ -413,6 +417,11 @@
 						        </div>`;
 					},
 					load: function(id) {
+						let dateFormat = 'yyyy-MM-dd';
+						if (global.lang == 'EN') {
+							dateFormat = 'MM-dd-yyyy';
+						}
+						
 						//var today = new Date();
 					    var picker = tui.DatePicker.createRangePicker({
 					        startpicker: {
@@ -425,9 +434,10 @@
 					            input: `#end_${id}`,
 					            container: `#end_${id}_container`
 					        },
-					        format: 'MM-dd-yyyy',
+					        format: dateFormat,
 					        timePicker: false,
 					        language: 'en',
+					        /*
 					        selectableRanges: [
 		                        [
 		                            new Date(2019, 3, 1),
@@ -438,6 +448,7 @@
 		                            new Date(2019, 10, 5)
 		                        ]
 		                    ]
+		                    */
 					    });
 					
 					    picker.on('change:start', () => {

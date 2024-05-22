@@ -97,7 +97,7 @@
         })(wg.c, wg.f);
         
         // 2.function area.
-        ;(function(co, fn, trigger) {
+        ;(function(g, co, fn, trigger) {
             fn.search = function() {
             	let opt = {
             		uri : co.uriMap.search,
@@ -106,6 +106,10 @@
             	fn.api.search(opt, function(res) {
             		if (res.result) {
             			// set data value on based searched data.
+            			
+            			//화면에 표시될 date 형식으로 변환.
+           				res.data.dateymd = getISO8601ToCurrentLang(res.data.dateymd, '-');
+            			
             			fn.form.setData(res.data);
             		}
             	});
@@ -118,11 +122,15 @@
 	            	//   - id가 지정 되어 있는 모든 dom의 key value를 가져온다.
 	            	let data = fn.form.getData();
 	            	
+	            	// 저장할 date 형식으로 변환.
+	            	data.dateymd = getCurrentLangToISO8601(data.dateymd);
+	            	
 	            	console.log('save data ==== ', data);
 	            	
 	            	let opt = {
 	               		uri : co.uriMap.save,
-	               		params : data
+	               		params : data,
+	               		//message : 'Custom save message!'
 	               	}
 	            	fn.api.save(opt, function(res) {
 	                    console.log('save callback fnc!!', res);
@@ -134,7 +142,7 @@
             	window.location.href = "/sample/jasper/pdf";
             }
             
-        })(wg.c, wg.f, wg.t);
+        })(wg.g, wg.c, wg.f, wg.t);
         
         // 3.event area.
         ;(function(co, fn, trigger) {
