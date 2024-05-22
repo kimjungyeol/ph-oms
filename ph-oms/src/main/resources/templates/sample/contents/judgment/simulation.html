@@ -45,7 +45,7 @@
             </div> -->
             <div class="form-floating mb-3">
                 <div>
-                    <select class="form-select" id="psr" name="psr" style="width:500px;">
+                    <select class="form-select" id="psrStandard" name="psrStandard" style="width:500px;">
                         <option value="">원산지 결정 기준</option>
                         <option value="CTH">CTH</option>
                         <option value="RVC">RVC</option>
@@ -74,6 +74,8 @@
                 </button>
             </div>
         </div>
+        
+        <div id="resultArea" style="display: none;">Fail</div>
     </div>
     
     <script th:inline="javascript">
@@ -85,7 +87,7 @@
             }
             
             co.uriMap = {
-                simulation: '/sample/judgment/simulation',
+                simulation: '/sample/simulation',
             }
             
             //grid id 지정.
@@ -125,8 +127,20 @@
                 	}
                 }
                 
-                fn.api.save(opt, function() {
+                fn.api.save(opt, function(res) {
                     console.log('save callback fnc!!');
+                    console.log('res', res);
+                    
+                    let result = res.result;
+                    let resultArea = document.getElementById('resultArea');
+
+                    resultArea.style.display = 'block';
+                    
+                    if (result) {
+                    	resultArea.innerText = '성공';
+                    } else {
+                    	resultArea.innerText = '실패';
+                    }
                 });
             }
         })(wg.c, wg.f, wg.t, wg.gr);
@@ -180,7 +194,7 @@
             fn.event();
             
             /////////////////////////////////////////////////////////////
-            document.getElementById('psr').addEventListener('input', (e) => {
+            document.getElementById('psrStandard').addEventListener('input', (e) => {
             	let psrVal = e.target.value;
             	
             	console.log('psr change.......................');
@@ -199,7 +213,7 @@
             	destinationCode: 'test',
             	hsCode: '830140',
             	amount: '100000',
-            	psr: 'CTH',
+            	psrStandard: 'CTH',
             });
             ////////////////////////////////////////////////////////////
         });
