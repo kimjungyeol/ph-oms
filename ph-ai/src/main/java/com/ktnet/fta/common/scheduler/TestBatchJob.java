@@ -23,7 +23,6 @@ import org.springframework.batch.repeat.policy.CompositeCompletionPolicy;
 import org.springframework.batch.repeat.policy.SimpleCompletionPolicy;
 import org.springframework.batch.repeat.policy.TimeoutTerminationPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -36,7 +35,7 @@ import jakarta.annotation.Resource;
 class TestBatchJob {
 
     Logger logger = LoggerFactory.getLogger(getClass());
-
+    
     @Autowired
     private DataSource batchDataSource;
 
