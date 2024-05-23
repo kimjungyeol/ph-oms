@@ -58,7 +58,7 @@ public class SampleRestController extends BasicController {
         // Batch Job 실행.
         JobParameters jobParameters = new JobParametersBuilder()
             .addString("executeDate", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-           .addString("path", "12312312").toJobParameters();
+            .addString("path", "12312312").toJobParameters();
            // .addString("historyId", history.getId())
           //  .addString("userId", "testId").toJobParameters();
         asyncJobLauncher.run(job, jobParameters);
