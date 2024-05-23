@@ -103,12 +103,17 @@
         
         // 2.function area.
         ;(function(co, fn, trigger, grid) {
-            fn.save = function() {
+            fn.simulation = function() {
             	let formData = fn.form.getData();
             	
                 let materialGrid = grid[grid.id.grid].context;
                 
                 let rowData = materialGrid.getData();
+                
+                if (rowData.length == 0) {
+                	$('#testRow').trigger('click');
+                	rowData = materialGrid.getData();
+                }                
                 
                 //grid validation check.
                 let v = materialGrid.validate();
@@ -152,10 +157,10 @@
                 
                 //save.
                 $(trigger.button.simulationBtn).click(function() {
-                    fn.save();
+                    fn.simulation();
                 });
                 $(trigger.button.simulationBtn2).click(function() {
-                    fn.save();
+                    fn.simulation();
                 });
                 
                 /* === grid event === */
@@ -220,9 +225,9 @@
         
         // test Data
         let materialList = [
-            {itemName: 'mtr1', hsCode: '830140', itemAmount: '50000', origin: 'Y'},
-            {itemName: 'mtr2', hsCode: '830140', itemAmount: '30000', origin: 'Y'},
-            {itemName: 'mtr3', hsCode: '830140', itemAmount: '20000', origin: 'N'},
+            {itemName: 'mtr1', hsCode: '830140', amount: '50000', origin: 'Y'},
+            {itemName: 'mtr2', hsCode: '830140', amount: '30000', origin: 'Y'},
+            {itemName: 'mtr3', hsCode: '830140', amount: '20000', origin: 'N'},
         ]
     </script>    
 </th:block>

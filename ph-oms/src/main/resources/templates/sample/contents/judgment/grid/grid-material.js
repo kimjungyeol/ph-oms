@@ -53,7 +53,7 @@
             },
             {
                 header: '가격',
-                name: 'itemAmount',
+                name: 'amount',
                 align: 'left',
                 editor: 'text',
             },

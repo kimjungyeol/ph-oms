@@ -34,13 +34,14 @@ public class SampleSimulationController extends BasicController {
         logger.debug(">> simulation <<");
 
         Map<String, Object> rtMap = new HashMap<String, Object>();
-
-        rtMap.put("result", false);
+        boolean result = false;
 
         Map<String, Object> ftaInfo = (Map<String, Object>) pMap.get("formData");
         List<Map<String, Object>> itemList = (List<Map<String, Object>>) pMap.get("rowData");
 
-        simulationExecutor.execute(ftaInfo, itemList);
+        result = simulationExecutor.execute(ftaInfo, itemList);
+
+        rtMap.put("result", result);
 
         return rtMap;
     }
