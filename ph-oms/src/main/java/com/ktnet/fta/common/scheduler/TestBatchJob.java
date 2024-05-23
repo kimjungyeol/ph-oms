@@ -69,6 +69,12 @@ class TestBatchJob {
     Tasklet helloWorldTasklet() {
         return (StepContribution contribution, ChunkContext chunkContext) -> {
             logger.debug("Hello, World!=============================");
+            
+            String executeDate = (String) chunkContext.getStepContext().getJobParameters().get("executeDate");
+            String path = (String) chunkContext.getStepContext().getJobParameters().get("path");
+            
+            logger.debug("executeDate : {}", executeDate);
+            logger.debug("path : {}", path);
 
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("pgStart", 1);

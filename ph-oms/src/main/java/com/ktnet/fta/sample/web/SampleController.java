@@ -1,5 +1,7 @@
 package com.ktnet.fta.sample.web;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +10,12 @@ import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +44,13 @@ public class SampleController extends BasicController {
 
     @Autowired
     public TestDynamicScheduler testDynamicScheduler;
+    
+    @Autowired
+    private JobLauncher asyncJobLauncher;
+    
+    @Autowired
+	@Qualifier("testJob")
+	private Job job;
     
     @Autowired
     public JasperPDFViewer jasperPDFViewer;
@@ -113,7 +127,17 @@ public class SampleController extends BasicController {
     public String schedule(HttpServletRequest req, Model model) throws Exception {
         logger.debug("schedule");
 
-        testDynamicScheduler.startScheduler();
+        //scheduler start or stop시 사용.
+        //testDynamicScheduler.startScheduler();
+        //testDynamicScheduler.stopScheduler();
+        
+        // Batch Job 실행.
+        JobParameters jobParameters = new JobParametersBuilder()
+        .addString("executeDate", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+        .addString("path", "12312312").toJobParameters();
+           // .addString("historyId", history.getId())
+          //  .addString("userId", "testId").toJobParameters();
+        asyncJobLauncher.run(job, jobParameters);
 
         return "sample/main";
     }
