@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ktnet.fta.common.job.JobConstant;
 import com.ktnet.fta.common.scheduler.TestDynamicScheduler;
 import com.ktnet.fta.common.web.BasicController;
 
@@ -32,7 +33,7 @@ public class SampleRestController extends BasicController {
     private JobLauncher asyncJobLauncher;
 
 	@Autowired
-	@Qualifier("testJob")
+	@Qualifier(JobConstant.TESTJOB)
 	private Job job;
 
 	@SuppressWarnings("null")
@@ -48,20 +49,23 @@ public class SampleRestController extends BasicController {
     }
 	
 	@GetMapping("/sample/schedule")
-    public void schedule(HttpServletRequest req, Model model) throws Exception {
-        logger.debug("schedule");
-        
-        //scheduler start or stop시 사용.
-        //testDynamicScheduler.startScheduler();
-        //testDynamicScheduler.stopScheduler();
-        
-        // Batch Job 실행.
-        JobParameters jobParameters = new JobParametersBuilder()
-            .addString("executeDate", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
-            .addString("path", "12312312").toJobParameters();
-           // .addString("historyId", history.getId())
-          //  .addString("userId", "testId").toJobParameters();
-        asyncJobLauncher.run(job, jobParameters);
-    }
+	public void schedule(HttpServletRequest req, Model model) throws Exception {
+		logger.debug("schedule");
+		
+		//scheduler start or stop시 사용.
+		testDynamicScheduler.startScheduler();
+		//testDynamicScheduler.stopScheduler();
+	}
+	
+	@GetMapping("/sample/batchjob")
+	public void batchjob(HttpServletRequest req, Model model) throws Exception {
+		logger.debug("batchjob");
+		
+		// Batch Job 실행.
+		JobParameters jobParameters = new JobParametersBuilder()
+				.addString("executeDate", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+				.addString("path", "12312312").toJobParameters();
+		asyncJobLauncher.run(job, jobParameters);
+	}
     
 }

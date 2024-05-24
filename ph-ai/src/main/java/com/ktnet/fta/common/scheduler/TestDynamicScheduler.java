@@ -15,6 +15,8 @@ import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.support.CronTrigger;
 
+import com.ktnet.fta.common.job.JobConstant;
+
 @Configuration
 @EnableScheduling
 public class TestDynamicScheduler extends DynamicAbstractScheduler {
@@ -28,7 +30,7 @@ public class TestDynamicScheduler extends DynamicAbstractScheduler {
     
     private Job job;
     
-    TestDynamicScheduler(JobLauncher jobLauncher, @Qualifier("testJob")Job job) {
+    TestDynamicScheduler(JobLauncher jobLauncher, @Qualifier(JobConstant.TESTJOB) Job job) {
         this.jobLauncher = jobLauncher;
         this.job = job;
     }

@@ -1,4 +1,4 @@
-package com.ktnet.fta.common.scheduler;
+package com.ktnet.fta.common.job;
 
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +42,7 @@ class TestBatchJob {
     @Resource(name = "sampleService")
     private SampleService sampleService;
     
-    @Bean(name = "testJob")
+    @Bean(name = JobConstant.TESTJOB)
     Job job(JobRepository jobRepository) {
         return new JobBuilder("testJob", jobRepository).start(step(jobRepository)).build();
     }
