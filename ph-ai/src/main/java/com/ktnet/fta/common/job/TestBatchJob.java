@@ -36,15 +36,17 @@ class TestBatchJob {
 
     Logger logger = LoggerFactory.getLogger(getClass());
     
+    private final String JobName = JobConstant.TESTJOB;
+    
     @Autowired
     private DataSource batchDataSource;
-
+    
     @Resource(name = "sampleService")
     private SampleService sampleService;
     
-    @Bean(name = JobConstant.TESTJOB)
+    @Bean(name = JobName)
     Job job(JobRepository jobRepository) {
-        return new JobBuilder("testJob", jobRepository).start(step(jobRepository)).build();
+        return new JobBuilder(JobName, jobRepository).start(step(jobRepository)).build();
     }
 
     @Bean
