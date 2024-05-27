@@ -12,6 +12,9 @@
                 <button class="btn btn-outline-info" id="simulationBtn">
                     <i class="fa fa-th-large"></i>Simulation
                 </button>
+                <button class="btn btn-outline-info" id="simulationApiBtn">
+                    <i class="fa fa-th-large"></i>Simulation API
+                </button>
             </div>
         </div>
         
@@ -72,6 +75,9 @@
                 <button class="btn btn-outline-info" id="simulationBtn2">
                     <i class="fa fa-th-large"></i>Simulation
                 </button>
+                <button class="btn btn-outline-info" id="simulationApiBtn2">
+                    <i class="fa fa-th-large"></i>Simulation API
+                </button>
             </div>
         </div>
         
@@ -87,7 +93,7 @@
             }
             
             co.uriMap = {
-                simulation: '/sample/simulation',
+                simulation: '/sample/judgment',
             }
             
             //grid id 지정.
@@ -161,6 +167,12 @@
                 });
                 $(trigger.button.simulationBtn2).click(function() {
                     fn.simulation();
+                });
+                $(trigger.button.simulationApiBtn).click(function() {
+                    fn.simulationApi();
+                });
+                $(trigger.button.simulationApiBtn2).click(function() {
+                    fn.simulationApi();
                 });
                 
                 /* === grid event === */
