@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestClient;
 
 import com.ktnet.core.map.ParamMap;
 import com.ktnet.fta.common.web.BasicController;
@@ -46,34 +47,37 @@ public class SampleSimulationController extends BasicController {
         return rtMap;
     }
 
-    public void judgment(Map<String, Object> ftaInfo, List<Map<String, Object>> mrtList) {
-        boolean result = false;
+    @RequestMapping(value = "/sample/judgment", method = { RequestMethod.GET, RequestMethod.POST })
+    public @ResponseBody Map<String, Object> judgment(HttpServletRequest req, Model model, ParamMap pMap)
+            throws Exception {
+        logger.debug(">> judgment <<");
 
-        if ("CTH".equals(ftaInfo.get("psrStandard"))) {
+        Map<String, Object> rtMap = new HashMap<String, Object>();
 
-        }
+        // String baseUrl = "http://localhost:8090";
+        // get : /api/get/test
+        // post : /api/test
+        // String url =
 
-        if ("RCV".equals(ftaInfo.get("psrStandard"))) {
+        RestClient restClient = RestClient.create();
 
-        }
+        String result = restClient.get().uri("http://localhost:8090/api/get/test").retrieve().body(String.class);
 
-        // 0. 판정용 데이터 생성
+        /*
+         * Map<String, String> reqMap = new HashMap<String, String>();
+         * reqMap.put("test", "test");
+         * 
+         * ResponseEntity<Void> result =
+         * restClient.post().uri("http://localhost:8090/api/post/test")
+         * .contentType(MediaType.APPLICATION_JSON).body(reqMap).retrieve().
+         * toBodilessEntity();
+         */
 
-        // 1. 세번변경 기준 판정
-        // 1.1 기준별 세번 일치건수 계산
-        // 1.2 CC 기준
-        // 1.3 CTH 기준
-        // 1.4 CTSH 기준
+        logger.debug(result.toString());
 
-        // 2. 미소기준 판정
+        rtMap.put("result", "test");
 
-        // 3. 부가가치 기준 판정
-        // 3.1 BD
-        // 3.2 BU
-        // 3.3 NC
-        // 3.4 MC
-
+        return rtMap;
     }
 
-    // public void
 }
