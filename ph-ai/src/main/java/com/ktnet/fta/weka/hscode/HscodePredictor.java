@@ -2,8 +2,10 @@ package com.ktnet.fta.weka.hscode;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -15,7 +17,9 @@ import com.ktnet.fta.weka.hscode.dto.PredictResultDto;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import weka.classifiers.Classifier;
 import weka.classifiers.meta.FilteredClassifier;
+import weka.classifiers.trees.J48;
 import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.SerializationHelper;
@@ -119,7 +123,7 @@ public class HscodePredictor extends HscodeClassifer {
     public PredictResultDto predict(HscodeClassifierDto dto) throws Exception {
         // 인스턴스 설정
         Instance instance = this.createInstance(dto);
-        logger.info(">>>> instance : " + instance);
+        //logger.info(">>>> instance : " + instance);
         
         PredictResultDto predictDto = new PredictResultDto();
         
@@ -129,9 +133,12 @@ public class HscodePredictor extends HscodeClassifer {
         }
         instances.add(instance);
         
+        Classifier model = new J48();
+        classifier.setClassifier(model);
+        
         // 데이터 예측
         for (int i = 0; i < instances.numInstances(); i++) {
-            instances.instance(i).setClassValue(classifier.classifyInstance(instances.instance(i)));
+        	instances.instance(i).setClassValue(classifier.classifyInstance(instances.instance(i)));  //예측
         }
         
         // 예측 결과 가져오기
@@ -143,6 +150,65 @@ public class HscodePredictor extends HscodeClassifer {
         predictDto.setRate(classifier.distributionForInstance(lastInstance)[classValue]);
         
         return predictDto;
+    }
+    
+    /**
+     * 데이터 예측 결과를 n개 리턴.
+     * @param itemName
+     * @return
+     * @throws Exception
+     */
+    public List<PredictResultDto> predictList(String itemName) throws Exception {
+        HscodeClassifierDto dto = new HscodeClassifierDto(itemName);
+        return this.predictList(dto);
+    }
+    public List<PredictResultDto> predictList(HscodeClassifierDto dto) throws Exception {
+    	// 인스턴스 설정
+    	Instance instance = this.createInstance(dto);
+    	//logger.info(">>>> instance : " + instance);
+    	
+    	List<PredictResultDto> predictResultList = new ArrayList<>();
+    	PredictResultDto predictDto = new PredictResultDto();
+    	
+    	if (instance == null) {
+    		predictDto.setResult("");
+    		predictDto.setRate(0);
+    		predictResultList.add(predictDto);
+    		return predictResultList;
+    	}
+    	
+    	instances.add(instance);
+    	
+    	// 데이터 예측
+    	for (int i = 0; i < instances.numInstances(); i++) {
+    		instances.instance(i).setClassValue(classifier.classifyInstance(instances.instance(i)));  //예측
+    	}
+    	
+    	// 예측 결과 가져오기
+    	Instance lastInstance = instances.lastInstance();
+    	
+    	// 예측 데이터들의 예측률 정보.
+    	double[] prediction = classifier.distributionForInstance(instances.lastInstance());
+    	//System.out.println("prediction CNT : " + prediction.length);
+    	//System.out.println("=============================");
+    	
+    	int idx = 0;
+    	for (double v : prediction) {
+    		if ((Math.floor(v*100)) >= 0.1) {
+    			// 결과 정보 등록.
+    			predictDto = new PredictResultDto();
+    			predictDto.setResult(lastInstance.classAttribute().value(idx));
+    			predictDto.setRate(v);
+    			predictResultList.add(predictDto);
+    			
+    			//System.out.println("prediction result : " + lastInstance.classAttribute().value(idx));
+    			//System.out.println("rate  : " + classifier.distributionForInstance(lastInstance)[idx]);
+    			//System.out.println("prediction rate   : " + Math.floor(v*100));
+    		}
+    		idx++;
+    	}
+    	
+    	return predictResultList;
     }
 
 }
