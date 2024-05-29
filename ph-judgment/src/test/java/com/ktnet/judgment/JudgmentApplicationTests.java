@@ -1,6 +1,5 @@
 package com.ktnet.judgment;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ktnet.fta.judgment.dto.JudgmentDto;
 import com.ktnet.fta.judgment.dto.TestDto;
 import com.ktnet.fta.judgment.service.JudgmentService;
 
@@ -34,22 +32,23 @@ public class JudgmentApplicationTests {
         // TestDto testDto =
         // TestDto.builder().value("aaaaaaaaaa").testValue("bbbbbbbbbbb").build();
 
-        TestDto testDto = TestDto.builder().build();
+        // TestDto testDto = TestDto.builder().build();
         TestDto testDto2 = new TestDto();
 
-        logger.debug(testDto.getValue());
-        logger.debug(testDto.getTestValue());
+        // logger.debug(testDto.getValue());
+        // logger.debug(testDto.getTestValue());
 
         logger.debug(testDto2.getValue());
         logger.debug(testDto2.getTestValue());
 
         // 초기화 확인 필요
-        JudgmentDto judgment = JudgmentDto.builder().amount(new BigDecimal(10000)).build();
-        JudgmentDto judgment2 = new JudgmentDto();
+        // JudgmentDto judgment = JudgmentDto.builder().amount(new
+        // BigDecimal(10000)).build();
+        // JudgmentDto judgment2 = new JudgmentDto();
 
         // logger.debug("judgmentDto", judgment.toString());
-        logger.debug("judgment", judgment.toString());
-        logger.debug("judgment2", judgment2.toString());
+        // logger.debug("judgment", judgment.toString());
+        // logger.debug("judgment2", judgment2.toString());
     }
 
     @Test

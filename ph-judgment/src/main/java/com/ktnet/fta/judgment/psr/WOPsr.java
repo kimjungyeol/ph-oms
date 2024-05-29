@@ -1,7 +1,10 @@
 package com.ktnet.fta.judgment.psr;
 
+import org.springframework.stereotype.Component;
+
 import com.ktnet.fta.judgment.dto.JudgmentDto;
 
+@Component
 public class WOPsr {
 
     public boolean judgment(Long companyId, JudgmentDto judgment) {

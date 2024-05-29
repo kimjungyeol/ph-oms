@@ -9,16 +9,6 @@ import com.ktnet.core.psr.search.dto.PsrSearchItemDto;
 import com.ktnet.fta.judgment.constant.DetailsType;
 import com.ktnet.fta.judgment.constant.JudgmentType;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
 public class JudgmentDto {
 
     private static DecimalFormat amountFormatter = new DecimalFormat("#,##0.00");
@@ -35,10 +25,8 @@ public class JudgmentDto {
 
     private Boolean useJudgment;
 
-    // @Enumerated(EnumType.STRING)
     private DetailsType detailsType;
 
-    // @Enumerated(EnumType.STRING)
     private JudgmentType judgmentType;
 
     private Long groupId;
@@ -173,7 +161,602 @@ public class JudgmentDto {
 
     private Boolean etc;
 
-    @Builder
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<JudgmentErrorDetailDto> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(List<JudgmentErrorDetailDto> errors) {
+        this.errors = errors;
+    }
+
+    public List<JudgmentConditionDetailDto> getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(List<JudgmentConditionDetailDto> conditions) {
+        this.conditions = conditions;
+    }
+
+    public JudgmentSetupDto getSetupDto() {
+        return setupDto;
+    }
+
+    public void setSetupDto(JudgmentSetupDto setupDto) {
+        this.setupDto = setupDto;
+    }
+
+    public PsrSearchItemDto getPsrDto() {
+        return psrDto;
+    }
+
+    public void setPsrDto(PsrSearchItemDto psrDto) {
+        this.psrDto = psrDto;
+    }
+
+    public Boolean getUseJudgment() {
+        return useJudgment;
+    }
+
+    public void setUseJudgment(Boolean useJudgment) {
+        this.useJudgment = useJudgment;
+    }
+
+    public DetailsType getDetailsType() {
+        return detailsType;
+    }
+
+    public void setDetailsType(DetailsType detailsType) {
+        this.detailsType = detailsType;
+    }
+
+    public JudgmentType getJudgmentType() {
+        return judgmentType;
+    }
+
+    public void setJudgmentType(JudgmentType judgmentType) {
+        this.judgmentType = judgmentType;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Long getEoId() {
+        return eoId;
+    }
+
+    public void setEoId(Long eoId) {
+        this.eoId = eoId;
+    }
+
+    public Long getFtaId() {
+        return ftaId;
+    }
+
+    public void setFtaId(Long ftaId) {
+        this.ftaId = ftaId;
+    }
+
+    public Long getItemTypeId() {
+        return itemTypeId;
+    }
+
+    public void setItemTypeId(Long itemTypeId) {
+        this.itemTypeId = itemTypeId;
+    }
+
+    public Long getPsrId() {
+        return psrId;
+    }
+
+    public void setPsrId(Long psrId) {
+        this.psrId = psrId;
+    }
+
+    public Long getClassificationId() {
+        return classificationId;
+    }
+
+    public void setClassificationId(Long classificationId) {
+        this.classificationId = classificationId;
+    }
+
+    public Long getSortSn() {
+        return sortSn;
+    }
+
+    public void setSortSn(Long sortSn) {
+        this.sortSn = sortSn;
+    }
+
+    public String getHscode() {
+        return hscode;
+    }
+
+    public void setHscode(String hscode) {
+        this.hscode = hscode;
+    }
+
+    public String getNameOfCo() {
+        return nameOfCo;
+    }
+
+    public void setNameOfCo(String nameOfCo) {
+        this.nameOfCo = nameOfCo;
+    }
+
+    public String getNameOfDo() {
+        return nameOfDo;
+    }
+
+    public void setNameOfDo(String nameOfDo) {
+        this.nameOfDo = nameOfDo;
+    }
+
+    public String getPsrDescription() {
+        return psrDescription;
+    }
+
+    public void setPsrDescription(String psrDescription) {
+        this.psrDescription = psrDescription;
+    }
+
+    public Boolean getDoUse() {
+        return doUse;
+    }
+
+    public void setDoUse(Boolean doUse) {
+        this.doUse = doUse;
+    }
+
+    public Boolean getDoSufficient() {
+        return doSufficient;
+    }
+
+    public void setDoSufficient(Boolean doSufficient) {
+        this.doSufficient = doSufficient;
+    }
+
+    public Boolean getWoUse() {
+        return woUse;
+    }
+
+    public void setWoUse(Boolean woUse) {
+        this.woUse = woUse;
+    }
+
+    public Boolean getWoSufficient() {
+        return woSufficient;
+    }
+
+    public void setWoSufficient(Boolean woSufficient) {
+        this.woSufficient = woSufficient;
+    }
+
+    public Boolean getSpUse() {
+        return spUse;
+    }
+
+    public void setSpUse(Boolean spUse) {
+        this.spUse = spUse;
+    }
+
+    public Boolean getSpSufficient() {
+        return spSufficient;
+    }
+
+    public void setSpSufficient(Boolean spSufficient) {
+        this.spSufficient = spSufficient;
+    }
+
+    public Boolean getCtcUse() {
+        return ctcUse;
+    }
+
+    public void setCtcUse(Boolean ctcUse) {
+        this.ctcUse = ctcUse;
+    }
+
+    public Boolean getCtcSufficient() {
+        return ctcSufficient;
+    }
+
+    public void setCtcSufficient(Boolean ctcSufficient) {
+        this.ctcSufficient = ctcSufficient;
+    }
+
+    public String getCtcStandard() {
+        return ctcStandard;
+    }
+
+    public void setCtcStandard(String ctcStandard) {
+        this.ctcStandard = ctcStandard;
+    }
+
+    public String getDeminimisStandard() {
+        return deminimisStandard;
+    }
+
+    public void setDeminimisStandard(String deminimisStandard) {
+        this.deminimisStandard = deminimisStandard;
+    }
+
+    public BigDecimal getDeminimisStandardRate() {
+        return deminimisStandardRate;
+    }
+
+    public void setDeminimisStandardRate(BigDecimal deminimisStandardRate) {
+        this.deminimisStandardRate = deminimisStandardRate;
+    }
+
+    public Long getDeminimisBuffer() {
+        return deminimisBuffer;
+    }
+
+    public void setDeminimisBuffer(Long deminimisBuffer) {
+        this.deminimisBuffer = deminimisBuffer;
+    }
+
+    public BigDecimal getDeminimisCalculationRate() {
+        return deminimisCalculationRate;
+    }
+
+    public void setDeminimisCalculationRate(BigDecimal deminimisCalculationRate) {
+        this.deminimisCalculationRate = deminimisCalculationRate;
+    }
+
+    public Boolean getDeminimisSufficient() {
+        return deminimisSufficient;
+    }
+
+    public void setDeminimisSufficient(Boolean deminimisSufficient) {
+        this.deminimisSufficient = deminimisSufficient;
+    }
+
+    public Boolean getRvcUse() {
+        return rvcUse;
+    }
+
+    public void setRvcUse(Boolean rvcUse) {
+        this.rvcUse = rvcUse;
+    }
+
+    public String getRvcStandard() {
+        return rvcStandard;
+    }
+
+    public void setRvcStandard(String rvcStandard) {
+        this.rvcStandard = rvcStandard;
+    }
+
+    public BigDecimal getRvcStandardRate() {
+        return rvcStandardRate;
+    }
+
+    public void setRvcStandardRate(BigDecimal rvcStandardRate) {
+        this.rvcStandardRate = rvcStandardRate;
+    }
+
+    public Long getRvcBuffer() {
+        return rvcBuffer;
+    }
+
+    public void setRvcBuffer(Long rvcBuffer) {
+        this.rvcBuffer = rvcBuffer;
+    }
+
+    public BigDecimal getRvcCalculationRate() {
+        return rvcCalculationRate;
+    }
+
+    public void setRvcCalculationRate(BigDecimal rvcCalculationRate) {
+        this.rvcCalculationRate = rvcCalculationRate;
+    }
+
+    public Boolean getRvcSufficient() {
+        return rvcSufficient;
+    }
+
+    public void setRvcSufficient(Boolean rvcSufficient) {
+        this.rvcSufficient = rvcSufficient;
+    }
+
+    public String getRvcDetail() {
+        return rvcDetail;
+    }
+
+    public void setRvcDetail(String rvcDetail) {
+        this.rvcDetail = rvcDetail;
+    }
+
+    public Boolean getConditionUse() {
+        return conditionUse;
+    }
+
+    public void setConditionUse(Boolean conditionUse) {
+        this.conditionUse = conditionUse;
+    }
+
+    public Boolean getConditionSufficient() {
+        return conditionSufficient;
+    }
+
+    public void setConditionSufficient(Boolean conditionSufficient) {
+        this.conditionSufficient = conditionSufficient;
+    }
+
+    public BigDecimal getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
+    }
+
+    public BigDecimal getMaterialAmountOrigin() {
+        return materialAmountOrigin;
+    }
+
+    public void setMaterialAmountOrigin(BigDecimal materialAmountOrigin) {
+        this.materialAmountOrigin = materialAmountOrigin;
+    }
+
+    public BigDecimal getMaterialAmountNonOrigin() {
+        return materialAmountNonOrigin;
+    }
+
+    public void setMaterialAmountNonOrigin(BigDecimal materialAmountNonOrigin) {
+        this.materialAmountNonOrigin = materialAmountNonOrigin;
+    }
+
+    public BigDecimal getMaterialWeightOrigin() {
+        return materialWeightOrigin;
+    }
+
+    public void setMaterialWeightOrigin(BigDecimal materialWeightOrigin) {
+        this.materialWeightOrigin = materialWeightOrigin;
+    }
+
+    public BigDecimal getMaterialWeightNonOrigin() {
+        return materialWeightNonOrigin;
+    }
+
+    public void setMaterialWeightNonOrigin(BigDecimal materialWeightNonOrigin) {
+        this.materialWeightNonOrigin = materialWeightNonOrigin;
+    }
+
+    public Integer getPriceErrorOriginCount() {
+        return priceErrorOriginCount;
+    }
+
+    public void setPriceErrorOriginCount(Integer priceErrorOriginCount) {
+        this.priceErrorOriginCount = priceErrorOriginCount;
+    }
+
+    public Integer getPriceErrorNonOriginCount() {
+        return priceErrorNonOriginCount;
+    }
+
+    public void setPriceErrorNonOriginCount(Integer priceErrorNonOriginCount) {
+        this.priceErrorNonOriginCount = priceErrorNonOriginCount;
+    }
+
+    public Integer getWeightErrorOriginCount() {
+        return weightErrorOriginCount;
+    }
+
+    public void setWeightErrorOriginCount(Integer weightErrorOriginCount) {
+        this.weightErrorOriginCount = weightErrorOriginCount;
+    }
+
+    public Integer getWeightErrorNonOriginCount() {
+        return weightErrorNonOriginCount;
+    }
+
+    public void setWeightErrorNonOriginCount(Integer weightErrorNonOriginCount) {
+        this.weightErrorNonOriginCount = weightErrorNonOriginCount;
+    }
+
+    public Integer getHscodeErrorCount() {
+        return hscodeErrorCount;
+    }
+
+    public void setHscodeErrorCount(Integer hscodeErrorCount) {
+        this.hscodeErrorCount = hscodeErrorCount;
+    }
+
+    public Integer getCcMatchCount() {
+        return ccMatchCount;
+    }
+
+    public void setCcMatchCount(Integer ccMatchCount) {
+        this.ccMatchCount = ccMatchCount;
+    }
+
+    public Integer getCthMatchCount() {
+        return cthMatchCount;
+    }
+
+    public void setCthMatchCount(Integer cthMatchCount) {
+        this.cthMatchCount = cthMatchCount;
+    }
+
+    public Integer getCtshMatchCount() {
+        return ctshMatchCount;
+    }
+
+    public void setCtshMatchCount(Integer ctshMatchCount) {
+        this.ctshMatchCount = ctshMatchCount;
+    }
+
+    public BigDecimal getCcMatchAmount() {
+        return ccMatchAmount;
+    }
+
+    public void setCcMatchAmount(BigDecimal ccMatchAmount) {
+        this.ccMatchAmount = ccMatchAmount;
+    }
+
+    public BigDecimal getCthMatchAmount() {
+        return cthMatchAmount;
+    }
+
+    public void setCthMatchAmount(BigDecimal cthMatchAmount) {
+        this.cthMatchAmount = cthMatchAmount;
+    }
+
+    public BigDecimal getCtshMatchAmount() {
+        return ctshMatchAmount;
+    }
+
+    public void setCtshMatchAmount(BigDecimal ctshMatchAmount) {
+        this.ctshMatchAmount = ctshMatchAmount;
+    }
+
+    public BigDecimal getCcMatchWeight() {
+        return ccMatchWeight;
+    }
+
+    public void setCcMatchWeight(BigDecimal ccMatchWeight) {
+        this.ccMatchWeight = ccMatchWeight;
+    }
+
+    public BigDecimal getCthMatchWeight() {
+        return cthMatchWeight;
+    }
+
+    public void setCthMatchWeight(BigDecimal cthMatchWeight) {
+        this.cthMatchWeight = cthMatchWeight;
+    }
+
+    public BigDecimal getCtshMatchWeight() {
+        return ctshMatchWeight;
+    }
+
+    public void setCtshMatchWeight(BigDecimal ctshMatchWeight) {
+        this.ctshMatchWeight = ctshMatchWeight;
+    }
+
+    public Integer getCcMatchAmountErrorCount() {
+        return ccMatchAmountErrorCount;
+    }
+
+    public void setCcMatchAmountErrorCount(Integer ccMatchAmountErrorCount) {
+        this.ccMatchAmountErrorCount = ccMatchAmountErrorCount;
+    }
+
+    public Integer getCthMatchAmountErrorCount() {
+        return cthMatchAmountErrorCount;
+    }
+
+    public void setCthMatchAmountErrorCount(Integer cthMatchAmountErrorCount) {
+        this.cthMatchAmountErrorCount = cthMatchAmountErrorCount;
+    }
+
+    public Integer getCtshMatchAmountErrorCount() {
+        return ctshMatchAmountErrorCount;
+    }
+
+    public void setCtshMatchAmountErrorCount(Integer ctshMatchAmountErrorCount) {
+        this.ctshMatchAmountErrorCount = ctshMatchAmountErrorCount;
+    }
+
+    public Integer getCcMatchWeightErrorCount() {
+        return ccMatchWeightErrorCount;
+    }
+
+    public void setCcMatchWeightErrorCount(Integer ccMatchWeightErrorCount) {
+        this.ccMatchWeightErrorCount = ccMatchWeightErrorCount;
+    }
+
+    public Integer getCthMatchWeightErrorCount() {
+        return cthMatchWeightErrorCount;
+    }
+
+    public void setCthMatchWeightErrorCount(Integer cthMatchWeightErrorCount) {
+        this.cthMatchWeightErrorCount = cthMatchWeightErrorCount;
+    }
+
+    public Integer getCtshMatchWeightErrorCount() {
+        return ctshMatchWeightErrorCount;
+    }
+
+    public void setCtshMatchWeightErrorCount(Integer ctshMatchWeightErrorCount) {
+        this.ctshMatchWeightErrorCount = ctshMatchWeightErrorCount;
+    }
+
+    public String getPsrStandard() {
+        return psrStandard;
+    }
+
+    public void setPsrStandard(String psrStandard) {
+        this.psrStandard = psrStandard;
+    }
+
+    public Boolean getSufficient() {
+        return sufficient;
+    }
+
+    public void setSufficient(Boolean sufficient) {
+        this.sufficient = sufficient;
+    }
+
+    public Long getItemTypeCount() {
+        return itemTypeCount;
+    }
+
+    public void setItemTypeCount(Long itemTypeCount) {
+        this.itemTypeCount = itemTypeCount;
+    }
+
+    public Boolean getAccmltstdr() {
+        return accmltstdr;
+    }
+
+    public void setAccmltstdr(Boolean accmltstdr) {
+        this.accmltstdr = accmltstdr;
+    }
+
+    public Boolean getEtc() {
+        return etc;
+    }
+
+    public void setEtc(Boolean etc) {
+        this.etc = etc;
+    }
+
+    public JudgmentDto() {
+
+    }
+
     public JudgmentDto(Long id, Boolean useJudgment, JudgmentType judgmentType, Long groupId, Long eoId, Long ftaId,
             Long itemTypeId, Long psrId, Long classificationId, Long sortSn, String hscode, String nameOfCo,
             String nameOfDo, String psrDescription, Boolean doUse, Boolean doSufficient, Boolean woUse,
@@ -262,7 +845,11 @@ public class JudgmentDto {
     }
 
     public void addError(String errorType, String contents) {
-        this.errors.add(JudgmentErrorDetailDto.builder().errorType(errorType).contents(contents).build());
+        // this.errors.add(JudgmentErrorDetailDto.builder().errorType(errorType).contents(contents).build());
+        JudgmentErrorDetailDto judgmentErrorDetailDto = new JudgmentErrorDetailDto();
+        judgmentErrorDetailDto.setErrorType(errorType);
+        judgmentErrorDetailDto.setContents(contents);
+        this.errors.add(judgmentErrorDetailDto);
     }
 
     public JudgmentDto update(JudgmentSetupDto setupDto) {
@@ -307,7 +894,11 @@ public class JudgmentDto {
 
         // 예외기준 처리
         psrDto.getConditions().stream().forEach(item -> {
-            this.conditions.add(JudgmentConditionDetailDto.builder().build().update(item));
+            // this.conditions.add(JudgmentConditionDetailDto.builder().build().update(item));
+
+            JudgmentConditionDetailDto judgmentConditionDetailDto = new JudgmentConditionDetailDto();
+            this.conditions.add(judgmentConditionDetailDto.update(item));
+
         });
         this.accmltstdr = Boolean.FALSE;
         this.etc = Boolean.FALSE;

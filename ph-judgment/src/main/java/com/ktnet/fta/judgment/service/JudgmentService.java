@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ktnet.core.fta.dto.FtaDto;
 import com.ktnet.fta.judgment.constant.JudgmentType;
 import com.ktnet.fta.judgment.dto.JudgmentDto;
 import com.ktnet.fta.judgment.psr.CTCPsr;
@@ -16,21 +18,24 @@ import com.ktnet.fta.judgment.psr.RVCPsr;
 import com.ktnet.fta.judgment.psr.SPPsr;
 import com.ktnet.fta.judgment.psr.WOPsr;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class JudgmentService {
 
     /*** Mapper ***/
 
     /*** PSR ***/
-    private final WOPsr woPsr;
-    private final SPPsr spPsr;
-    private final CTCPsr ctcPsr;
-    private final RVCPsr rvcPsr;
-    private final ConditionPsr conditionPsr;
-    private final DOPsr doPsr;
+    @Autowired
+    WOPsr woPsr;
+    @Autowired
+    SPPsr spPsr;
+    @Autowired
+    CTCPsr ctcPsr;
+    @Autowired
+    RVCPsr rvcPsr;
+    @Autowired
+    ConditionPsr conditionPsr;
+    @Autowired
+    DOPsr doPsr;
 
     public String test() {
         return "judgment api post test";
@@ -43,6 +48,7 @@ public class JudgmentService {
         Long tempCompanyId = -100L;
 
         JudgmentDto judgmentDto = this.generateJudgmentDto(ftaInfo, itemList);
+        FtaDto ftaDto = new FtaDto();
 
         this.judgment(tempCompanyId, judgmentDto);
 
@@ -51,11 +57,11 @@ public class JudgmentService {
         }
 
         if ("RVC".equals(ftaInfo.get("psrStandard"))) {
-            // result = rvcPsr.judgment(judgmentData);
+            // result = rvcPsr.judgment(judgmentDto);
         }
 
         if ("CTH".equals(ftaInfo.get("psrStandard"))) {
-            // result = ctcPsr.judgment(judgmentData);
+            // result = ctcPsr.judgment(judgmentDto);
         }
 
         return result;
@@ -144,16 +150,45 @@ public class JudgmentService {
 
         // PSR 조회 추가 필요
 
-        JudgmentDto judgmentDto = JudgmentDto.builder().amount(amount).psrStandard(psrStandard)
-                .rvcStandardRate(rvcStandardRate).materialAmountOrigin(materialAmountOrigin)
-                .materialAmountNonOrigin(materialAmountNonOrigin).hscodeErrorCount(hscodeErrorCount)
-                .ccMatchCount(ccMatchCount).cthMatchCount(cthMatchCount).ctshMatchCount(ctshMatchCount)
-                .ccMatchAmount(ccMatchAmount).cthMatchAmount(cthMatchAmount).ctshMatchAmount(ctshMatchAmount)
-                .deminimisBuffer(3L).rvcBuffer(5L).sufficient(Boolean.FALSE).doSufficient(Boolean.FALSE)
-                .woSufficient(Boolean.FALSE).spSufficient(Boolean.FALSE).ctcSufficient(Boolean.FALSE)
-                .deminimisSufficient(Boolean.FALSE).rvcSufficient(Boolean.FALSE).conditionSufficient(Boolean.FALSE)
-                .accmltstdr(Boolean.FALSE).etc(Boolean.FALSE).priceErrorOriginCount(priceErrorOriginCount)
-                .priceErrorNonOriginCount(priceErrorNonOriginCount).build();
+//        JudgmentDto judgmentDto2 = JudgmentDto.builder().amount(amount).psrStandard(psrStandard)
+//                .rvcStandardRate(rvcStandardRate).materialAmountOrigin(materialAmountOrigin)
+//                .materialAmountNonOrigin(materialAmountNonOrigin).hscodeErrorCount(hscodeErrorCount)
+//                .ccMatchCount(ccMatchCount).cthMatchCount(cthMatchCount).ctshMatchCount(ctshMatchCount)
+//                .ccMatchAmount(ccMatchAmount).cthMatchAmount(cthMatchAmount).ctshMatchAmount(ctshMatchAmount)
+//                .deminimisBuffer(3L).rvcBuffer(5L).sufficient(Boolean.FALSE).doSufficient(Boolean.FALSE)
+//                .woSufficient(Boolean.FALSE).spSufficient(Boolean.FALSE).ctcSufficient(Boolean.FALSE)
+//                .deminimisSufficient(Boolean.FALSE).rvcSufficient(Boolean.FALSE).conditionSufficient(Boolean.FALSE)
+//                .accmltstdr(Boolean.FALSE).etc(Boolean.FALSE).priceErrorOriginCount(priceErrorOriginCount)
+//                .priceErrorNonOriginCount(priceErrorNonOriginCount).build();
+
+        JudgmentDto judgmentDto = new JudgmentDto();
+
+        judgmentDto.setAmount(amount);
+        judgmentDto.setPsrStandard(psrStandard);
+        judgmentDto.setRvcStandardRate(rvcStandardRate);
+        judgmentDto.setMaterialAmountOrigin(materialAmountOrigin);
+        judgmentDto.setMaterialAmountNonOrigin(materialAmountNonOrigin);
+        judgmentDto.setHscodeErrorCount(hscodeErrorCount);
+        judgmentDto.setCcMatchCount(ccMatchCount);
+        judgmentDto.setCthMatchCount(cthMatchCount);
+        judgmentDto.setCtshMatchCount(ctshMatchCount);
+        judgmentDto.setCcMatchAmount(ccMatchAmount);
+        judgmentDto.setCthMatchAmount(cthMatchAmount);
+        judgmentDto.setCtshMatchAmount(ctshMatchAmount);
+        judgmentDto.setDeminimisBuffer(3L);
+        judgmentDto.setRvcBuffer(5L);
+        judgmentDto.setSufficient(Boolean.FALSE);
+        judgmentDto.setDoSufficient(Boolean.FALSE);
+        judgmentDto.setWoSufficient(Boolean.FALSE);
+        judgmentDto.setSpSufficient(Boolean.FALSE);
+        judgmentDto.setCtcSufficient(Boolean.FALSE);
+        judgmentDto.setDeminimisSufficient(Boolean.FALSE);
+        judgmentDto.setRvcSufficient(Boolean.FALSE);
+        judgmentDto.setConditionSufficient(Boolean.FALSE);
+        judgmentDto.setAccmltstdr(Boolean.FALSE);
+        judgmentDto.setEtc(Boolean.FALSE);
+        judgmentDto.setPriceErrorOriginCount(priceErrorOriginCount);
+        judgmentDto.setPriceErrorNonOriginCount(priceErrorNonOriginCount);
 
         // PSR 조회 후 update 해줘야함
         // 1. deminimisBuffer (미소기준 버퍼)
@@ -174,34 +209,34 @@ public class JudgmentService {
 
         if (judgment.getJudgmentType().equals(JudgmentType.PURCHASE)) {
             // 상품 판정
-            result = this.doPsr.judgment(judgment);
+            // result = this.doPsr.judgment(judgment);
             judgment.updateSufficient(result);
             return;
         }
 
         // 완전 생산 기준 판정
         if (judgment.getWoUse()) {
-            result = result && this.woPsr.judgment(companyId, judgment);
+            // result = result && this.woPsr.judgment(companyId, judgment);
         }
 
         // 가공공정 기준 판정
         if (judgment.getSpUse()) {
-            result = result && this.spPsr.judgment(companyId, judgment);
+            // result = result && this.spPsr.judgment(companyId, judgment);
         }
 
         // 세번변경 기준 판정
         if (judgment.getCtcUse()) {
-            result = result && this.ctcPsr.judgment(companyId, judgment);
+            // result = result && this.ctcPsr.judgment(companyId, judgment);
         }
 
         // 부가가치 기준 판정
         if (judgment.getRvcUse()) {
-            result = result && this.rvcPsr.judgment(companyId, judgment);
+            // result = result && this.rvcPsr.judgment(companyId, judgment);
         }
 
         // 예외기준 판정
         if (judgment.getConditionUse()) {
-            result = result && this.conditionPsr.judgment(companyId, judgment);
+            // result = result && this.conditionPsr.judgment(companyId, judgment);
         }
 
         // 최종 결과 반영
@@ -216,11 +251,11 @@ public class JudgmentService {
         Map<String, Object> judgmentData = this.generateJudgmentData(ftaInfo, itemList);
 
         if ("RVC".equals(ftaInfo.get("psrStandard"))) {
-            result = rvcPsr.judgment(judgmentData);
+            // result = rvcPsr.judgment(judgmentData);
         }
 
         if ("CTH".equals(ftaInfo.get("psrStandard"))) {
-            result = ctcPsr.judgment(judgmentData);
+            // result = ctcPsr.judgment(judgmentData);
         }
 
         return result;

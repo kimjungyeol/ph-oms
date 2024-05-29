@@ -1,8 +1,5 @@
 package com.ktnet.common.response;
 
-
-import lombok.Builder;
-
 /**
  * [공통] API Response 결과의 반환 값을 관리
  */
@@ -18,16 +15,17 @@ public class ApiResponse<T> {
     private String resultMsg;
 
     public T getResult() {
-		return result;
-	}
-	public int getResultCode() {
-		return resultCode;
-	}
-	public String getResultMsg() {
-		return resultMsg;
-	}
+        return result;
+    }
 
-	@Builder
+    public int getResultCode() {
+        return resultCode;
+    }
+
+    public String getResultMsg() {
+        return resultMsg;
+    }
+
     public ApiResponse(final T result, final int resultCode, final String resultMsg) {
         this.result = result;
         this.resultCode = resultCode;

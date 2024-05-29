@@ -4,14 +4,6 @@ import java.math.BigDecimal;
 
 import com.ktnet.core.psr.condition.dto.PsrConditionDto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-@Getter
-@ToString
-@NoArgsConstructor
 public class JudgmentConditionDetailDto {
 
     private Long id;
@@ -28,7 +20,65 @@ public class JudgmentConditionDetailDto {
 
     private String targetHsCode;
 
-    @Builder
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Long getJudgmentId() {
+        return judgmentId;
+    }
+
+    public void setJudgmentId(Long judgmentId) {
+        this.judgmentId = judgmentId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public String getTargetHsCode() {
+        return targetHsCode;
+    }
+
+    public void setTargetHsCode(String targetHsCode) {
+        this.targetHsCode = targetHsCode;
+    }
+
+    public JudgmentConditionDetailDto() {
+    }
+
     public JudgmentConditionDetailDto(Long id, Long groupId, Long judgmentId, String type, String description,
             BigDecimal rate, String targetHsCode) {
         this.id = id;

@@ -8,15 +8,6 @@ import com.ktnet.core.fta.dto.FtaDto;
 import com.ktnet.core.item.dto.StandardItemTypeDto;
 import com.ktnet.core.psr.condition.dto.PsrConditionDto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@ToString
-@NoArgsConstructor
 public class PsrDto {
 
     private Long id;
@@ -63,10 +54,179 @@ public class PsrDto {
     private Boolean conditionUse; // 예외기준
     private Boolean choiceUse; // 선택기준
 
-    @Setter
     private List<PsrConditionDto> conditions;
 
-    @Builder
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getFtaId() {
+        return ftaId;
+    }
+
+    public void setFtaId(Long ftaId) {
+        this.ftaId = ftaId;
+    }
+
+    public FtaDto getFta() {
+        return fta;
+    }
+
+    public void setFta(FtaDto fta) {
+        this.fta = fta;
+    }
+
+    public Long getStandardItemTypeId() {
+        return standardItemTypeId;
+    }
+
+    public void setStandardItemTypeId(Long standardItemTypeId) {
+        this.standardItemTypeId = standardItemTypeId;
+    }
+
+    public Long getSortSn() {
+        return sortSn;
+    }
+
+    public void setSortSn(Long sortSn) {
+        this.sortSn = sortSn;
+    }
+
+    public StandardItemTypeDto getStandardItemType() {
+        return standardItemType;
+    }
+
+    public void setStandardItemType(StandardItemTypeDto standardItemType) {
+        this.standardItemType = standardItemType;
+    }
+
+    public String getNameOfCo() {
+        return nameOfCo;
+    }
+
+    public void setNameOfCo(String nameOfCo) {
+        this.nameOfCo = nameOfCo;
+    }
+
+    public String getNameOfDo() {
+        return nameOfDo;
+    }
+
+    public void setNameOfDo(String nameOfDo) {
+        this.nameOfDo = nameOfDo;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getWoUse() {
+        return woUse;
+    }
+
+    public void setWoUse(Boolean woUse) {
+        this.woUse = woUse;
+    }
+
+    public Boolean getSpUse() {
+        return spUse;
+    }
+
+    public void setSpUse(Boolean spUse) {
+        this.spUse = spUse;
+    }
+
+    public Boolean getCtcUse() {
+        return ctcUse;
+    }
+
+    public void setCtcUse(Boolean ctcUse) {
+        this.ctcUse = ctcUse;
+    }
+
+    public String getCtcStandard() {
+        return ctcStandard;
+    }
+
+    public void setCtcStandard(String ctcStandard) {
+        this.ctcStandard = ctcStandard;
+    }
+
+    public String getDeminimisStandard() {
+        return deminimisStandard;
+    }
+
+    public void setDeminimisStandard(String deminimisStandard) {
+        this.deminimisStandard = deminimisStandard;
+    }
+
+    public BigDecimal getDeminimisRate() {
+        return deminimisRate;
+    }
+
+    public void setDeminimisRate(BigDecimal deminimisRate) {
+        this.deminimisRate = deminimisRate;
+    }
+
+    public Boolean getRvcUse() {
+        return rvcUse;
+    }
+
+    public void setRvcUse(Boolean rvcUse) {
+        this.rvcUse = rvcUse;
+    }
+
+    public String getRvcStandard() {
+        return rvcStandard;
+    }
+
+    public void setRvcStandard(String rvcStandard) {
+        this.rvcStandard = rvcStandard;
+    }
+
+    public BigDecimal getRvcRate() {
+        return rvcRate;
+    }
+
+    public void setRvcRate(BigDecimal rvcRate) {
+        this.rvcRate = rvcRate;
+    }
+
+    public Boolean getConditionUse() {
+        return conditionUse;
+    }
+
+    public void setConditionUse(Boolean conditionUse) {
+        this.conditionUse = conditionUse;
+    }
+
+    public Boolean getChoiceUse() {
+        return choiceUse;
+    }
+
+    public void setChoiceUse(Boolean choiceUse) {
+        this.choiceUse = choiceUse;
+    }
+
+    public List<PsrConditionDto> getConditions() {
+        return conditions;
+    }
+
+    public void setConditions(List<PsrConditionDto> conditions) {
+        this.conditions = conditions;
+    }
+
+    public PsrDto() {
+    }
+
     public PsrDto(Long id, Long ftaId, FtaDto fta, Long standardItemTypeId, Long sortSn,
             StandardItemTypeDto standardItemType, String nameOfCo, String nameOfDo, String description, Boolean woUse,
             Boolean spUse, Boolean ctcUse, String ctcStandard, String deminimisStandard, BigDecimal deminimisRate,

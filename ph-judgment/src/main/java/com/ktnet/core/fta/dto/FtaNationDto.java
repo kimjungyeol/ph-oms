@@ -2,16 +2,6 @@ package com.ktnet.core.fta.dto;
 
 import com.ktnet.core.nation.dto.NationRetrieveDto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-@Setter
-@Getter
-@ToString
-@NoArgsConstructor
 public class FtaNationDto {
 
     private Long id;
@@ -19,12 +9,64 @@ public class FtaNationDto {
     private Long ftaId;
 
     private String beginDate;
+
     private String endDate = "29991231";
 
     private Long nationId;
+
     private NationRetrieveDto nation;
 
-    @Builder
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getFtaId() {
+        return ftaId;
+    }
+
+    public void setFtaId(Long ftaId) {
+        this.ftaId = ftaId;
+    }
+
+    public String getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(String beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public Long getNationId() {
+        return nationId;
+    }
+
+    public void setNationId(Long nationId) {
+        this.nationId = nationId;
+    }
+
+    public NationRetrieveDto getNation() {
+        return nation;
+    }
+
+    public void setNation(NationRetrieveDto nation) {
+        this.nation = nation;
+    }
+
+    public FtaNationDto() {
+    }
+
     public FtaNationDto(Long id, Long ftaId, String beginDate, String endDate, Long nationId,
             NationRetrieveDto nation) {
         this.id = id;

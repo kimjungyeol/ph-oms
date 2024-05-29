@@ -4,14 +4,6 @@ import java.math.BigDecimal;
 
 import com.ktnet.core.psr.base.dto.PsrDto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-@Getter
-@ToString
-@NoArgsConstructor
 public class PsrConditionDto {
 
     private Long id;
@@ -30,7 +22,73 @@ public class PsrConditionDto {
 
     private String hscode;
 
-    @Builder
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Long getPsrId() {
+        return psrId;
+    }
+
+    public void setPsrId(Long psrId) {
+        this.psrId = psrId;
+    }
+
+    public PsrDto getPsr() {
+        return psr;
+    }
+
+    public void setPsr(PsrDto psr) {
+        this.psr = psr;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public String getHscode() {
+        return hscode;
+    }
+
+    public void setHscode(String hscode) {
+        this.hscode = hscode;
+    }
+
+    public PsrConditionDto() {
+    }
+
     public PsrConditionDto(Long id, Long groupId, Long psrId, PsrDto psr, String type, String description,
             BigDecimal rate, String hscode) {
         this.id = id;

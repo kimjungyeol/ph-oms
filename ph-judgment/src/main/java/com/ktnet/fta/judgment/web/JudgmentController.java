@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktnet.fta.common.web.BasicController;
-import com.ktnet.fta.judgment.base.JudgmentExecuter;
 import com.ktnet.fta.judgment.service.JudgmentService;
 
 @RestController
@@ -25,9 +24,6 @@ public class JudgmentController extends BasicController {
 
     @Autowired
     JudgmentService judgmentService;
-
-    @Autowired
-    JudgmentExecuter judgmentExecuter;
 
     @GetMapping("/api/get/test")
     public String getTest() {
