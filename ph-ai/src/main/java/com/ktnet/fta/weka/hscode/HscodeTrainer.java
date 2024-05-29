@@ -16,8 +16,8 @@ import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Attribute;
-import weka.core.Debug.Random;
 import weka.core.DenseInstance;
+import weka.core.Debug.Random;
 import weka.core.Instances;
 import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils.DataSink;
@@ -102,19 +102,23 @@ public class HscodeTrainer extends HscodeClassifer {
 
     /*** 학습 ***/
     public void training() throws Exception {
-        logger.debug(">>> classes : " + this.classes.size());
-        logger.debug(">>> attribute : " + this.instances.numAttributes());
-        logger.debug(">>> instance : " + this.instances.numInstances());
+        logger.info(">>> classes : " + this.classes.size());
+        logger.info(">>> attribute : " + this.instances.numAttributes());
+        logger.info(">>> instance : " + this.instances.numInstances());
         
+        logger.info("saveArff start!!");
         // ARFF 저장
         this.saveArff();
         
+        logger.info("buildClassifier start!!");
         // 해당 알고리즘으로 데이터를 학습한다.
         this.classifier.buildClassifier(instances);
         
+       // logger.info("evaluation start!!");
         // 교차 검증
-        this.evaluation();
+        //this.evaluation();
         
+        logger.info("saveModel start!!");
         // MODEL 저장
         this.saveModel();
     }

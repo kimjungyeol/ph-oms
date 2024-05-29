@@ -61,10 +61,12 @@ public class HscodeClassifer {
     public DenseInstance createInstance(HscodeClassifierDto classifierDto) {
         // 특성정보(품명 - 형태소 분석)
         String itemName = classifierDto.getItemName();
-        logger.debug(">>> itemName : " + itemName);
         String itemNameBow = BagOfWordAnalyzer.analyze(itemName);
         
-        logger.debug(">>> itemNameBow : " + itemNameBow);
+        logger.info("============================");
+        logger.info(">>> itemName : " + itemName);
+        logger.info(">>> itemNameBow : " + itemNameBow);
+        
         if (StringUtils.isBlank(itemNameBow)) {
           return null;
         }
