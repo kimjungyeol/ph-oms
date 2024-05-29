@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.sample.mapper.SampleMapper">
+
+    <select id="selectSampleList" parameterType="map" resultType="camelMap">
+        /*queryId=SampleMapper.selectSampleList*/
+        <include refid="pagingMapper.header"/>
+        SELECT * FROM TESTDB
+        <if test="pgStart != null and pgStart != '' and pgStart != 10">
+        WHERE 1=1
+        </if>
+        <include refid="pagingMapper.footer"/>
+    </select>
+
+    <select id="selectSample" parameterType="map" resultType="camelMap">
+		/*queryId=SampleMapper.selectSample*/
+        SELECT * FROM TESTDB
+         WHERE NAME = #{name} 
+    </select>
+    
+    <insert id="insertSample" parameterType="map">
+        /*queryId=SampleMapper.insertSample*/
+        INSERT INTO TESTDB
+        (NAME, NAME_ENG, AGE, EMAIL, USEYN)
+        VALUES
+        (#{name}, #{nameEng}, #{age}, #{email}, #{useyn})
+    </insert>
+    
+    <insert id="updateSample" parameterType="map">
+        /*queryId=SampleMapper.updateSample*/
+        UPDATE TESTDB
+           SET AGE = #{age}
+              ,EMAIL = #{email}
+              ,USEYN = #{useyn}
+         WHERE NAME = #{name}
+    </insert>
+
+</mapper>
