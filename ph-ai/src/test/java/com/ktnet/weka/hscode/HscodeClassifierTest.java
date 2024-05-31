@@ -131,12 +131,12 @@ public class HscodeClassifierTest {
         log.info(">>> predict rate : " + Math.floor(result.getRate()*100) + " (" + result.getRate() + ")");
         
         //예측률이 높은 n건.
-//        List<PredictResultDto> resultList = predictor.predictList(predictStr);
-//        for (PredictResultDto dto : resultList) {
-//        	log.info(">>> predict result : " + dto.getResult());
-//        	log.info(">>> predict rate : " + Math.floor(dto.getRate()*100) + " (" + dto.getRate() + ")");
-//        	log.info("===================================");
-//        }
+        List<PredictResultDto> resultList = predictor.predictList(predictStr);
+        for (PredictResultDto dto : resultList) {
+        	log.info(">>> predict result : " + dto.getResult());
+        	log.info(">>> predict rate : " + Math.floor(dto.getRate()*100) + " (" + dto.getRate() + ")");
+        	log.info("===================================");
+        }
         
         assertThat(result).isNotNull();
     }

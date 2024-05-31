@@ -133,8 +133,8 @@ public class HscodePredictor extends HscodeClassifer {
         }
         instances.add(instance);
         
-        Classifier model = new J48();
-        classifier.setClassifier(model);
+       // Classifier model = new J48();
+        //classifier.setClassifier(model);
         
         // 데이터 예측
         for (int i = 0; i < instances.numInstances(); i++) {
@@ -188,7 +188,7 @@ public class HscodePredictor extends HscodeClassifer {
     	Instance lastInstance = instances.lastInstance();
     	
     	// 예측 데이터들의 예측률 정보.
-    	double[] prediction = classifier.distributionForInstance(instances.lastInstance());
+    	double[] prediction = classifier.distributionForInstance(lastInstance);
     	//System.out.println("prediction CNT : " + prediction.length);
     	//System.out.println("=============================");
     	
