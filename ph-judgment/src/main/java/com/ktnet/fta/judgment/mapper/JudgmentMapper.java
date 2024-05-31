@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.ktnet.fta.judgment.dto.JudgmentConditionDetailDto;
 import com.ktnet.fta.judgment.dto.JudgmentDto;
+import com.ktnet.fta.judgment.dto.JudgmentErrorDetailDto;
 import com.ktnet.fta.judgment.dto.JudgmentSetupDto;
 
 @Mapper
@@ -18,5 +20,13 @@ public interface JudgmentMapper {
     public List<JudgmentSetupDto> selectJudgmentSetup(Map<String, Object> params);
 
     public void deleteJudgmentCondition(Map<String, Object> params);
+
+    public void insertJudgment(JudgmentDto judgment);
+
+    public void insertJudgmentCondition(JudgmentConditionDetailDto condition);
+
+    public void insertJudgmentError(JudgmentErrorDetailDto error);
+
+    public Map<String, Object> selectJudgmentPurchase(Long eoId);
 
 }

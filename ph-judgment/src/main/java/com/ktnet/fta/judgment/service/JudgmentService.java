@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import com.ktnet.fta.common.dto.FtaDto;
 import com.ktnet.fta.judgment.constant.DetailsType;
 import com.ktnet.fta.judgment.constant.JudgmentType;
+import com.ktnet.fta.judgment.dto.JudgmentConditionDetailDto;
 import com.ktnet.fta.judgment.dto.JudgmentDto;
+import com.ktnet.fta.judgment.dto.JudgmentErrorDetailDto;
 import com.ktnet.fta.judgment.dto.JudgmentSetupDto;
 import com.ktnet.fta.judgment.mapper.JudgmentMapper;
 import com.ktnet.fta.judgment.psr.CTCPsr;
@@ -220,7 +222,7 @@ public class JudgmentService {
 
         if (judgment.getJudgmentType().equals(JudgmentType.PURCHASE)) {
             // 상품 판정
-            // result = this.doPsr.judgment(judgment);
+            result = this.doPsr.judgment(companyId, judgment);
             judgment.updateSufficient(result);
             return;
         }
@@ -366,6 +368,9 @@ public class JudgmentService {
                 judgmentEntities.add(judgmentDto);
             }
         }
+
+        // 판정 정보 저장
+        this.save(tempCompanyId, judgmentEntities);
     }
 
     // 초기화
@@ -388,8 +393,36 @@ public class JudgmentService {
         return setupMap;
     }
 
-    private PsrSearchResultDto selectPsrSearchResult(PsrSearchParamsDto psrParams) {
-        // TODO Auto-generated method stub
-        return null;
+    private void save(Long tempCompanyId, List<JudgmentDto> judgmentEntities) {
+        this.saveJudgment(judgmentEntities);
+        this.saveJudgmentCondition(judgmentEntities);
+        this.saveJudgmentError(judgmentEntities);
+    }
+
+    private void saveJudgment(List<JudgmentDto> judgmentEntities) {
+        for (JudgmentDto judgment : judgmentEntities) {
+            // *mybatis forEach로 변경 필요
+            judgmentMapper.insertJudgment(judgment);
+        }
+    }
+
+    private void saveJudgmentCondition(List<JudgmentDto> judgmentEntities) {
+        for (JudgmentDto judgment : judgmentEntities) {
+            for (JudgmentConditionDetailDto condition : judgment.getConditions()) {
+                // *mybatis forEach로 변경 필요
+                judgmentMapper.insertJudgmentCondition(condition);
+            }
+        }
+    }
+
+    private void saveJudgmentError(List<JudgmentDto> judgmentEntities) {
+        for (JudgmentDto judgment : judgmentEntities) {
+            for (JudgmentErrorDetailDto error : judgment.getErrors()) {
+                error.setGroupId(judgment.getGroupId());
+                error.setJudgmentId(judgment.getId());
+
+                judgmentMapper.insertJudgmentError(error);
+            }
+        }
     }
 }

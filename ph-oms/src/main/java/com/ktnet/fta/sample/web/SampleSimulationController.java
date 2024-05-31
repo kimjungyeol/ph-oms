@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,13 +66,13 @@ public class SampleSimulationController extends BasicController {
 
         System.out.println("pMap : " + mapper.writeValueAsString(pMap));
 
-        ResponseEntity<Void> result = restClient.post().uri("http://localhost:8090/api/post/test")
+        String result = restClient.post().uri("http://localhost:8090/api/post/test")
                 .contentType(MediaType.APPLICATION_JSON).body(mapper.writeValueAsString(pMap)).retrieve()
-                .toBodilessEntity();
+                .body(String.class);
 
-        System.out.println("result : " + result.getStatusCode());
+        System.out.println("result : " + result);
 
-        rtMap.put("result", result.getStatusCode());
+        rtMap.put("result", result);
 
         //////////////////////////////////////////////////////////
         RestTemplate restTemplate = new RestTemplate();
