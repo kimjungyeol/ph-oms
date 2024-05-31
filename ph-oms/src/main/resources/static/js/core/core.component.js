@@ -464,7 +464,97 @@
 					}
 				}// range
 			}// tui
-		}// datepicker {}
+		},// datepicker {}
+		
+		commonCode : {
+			name    : 'data-component-commoncode',
+			uri : {
+				search: '/common/code/searchOne',
+			},
+			dom : {
+				area: `
+						<input type="text" class="form-control" id="key"   name="key"   maxlength="5" style="width: 100px;display: inline-table;">
+	                    <input type="text" class="form-control" id="value" name="value" readonly  style="width: 200px;display: inline-table;background-color: #cfcfcf;">
+					  ` 
+            },
+            init: function() {
+				const self = this;
+			},
+			/**
+			 * HTML with data-component-file attribute create an file area
+ 			 *   - data-component-file="user"
+			 */
+			render: function(id = 'fileId') {
+				const self = this;
+				
+				let dataEleArr = document.querySelectorAll(`[${self.name}]`);
+				if (dataEleArr.length == 0) {
+					return;
+				}
+				
+				dataEleArr.forEach((dataEle) => {
+					dataEle.innerHTML = self.dom.area;
+					let eleId = dataEle.id;
+					let groupcode = dataEle.getAttribute(`${self.name}`);  //group code
+					
+					let keyEle = dataEle.querySelector(`[id="key"]`);
+					keyEle.id = eleId;
+					keyEle.name = eleId;
+					let valueEle = dataEle.querySelector(`[id="value"]`);
+					valueEle.id = eleId + 'Nm';
+					valueEle.name = eleId + 'Nm';
+					
+					keyEle.onkeyup = function() {
+						valueEle.value = '';
+						self.view(groupcode, keyEle.value, function(res) {
+							if (res.result && res.data != null) {
+								keyEle.value = res.data.code;
+								valueEle.value = res.data.value;
+							}
+						});
+					}
+				});
+			},
+			//view common code.
+			view : function(groupcode = '', code = '', callbackFnc = null) {
+				const self = this;
+				
+                if (code == '') {
+                    return;
+                }
+                
+                let params = {
+					grpCd  : groupcode,
+					cmmnCd : code
+				}
+                
+                $.ajax({
+                    url: self.uri.search,
+                    method: "post",
+                    dataType: "json",
+                    data: JSON.stringify(params),
+                    success: function(result) {
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                    }
+                })
+                .done(function (response, textStatus, xhr) {
+                    console.log('done response', response);
+                    
+                    if (response.status == 500) {
+						swal(response.reason, "", "warning");
+						return;
+					}
+                    
+                    if (callbackFnc != null && typeof callbackFnc == 'function') {
+                        callbackFnc(response);
+                    }
+                })
+                .fail(function(data, textStatus, errorThrown) {
+                    swal("server Error occurred!", "", "warning");
+                });
+            },
+		}
     }
     
     wg.cpnt = g.component;

@@ -1,6 +1,5 @@
 package com.ktnet.fta.common.service;
 
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -18,14 +17,6 @@ public class CommonService {
     
 	@Autowired
     private CommonMapper commonMapper;
-    
-    public List<Map<String, Object>> searchCodeList(Map<String, Object> map) throws Exception {
-        return commonMapper.selectCodeList(map);
-    }
-    
-    public Map<String, Object> searchCodeOne(Map<String, Object> map) throws Exception {
-    	return commonMapper.selectCodeOne(map);
-    }
     
     @Transactional
     public int saveErrorMessage(Map<String, Object> map) throws Exception {

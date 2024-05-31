@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.common.mapper.CommonMapper">
+
+    <!--
+    ##################
+    Log Manage Query
+    ##################
+     -->
+
+    <!-- LOGIN LOG -->
+    <insert id="saveLoginLog" parameterType="java.util.Map">
+        /* saveLoginLog */
+        <selectKey keyProperty="lognLogSn" resultType="string" order="BEFORE">
+            SELECT SQ_SM015DL.NEXTVAL AS LOGN_LOG_SN FROM DUAL
+        </selectKey>
+        INSERT INTO SM015DL
+        (
+                LOGN_LOG_SN
+               ,LOGN_ID
+               ,HOST_NM
+               ,IP_ADDR
+               ,LOGN_DTTM
+               ,CRTN_ID
+               ,CRTN_DTTM
+               ,UPDT_ID
+               ,UPDT_DTTM
+              )
+        VALUES(
+              #{lognLogSn}
+            , #{userId}
+            , #{remoteHost}
+            , #{ipAddr}
+            , SYSDATE
+            ,'SYSTEM'
+            ,SYSDATE
+            ,'SYSTEM'
+            ,SYSDATE
+       )
+    </insert>
+
+    <!-- ERROR LOG -->
+    <insert id="saveErrorLog" parameterType="java.util.Map">
+        /* saveErrorLog */
+        <selectKey keyProperty="errLogSn" resultType="string" order="BEFORE">
+            SELECT SQ_SM016DL.NEXTVAL AS ERR_LOG_SN FROM DUAL
+        </selectKey>
+        INSERT
+          INTO SM016DL
+             (
+                ERR_LOG_SN
+               ,ERR_MSG
+               ,ERR_DTTM
+               ,CRTN_ID
+               ,CRTN_DTTM
+               ,UPDT_ID
+               ,UPDT_DTTM
+             )
+        VALUES
+             (
+                #{errLogSn}
+               ,#{errMsg}
+               ,SYSDATE
+               ,'SYSTEM'
+               ,SYSDATE
+               ,'SYSTEM'
+               ,SYSDATE
+             )
+    </insert>
+
+    <!-- Event LOG -->
+    <insert id="saveEventLog" parameterType="java.util.Map">
+        /* saveEventLog */
+        <selectKey keyProperty="evntLogSn" resultType="string" order="BEFORE">
+            SELECT SQ_SM017DL.NEXTVAL AS EVNT_LOG_SN FROM DUAL
+        </selectKey>
+        INSERT
+          INTO SM017DL
+             (
+                EVNT_LOG_SN
+               ,SCRN_ID
+               ,USER_ID
+               ,EVNT_TPCD
+               ,EVNT_COND_VALU
+               ,EVNT_DATA_VALU
+               ,EVNT_DTTM
+               ,IP_ADDR
+               ,CRTN_ID
+               ,CRTN_DTTM
+               ,UPDT_ID
+               ,UPDT_DTTM
+             )
+        VALUES
+             (
+                #{evntLogSn}
+               ,#{scrnId}
+               ,#{userId}
+               ,#{evntTpcd}
+               ,#{evntCondValu}
+               ,#{evntDataValu}
+               ,SYSDATE
+               ,#{ipAddr}
+               ,'SYSTEM'
+               ,SYSDATE
+               ,'SYSTEM'
+               ,SYSDATE
+             )
+    </insert>
+
+    <!--
+    ##########################
+    My Favor Menu Manage Query
+    ##########################
+     -->
+
+    <!-- search my favor list -->
+    <select id="selectMyFavorMenuList" parameterType="java.util.Map" resultType="camelMap">
+        /* selectMyFavorMenuList */
+        SELECT A.MENU_CD
+                 ,A.MENU_NM${suffixLang} AS MENU_NM
+                 ,A.UPPR_MENU_CD
+                 ,A.MENU_LVL
+                 ,A.UPPR_SORT_NO
+                 ,A.LWPS_SORT_NO
+                 ,A.RMKS
+                 ,A.SCRN_ID
+                 ,A.USE_FLAG
+                 ,D.SCRN_ROUT_NM
+          FROM SM002DM A
+         INNER JOIN
+                ( SELECT AB.SCRN_ID
+                     FROM SM005DM AA
+                    INNER JOIN SM004DM AB
+                       ON AA.ATHR_CD = AB.ATHR_CD
+                    WHERE AA.USER_ID = #{loginUserId}
+                      AND AA.USE_FLAG = 'S'
+               ) B
+            ON A.SCRN_ID = B.SCRN_ID
+         INNER JOIN SM014DM C
+            ON A.MENU_CD = C.MENU_CD
+         INNER JOIN SM006DM D
+            ON A.SCRN_ID = D.SCRN_ID
+         WHERE C.USER_ID = #{loginUserId}
+         ORDER BY A.UPPR_SORT_NO, A.LWPS_SORT_NO
+    </select>
+
+    <!-- save my favor menu info. -->
+    <update id="insertMyFavorMenu" parameterType="java.util.Map">
+        /* "insertMyFavorMenu" */
+        INSERT INTO SM014DM (
+               USER_ID
+             , MENU_CD
+             , CRTN_ID
+             , CRTN_DTTM
+             , UPDT_ID
+             , UPDT_DTTM
+        ) VALUES (
+              #{loginUserId}
+            , #{menuCd}
+            , #{loginUserId}
+            , SYSDATE
+            , #{loginUserId}
+            , SYSDATE
+        )
+    </update>
+
+    <!-- delete my favor menu info. -->
+    <delete id="deleteMyFavorMenu" parameterType="java.util.Map">
+        /* deleteMyFavorMenu */
+        DELETE FROM SM014DM
+         WHERE USER_ID = #{loginUserId}
+           AND MENU_CD = #{menuCd}
+    </delete>
+
+</mapper>

@@ -46,6 +46,8 @@ var wg = {};
 		    this.contents.init();
 		    this.triggers.init();
 		    
+		    //commoncode render.
+		    this.component.commonCode.render();
 		    //file area render.
 			this.component.file.render();
 		    //tui datepicker render.
