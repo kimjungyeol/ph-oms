@@ -1,4 +1,4 @@
-package com.ktnet.core.fta.dto;
+package com.ktnet.fta.common.dto;
 
 import java.math.BigDecimal;
 import java.util.List;

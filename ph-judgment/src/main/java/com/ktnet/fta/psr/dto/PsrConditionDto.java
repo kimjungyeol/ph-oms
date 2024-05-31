@@ -1,8 +1,6 @@
-package com.ktnet.core.psr.condition.dto;
+package com.ktnet.fta.psr.dto;
 
 import java.math.BigDecimal;
-
-import com.ktnet.core.psr.base.dto.PsrDto;
 
 public class PsrConditionDto {
 

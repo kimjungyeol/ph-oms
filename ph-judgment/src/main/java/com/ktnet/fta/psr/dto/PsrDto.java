@@ -1,12 +1,11 @@
-package com.ktnet.core.psr.base.dto;
+package com.ktnet.fta.psr.dto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ktnet.core.fta.dto.FtaDto;
-import com.ktnet.core.item.dto.StandardItemTypeDto;
-import com.ktnet.core.psr.condition.dto.PsrConditionDto;
+import com.ktnet.fta.common.dto.FtaDto;
+import com.ktnet.fta.common.dto.StandardItemTypeDto;
 
 public class PsrDto {
 

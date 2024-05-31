@@ -1,4 +1,4 @@
-package com.ktnet.core.nation.dto;
+package com.ktnet.fta.common.dto;
 
 public class NationRetrieveDto {
 

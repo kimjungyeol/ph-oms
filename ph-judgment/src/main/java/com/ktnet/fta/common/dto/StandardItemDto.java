@@ -1,9 +1,7 @@
-package com.ktnet.core.item.dto;
+package com.ktnet.fta.common.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.ktnet.core.fta.dto.FtaDto;
 
 public class StandardItemDto {
 
