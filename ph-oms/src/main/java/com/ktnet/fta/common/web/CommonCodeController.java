@@ -47,7 +47,6 @@ public class CommonCodeController extends BasicController {
     @PostMapping("/common/code/searchList")
     public ResponseEntity<ResultResponseDto> commonCodeSearchList(HttpServletRequest req, ParamMap pMap) throws Exception {
     	logger.info("commonSearch");
-    	Map<String, Object> paramMap = pMap.getMap();
     	
     	List<Map<String, Object>> rtList = commonCodeService.searchCodeList(pMap.getMap());
     	
