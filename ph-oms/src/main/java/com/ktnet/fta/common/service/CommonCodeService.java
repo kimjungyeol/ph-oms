@@ -23,6 +23,10 @@ public class CommonCodeService {
         return commonCodeMapper.selectCodeList(map);
     }
     
+    public List<Map<String, Object>> searchGridCodeList(Map<String, Object> map) throws Exception {
+    	return commonCodeMapper.selectGridCodeList(map);
+    }
+    
     public Map<String, Object> searchCodeOne(Map<String, Object> map) throws Exception {
     	return commonCodeMapper.selectCodeOne(map);
     }

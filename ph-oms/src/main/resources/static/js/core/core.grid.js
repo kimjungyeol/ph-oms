@@ -90,7 +90,7 @@
 						}
 					} else {
 						if (m.result) {
-							self.code.listItems[prKey[idx]] = m.dataList;
+							self.code.listItems[prKey[idx]] = m.dataList == null ? [] : m.dataList;
 						} else {
 							self.code.listItems[prKey[idx]] = [];
 						}

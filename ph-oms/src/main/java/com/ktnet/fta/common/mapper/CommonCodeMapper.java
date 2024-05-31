@@ -10,6 +10,8 @@ public interface CommonCodeMapper {
  
     public List<Map<String, Object>> selectCodeList(Map<String, Object> map);
     
+    public List<Map<String, Object>> selectGridCodeList(Map<String, Object> map);
+    
     public Map<String, Object> selectCodeOne(Map<String, Object> map);
     
 }

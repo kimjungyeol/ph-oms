@@ -3,14 +3,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ktnet.fta.common.mapper.CommonCodeMapper">
 
+    <select id="selectCodeList" parameterType="hashmap" resultType="camelMap">
+        /* ProgramID=commonCodeMapper.selectCodeList */
+        SELECT CMMN_CD AS CODE
+              ,CMMN_NM AS VALUE
+          FROM COMMON_CODE
+         WHERE CMMN_GRP_CD = UPPER( #{grpCd} )
+           AND USE_FLAG = 'Y'
+         ORDER BY SORT_NO
+    </select>
+    
+    <select id="selectGridCodeList" parameterType="hashmap" resultType="camelMap">
+        /* ProgramID=commonCodeMapper.selectGridCodeList */
+        SELECT CMMN_CD AS VALUE
+              ,CMMN_NM AS TEXT
+          FROM COMMON_CODE
+         WHERE CMMN_GRP_CD = UPPER( #{grpCd} )
+           AND USE_FLAG = 'Y'
+         ORDER BY SORT_NO
+    </select>
+    
     <select id="selectCodeOne" parameterType="hashmap" resultType="camelMap">
         /* ProgramID=commonCodeMapper.selectCodeOne */
-        SELECT  CMMN_CD AS CODE
-               ,CMMN_NM AS VALUE
+        SELECT CMMN_CD AS CODE
+              ,CMMN_NM AS VALUE
           FROM COMMON_CODE
          WHERE CMMN_GRP_CD = UPPER( #{grpCd} )
            AND CMMN_CD = UPPER( #{cmmnCd} )
            AND USE_FLAG = 'Y'
+         ORDER BY SORT_NO
     </select>
 
 </mapper>

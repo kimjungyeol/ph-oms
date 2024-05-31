@@ -49,22 +49,7 @@ public class CommonCodeController extends BasicController {
     	logger.info("commonSearch");
     	Map<String, Object> paramMap = pMap.getMap();
     	
-    	List<Map<String, Object>> rtList = new ArrayList<Map<String, Object>>();
-    	
-    	//commonService.searchCodeOne(pMap.getMap());
-    	
-    	//test용
-    	if("CM000".equals(paramMap.get("grpCd")+"")) {
-    		Map<String, Object> map = new HashMap<String, Object>();
-    		map.put("text", "Yes");
-    		map.put("value", "Y");
-    		rtList.add(map);
-    		
-    		map = new HashMap<String, Object>();
-    		map.put("text", "No");
-    		map.put("value", "N");
-    		rtList.add(map);
-    	}
+    	List<Map<String, Object>> rtList = commonCodeService.searchCodeList(pMap.getMap());
     	
     	return new ResponseEntity<>(ResultResponse(rtList), HttpStatus.OK);
     }
@@ -107,13 +92,13 @@ public class CommonCodeController extends BasicController {
     @PostMapping("/common/code/grid/search")
     public ResponseEntity<ResultResponseDto> commonCodeGridSearch(HttpServletRequest req, ParamMap pMap) throws Exception {
     	logger.info("commonSearch");
-    	Map<String, Object> paramMap = pMap.getMap();
     	
-    	List<Map<String, Object>> rtList = new ArrayList<Map<String, Object>>();
-    	
-    	//commonService.searchCodeOne(pMap.getMap());
+    	List<Map<String, Object>> rtList = commonCodeService.searchGridCodeList(pMap.getMap());
     	
     	//test용
+    	/*
+    	List<Map<String, Object>> rtList = new ArrayList<Map<String, Object>>();
+    	
     	if("CM000".equals(paramMap.get("grpCd")+"")) {
     		Map<String, Object> map = new HashMap<String, Object>();
     		map.put("text", "Yes");
@@ -136,6 +121,7 @@ public class CommonCodeController extends BasicController {
     		map.put("value", "N");
     		rtList.add(map);
     	}
+    	*/
     	
     	return new ResponseEntity<>(ResultResponse(rtList), HttpStatus.OK);
     }

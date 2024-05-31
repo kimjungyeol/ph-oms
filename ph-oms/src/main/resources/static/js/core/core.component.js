@@ -147,6 +147,7 @@
 					let fileEle = dataFileEle.querySelector(`[type="file"]`);
 					fileEle.id = fileId + '_atchFile';
 					fileEle.name = fileId + '_atchFile';
+					fileEle.setAttribute('autocomplete', 'off');
 					
 					let viewFileEle = dataFileEle.querySelector(`[id="viewfile"]`);
 					viewFileEle.id = fileId + '_viewfile';
@@ -500,9 +501,11 @@
 					let keyEle = dataEle.querySelector(`[id="key"]`);
 					keyEle.id = eleId;
 					keyEle.name = eleId;
+					keyEle.setAttribute('autocomplete', 'off');
 					let valueEle = dataEle.querySelector(`[id="value"]`);
 					valueEle.id = eleId + 'Nm';
 					valueEle.name = eleId + 'Nm';
+					valueEle.setAttribute('autocomplete', 'off');
 					
 					keyEle.onkeyup = function() {
 						valueEle.value = '';
