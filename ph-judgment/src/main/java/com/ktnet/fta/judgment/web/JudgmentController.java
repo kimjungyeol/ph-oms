@@ -31,7 +31,7 @@ public class JudgmentController extends BasicController {
     }
 
     @PostMapping("/api/post/test")
-    public ResponseEntity<Map<String, String>> test(@RequestBody Map<String, Object> reqMap) {
+    public ResponseEntity<String> test(@RequestBody Map<String, Object> reqMap) {
 
         logger.debug(reqMap.toString());
 
@@ -39,7 +39,7 @@ public class JudgmentController extends BasicController {
         Map<String, String> resultMap = new HashMap<String, String>();
         resultMap.put("result", result);
 
-        return ResponseEntity.ok(resultMap);
+        return ResponseEntity.ok("SUCCESS..!");
     }
 
     @PostMapping("/api/simulation")

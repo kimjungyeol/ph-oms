@@ -2,7 +2,7 @@ package com.ktnet.fta.judgment.dto;
 
 import java.math.BigDecimal;
 
-import com.ktnet.core.psr.condition.dto.PsrConditionDto;
+import com.ktnet.fta.psr.dto.PsrConditionDto;
 
 public class JudgmentConditionDetailDto {
 

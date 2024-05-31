@@ -5,9 +5,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ktnet.core.psr.search.dto.PsrSearchItemDto;
 import com.ktnet.fta.judgment.constant.DetailsType;
 import com.ktnet.fta.judgment.constant.JudgmentType;
+import com.ktnet.fta.psr.dto.PsrSearchItemDto;
 
 public class JudgmentDto {
 

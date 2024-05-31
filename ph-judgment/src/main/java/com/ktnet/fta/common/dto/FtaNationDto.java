@@ -1,8 +1,6 @@
-package com.ktnet.core.fta.dto;
+package com.ktnet.fta.common.dto;
 
-import com.ktnet.core.hscode.constant.HscodeType;
-
-public class FtaPsrDto {
+public class FtaNationDto {
 
     private Long id;
 
@@ -12,7 +10,9 @@ public class FtaPsrDto {
 
     private String endDate = "29991231";
 
-    private HscodeType hscodeType;
+    private Long nationId;
+
+    private NationRetrieveDto nation;
 
     public Long getId() {
         return id;
@@ -46,22 +46,32 @@ public class FtaPsrDto {
         this.endDate = endDate;
     }
 
-    public HscodeType getHscodeType() {
-        return hscodeType;
+    public Long getNationId() {
+        return nationId;
     }
 
-    public void setHscodeType(HscodeType hscodeType) {
-        this.hscodeType = hscodeType;
+    public void setNationId(Long nationId) {
+        this.nationId = nationId;
     }
 
-    public FtaPsrDto() {
+    public NationRetrieveDto getNation() {
+        return nation;
     }
 
-    public FtaPsrDto(Long id, Long ftaId, String beginDate, String endDate, HscodeType hscodeType) {
+    public void setNation(NationRetrieveDto nation) {
+        this.nation = nation;
+    }
+
+    public FtaNationDto() {
+    }
+
+    public FtaNationDto(Long id, Long ftaId, String beginDate, String endDate, Long nationId,
+            NationRetrieveDto nation) {
         this.id = id;
         this.ftaId = ftaId;
         this.beginDate = beginDate;
         this.endDate = endDate;
-        this.hscodeType = hscodeType;
+        this.nationId = nationId;
+        this.nation = nation;
     }
 }

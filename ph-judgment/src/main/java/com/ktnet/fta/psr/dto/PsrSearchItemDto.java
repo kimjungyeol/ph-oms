@@ -1,11 +1,10 @@
-package com.ktnet.core.psr.search.dto;
+package com.ktnet.fta.psr.dto;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ktnet.core.hscode.constant.HscodeType;
-import com.ktnet.core.psr.condition.dto.PsrConditionDto;
 
 public class PsrSearchItemDto {
 

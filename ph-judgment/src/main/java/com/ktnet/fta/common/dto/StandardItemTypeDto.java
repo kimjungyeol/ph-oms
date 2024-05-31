@@ -1,4 +1,4 @@
-package com.ktnet.core.item.dto;
+package com.ktnet.fta.common.dto;
 
 public class StandardItemTypeDto {
 
