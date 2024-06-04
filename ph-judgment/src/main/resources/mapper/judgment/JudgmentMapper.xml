@@ -11,8 +11,41 @@
            AND FTA_ID = #{ftaId}
     </select>
     
-    <!-- <select id="selectJudgmentSetup" parameterType="map" resultType="camelMap"> -->
-    <select id="selectJudgmentSetup" parameterType="map" resultType="com.ktnet.fta.judgment.dto.JudgmentSetupDto">
+    <delete id="deleteJudgmentCondition" parameterType="map">
+        /*queryId=JudgmentMapper.deleteJudgmentCondition*/
+		DELETE 
+		  FROM FTA_JDGMNT_EXCP 
+		 WHERE JDGMNT_ID IN (
+		                     SELECT FJ.JDGMNT_ID 
+		                       FROM CMPNY_DTLS_ITEM CDI 
+		                      INNER JOIN FTA_EO FE 
+		                         ON FE.DTLS_ID=CDI.DTLS_ID
+		                      INNER JOIN FTA_JDGMNT FJ 
+		                         ON FJ.EO_ID = FE.EO_ID
+		                      WHERE CDI.DTLS_GROUP_ID = #{groupId}
+		                      <if test="detailsId != null and detailsId != ''">
+		                          AND FE.DTLS_ID = #{detailsId}
+		                      </if> 
+		                    )
+    </delete>
+    
+    <delete id="deleteJudgment" parameterType="map">
+	    /*queryId=JudgmentMapper.deleteJudgment*/
+		DELETE 
+		  FROM FTA_JDGMNT 
+		 WHERE EO_ID IN (
+		                 SELECT FE.EO_ID 
+		                   FROM CMPNY_DTLS_ITEM CDI 
+		                  INNER JOIN FTA_EO FE 
+		                     ON FE.DTLS_ID = CDI.DTLS_ID
+		                  WHERE CDI.DTLS_GROUP_ID = #{groupId}
+		                  <if test="detailsId != null and detailsId != ''">
+		                      AND FE.DTLS_ID = #{detailsId}
+		                  </if>           
+		                )
+    </delete>
+    
+    <select id="selectJudgmentSetupList" parameterType="map" resultType="camelMap">
         /*queryId=JudgmentMapper.selectJudgmentSetup*/
         SELECT FE.FTA_ID
              , CASE WHEN CF.CTC_BUFFER > 0 THEN CF.CTC_BUFFER                -- 회사설정
@@ -32,42 +65,59 @@
 		    ON CF.FTA_ID = FE.FTA_ID 
 		   AND CF.CMPNY_ID = CDI.CMPNY_ID
 		 WHERE CDI.DTLS_GROUP_ID = #{groupId}
-		   <if test="detailsId != null and detailsId != ''">
-		       AND CDI.DTLS_ID = #{detailsId}
-		   </if>
+		 <if test="detailsId != null and detailsId != ''">
+		     AND CDI.DTLS_ID = #{detailsId}
+		 </if>
     </select>
     
-    <!-- <select id="selectSampleList" parameterType="map" resultType="camelMap">
-        /*queryId=SampleMapper.selectSampleList*/
-        <include refid="pagingMapper.header"/>
-        SELECT * FROM TESTDB
-        <if test="pgStart != null and pgStart != '' and pgStart != 10">
-        WHERE 1=1
-        </if>
-        <include refid="pagingMapper.footer"/>
+    <select id="selectJudgmentList" parameterType="map" resultType="camelMap">
+        /*queryId=JudgmentMapper.selectJudgment*/
+        SELECT FE.DTLS_GROUP_ID AS "GROUP_ID"
+			 , FE.EO_ID AS "EO_ID"
+			 , FE.FTA_ID AS "FTA_ID"
+			 , CDI.DTLS_TY AS "DETAILS_TYPE"
+			 , FIJ.JDGMNT_TY AS "JUDGMENT_TYPE"
+			 , NVL(FIJ.JDGMNT_USE, TRUE) AS "USE_JUDGMENT"
+			 , FE.HS_CODE AS "HSCODE"
+			 , CDI.ITEM_CL_ID AS "CLASSIFICATION_ID"
+			 , FE.QY AS "QUANTITY"
+			 , FE.AMOUNT AS "AMOUNT"
+			 , FE.WT AS "WEIGHT"
+			 , FE.MTRIL_AMOUNT_INTRA AS "MATERIAL_AMOUNT_ORIGIN"
+			 , FE.MTRIL_AMOUNT_OFSHR AS "MATERIAL_AMOUNT_NON_ORIGIN"
+			 , FE.MTRIL_WT_INTRA AS "MATERIAL_WEIGHT_ORIGIN"
+			 , FE.MTRIL_WT_OFSHR AS "MATERIAL_WEIGHT_NON_ORIGIN"
+			 , FE.UNTPC_ERROR_INTRA_CNT AS "PRICE_ERROR_ORIGIN_COUNT"
+			 , FE.UNTPC_ERROR_OFSHR_CNT AS "PRICE_ERROR_NON_ORIGIN_COUNT"
+			 , FE.WT_ERROR_INTRA_CNT AS "WEIGHT_ERROR_ORIGIN_COUNT"
+			 , FE.WT_ERROR_OFSHR_CNT AS "WEIGHT_ERROR_NON_ORIGIN_COUNT"
+			 , FE.HS_CODE_ERROR_CNT AS "HSCODE_ERROR_COUNT"
+			 , FE.CC_MTCH_CNT AS "CC_MATCH_COUNT"
+			 , FE.CTH_MTCH_CNT AS "CTH_MATCH_COUNT"
+			 , FE.CTSH_MTCH_CNT AS "CTSH_MATCH_COUNT"
+			 , FE.CC_MTCH_AMOUNT AS "CC_MATCH_AMOUNT"
+			 , FE.CTH_MTCH_AMOUNT AS "CTH_MATCH_AMOUNT"
+			 , FE.CTSH_MTCH_AMOUNT AS "CTSH_MATCH_AMOUNT"
+			 , FE.CC_MTCH_WT AS "CC_MATCH_WEIGHT"
+			 , FE.CTH_MTCH_WT AS "CTH_MATCH_WEIGHT"
+			 , FE.CTSH_MTCH_WT AS "CTSH_MATCH_WEIGHT"
+			 , FE.CC_AMOUNT_ERROR_CNT AS "CC_MATCH_AMOUNT_ERROR_COUNT"
+			 , FE.CTH_AMOUNT_ERROR_CNT AS "CTH_MATCH_AMOUNT_ERROR_COUNT"
+			 , FE.CTSH_AMOUNT_ERROR_CNT AS "CTSH_MATCH_AMOUNT_ERROR_COUNT"
+			 , FE.CC_WT_ERROR_CNT AS "CC_MATCH_WEIGHT_ERROR_COUNT"
+			 , FE.CTH_WT_ERROR_CNT AS "CTH_MATCH_WEIGHT_ERROR_COUNT"
+			 , FE.CTSH_WT_ERROR_CNT AS "CTSH_MATCH_WEIGHT_ERROR_COUNT" 
+		  FROM CMPNY_DTLS_GROUP CDG 
+		 INNER JOIN CMPNY_DTLS_ITEM CDI 
+			ON CDI.DTLS_GROUP_ID = CDG.DTLS_GROUP_ID
+		 INNER JOIN FTA_EO FE 
+			ON FE.DTLS_ID = CDI.DTLS_ID
+          LEFT OUTER JOIN FTA_ITEM_JDGMNT FIJ 
+			ON FIJ.ITEM_ID = CDI.ITEM_ID
+         WHERE CDG.DTLS_GROUP_ID = #{groupId}
+         <if test="detailsId != null and detailsId != ''">
+             AND FE.DTLS_ID = #{detailsId}
+         </if>
     </select>
-
-    <select id="selectSample" parameterType="map" resultType="camelMap">
-        /*queryId=SampleMapper.selectSample*/
-        SELECT * FROM TESTDB
-         WHERE NAME = #{name} 
-    </select>
-    
-    <insert id="insertSample" parameterType="map">
-        /*queryId=SampleMapper.insertSample*/
-        INSERT INTO TESTDB
-        (NAME, NAME_ENG, AGE, EMAIL, USEYN)
-        VALUES
-        (#{name}, #{nameEng}, #{age}, #{email}, #{useyn})
-    </insert>
-    
-    <insert id="updateSample" parameterType="map">
-        /*queryId=SampleMapper.updateSample*/
-        UPDATE TESTDB
-           SET AGE = #{age}
-              ,EMAIL = #{email}
-              ,USEYN = #{useyn}
-         WHERE NAME = #{name}
-    </insert> -->
 
 </mapper>

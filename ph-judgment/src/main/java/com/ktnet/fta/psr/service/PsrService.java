@@ -34,10 +34,10 @@ public class PsrService {
         }
 
         // PSR 목록 가져오기
-        List<PsrSearchItemDto> psrs = psrMapper.selectPsrSearchItem(params);
+        List<PsrSearchItemDto> psrs = psrMapper.selectPsrList(params);
 
         // PSR 예외조건 가져오기
-        List<PsrConditionDto> conditions = psrMapper.selectPsrCondition(params);
+        List<PsrConditionDto> conditions = psrMapper.selectPsrConditionList(params);
 
         for (PsrSearchItemDto psr : psrs) {
             psr.setConditions(conditions.stream().filter(item -> item.getPsrId().equals(psr.getId()))

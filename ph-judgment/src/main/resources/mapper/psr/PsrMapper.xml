@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.psr.mapper.PsrMapper">
+
+    <select id="selectPsrList" parameterType="map" resultType="camelMap">
+        /*queryId=PsrMapper.selectPsrList*/
+	    SELECT SP.PSR_ID,
+	         , SFP.FTA_ID
+	         , SF.FTA_CODE
+	         , SF.FTA_NM
+	         , SFP.HS_TY
+	         , SI.HS_CODE
+	         , SFP.FTA_PSR_ID
+	         , SI.STD_ITEM_ID
+	         , SI.ITEM_NM
+	         , SI.ITEM_NM_ENG
+	         , SIT.ITEM_TY_ID
+	         , SIT.CODE
+	         , SIT.DC
+	         , SP.SORT_SN
+	         , SP.CO_MARK
+	         , SP.DO_MARK
+	         , SP.PSR_DC
+	         , SP.WO_AT
+	         , SP.SP_AT
+	         , SP.CTC_AT
+	         , SP.CTC_STDR
+	         , SP.DEMIN_STDR
+	         , SP.DEMIN_RATE
+	         , SP.RVC_AT
+	         , SP.RVC_STDR
+	         , SP.RVC_RATE
+	         , SP.EXCP_AT 
+	      FROM STD_ITEM SI
+	     INNER JOIN STD_FTA_PSR SFP 
+	        ON SFP.FTA_PSR_ID=SI.FTA_PSR_ID
+	     INNER JOIN STD_FTA SF
+	        ON SF.FTA_ID=SFP.FTA_ID
+	     INNER JOIN STD_ITEM_TY SIT
+	        ON SIT.STD_ITEM_ID=SI.STD_ITEM_ID
+	     INNER JOIN STD_PSR SP
+	        ON SP.ITEM_TY_ID = SIT.ITEM_TY_ID
+	     WHERE 1=1
+	       AND SI.HS_CODE = SUBSTR(#{hscode}, 1, LENGTH(SI.HS_CODE)) 
+	       AND SFP.BEGIN_DE <![CDATA[<=]]> #{beginDe}
+	       AND SFP.END_DE <![CDATA[>=]]> #{endDe} 
+	       <if test="ftaId != null and ftaId != ''">
+               AND SFP.FTA_ID = #{ftaId}
+           </if>
+	     ORDER BY SFP.FTA_ID ASC
+    </select>
+    
+    <select id="selectPsrConditionList" parameterType="map" resultType="camelMap">
+        /*queryId=JudgmentMapper.selectPsrConditionList*/
+        SELECT SPE.PSR_EXCP_ID
+             , SPE.PSR_ID
+             , SPE.EXCP_TY
+             , SPE.EXCP_DC
+             , SPE.EXCP_RATE
+             , SPE.TRGET_HS_CODE
+          FROM STD_ITEM SI
+         INNER JOIN STD_FTA_PSR SFP
+            ON SFP.FTA_PSR_ID = SI.FTA_PSR_ID
+         INNER JOIN STD_ITEM_TY SIT
+            ON SIT.STD_ITEM_ID = SI.STD_ITEM_ID
+         INNER JOIN STD_PSR SP
+            ON SP.ITEM_TY_ID = SIT.ITEM_TY_ID
+         INNER JOIN STD_PSR_EXCP SPE
+            ON SPE.PSR_ID = SP.PSR_ID
+         WHERE 1=1
+           AND SI.HS_CODE = SUBSTR(#{hscode}, 1, LENGTH(SI.HS_CODE))
+           AND SFP.BEGIN_DE <![CDATA[<=]]> #{beginDe}
+           AND SFP.END_DE <![CDATA[>=]]> #{endDe}
+           <if test="ftaId != null and ftaId != ''">
+               AND SFP.FTA_ID = #{ftaId}
+           </if>
+         ORDER BY SFP.FTA_ID ASC
+    </select>
+    
+
+</mapper>

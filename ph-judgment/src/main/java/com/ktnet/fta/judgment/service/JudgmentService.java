@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ktnet.fta.judgment.constant.DetailsType;
 import com.ktnet.fta.judgment.constant.JudgmentType;
@@ -31,6 +32,7 @@ import com.ktnet.fta.psr.dto.PsrStdItemTypeDto;
 import com.ktnet.fta.psr.service.PsrService;
 
 @Service("judgmentService")
+@Transactional
 public class JudgmentService {
 
     /*** Service ***/
@@ -249,7 +251,7 @@ public class JudgmentService {
         Map<Long, JudgmentSetupDto> setupMap = this.findSetupMap(params);
 
         // 판정 데이터 조회
-        List<JudgmentDto> judgmentDtos = this.judgmentMapper.selectJudgment(params);
+        List<JudgmentDto> judgmentDtos = this.judgmentMapper.selectJudgmentList(params);
         List<JudgmentDto> judgmentEntities = new ArrayList<>();
 
         // PSR 조회
@@ -363,7 +365,7 @@ public class JudgmentService {
     // 설정정보 가져오기
     public Map<Long, JudgmentSetupDto> findSetupMap(Map<String, Object> params) {
         // FTA 별 설정정보 가져오기
-        List<JudgmentSetupDto> setups = judgmentMapper.selectJudgmentSetup(params);
+        List<JudgmentSetupDto> setups = judgmentMapper.selectJudgmentSetupList(params);
 
         Map<Long, JudgmentSetupDto> setupMap = new HashMap<>();
 

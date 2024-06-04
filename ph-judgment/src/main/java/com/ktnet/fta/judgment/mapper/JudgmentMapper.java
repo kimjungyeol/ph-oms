@@ -13,11 +13,11 @@ import com.ktnet.fta.judgment.dto.JudgmentSetupDto;
 @Mapper
 public interface JudgmentMapper {
 
-    public List<JudgmentDto> selectJudgment(Map<String, Object> params);
+    public List<JudgmentDto> selectJudgmentList(Map<String, Object> params);
 
     public int deleteJudgment(Map<String, Object> map);
 
-    public List<JudgmentSetupDto> selectJudgmentSetup(Map<String, Object> params);
+    public List<JudgmentSetupDto> selectJudgmentSetupList(Map<String, Object> params);
 
     public int deleteJudgmentCondition(Map<String, Object> params);
 
