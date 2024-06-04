@@ -11,7 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ktnet.fta.common.dto.FtaDto;
 import com.ktnet.fta.judgment.constant.DetailsType;
 import com.ktnet.fta.judgment.constant.JudgmentType;
 import com.ktnet.fta.judgment.dto.JudgmentConditionDetailDto;
@@ -67,21 +66,16 @@ public class JudgmentService {
         Long tempCompanyId = -100L;
 
         JudgmentDto judgmentDto = this.generateJudgmentDto(ftaInfo, itemList);
-        FtaDto ftaDto = new FtaDto();
 
         this.judgment(tempCompanyId, judgmentDto);
 
-        if ("RVC".equals(judgmentDto.getPsrStandard())) {
-            result = rvcPsr.judgment(judgmentDto);
-        }
-
-        if ("RVC".equals(ftaInfo.get("psrStandard"))) {
-            // result = rvcPsr.judgment(judgmentDto);
-        }
-
-        if ("CTH".equals(ftaInfo.get("psrStandard"))) {
-            // result = ctcPsr.judgment(judgmentDto);
-        }
+//        if ("RVC".equals(judgmentDto.getPsrStandard())) {
+//            result = rvcPsr.judgment(judgmentDto);
+//        }
+//
+//        if ("CTH".equals(ftaInfo.get("psrStandard"))) {
+//            // result = ctcPsr.judgment(judgmentDto);
+//        }
 
         return result;
     }
@@ -91,7 +85,7 @@ public class JudgmentService {
         String psrStandard = String.valueOf(ftaInfo.get("psrStandard"));
         BigDecimal rvcStandardRate = new BigDecimal(String.valueOf(ftaInfo.get("rvcStandardRate")));
 
-        String hsCode = String.valueOf(ftaInfo.get("hsCode")); // 제품 HS Code
+        String hscode = String.valueOf(ftaInfo.get("hscode")); // 제품 HS Code
         BigDecimal materialAmountOrigin = BigDecimal.ZERO; // 원산지 재료비
         BigDecimal materialAmountNonOrigin = BigDecimal.ZERO; // 비원산지 재료비
         int priceErrorOriginCount = 0; // 원산지 재료비 오류
@@ -110,7 +104,7 @@ public class JudgmentService {
 
         for (Map<String, Object> itemData : itemList) {
             BigDecimal itemAmount = new BigDecimal(String.valueOf(itemData.get("amount")));
-            String itemHsCode = String.valueOf(itemData.get("hsCode"));
+            String itemHscode = String.valueOf(itemData.get("hscode"));
             String itemOrigin = String.valueOf(itemData.get("origin"));
 
             // 원산지, 비원산지 재료비
@@ -131,54 +125,43 @@ public class JudgmentService {
             }
 
             // HS 오류 카운트
-            if (itemHsCode.length() < 6) {
+            if (itemHscode.length() < 6) {
                 hscodeErrorCount++;
             }
 
             // 2자리 일치 카운트 ***
-            if (itemHsCode.startsWith(hsCode.substring(0, 2))) {
+            if (itemHscode.startsWith(hscode.substring(0, 2))) {
                 ccMatchCount++;
             }
 
             // 4자리 일치 카운트 ***
-            if (itemHsCode.startsWith(hsCode.substring(0, 4))) {
+            if (itemHscode.startsWith(hscode.substring(0, 4))) {
                 cthMatchCount++;
             }
 
             // 6자리 일치 카운트 ***
-            if (itemHsCode.startsWith(hsCode.substring(0, 6))) {
+            if (itemHscode.startsWith(hscode.substring(0, 6))) {
                 ctshMatchCount++;
             }
 
             // 2자리 일치 비원산지 재료비
-            if ("N".equals(itemOrigin) && itemHsCode.startsWith(hsCode.substring(0, 2))) {
+            if ("N".equals(itemOrigin) && itemHscode.startsWith(hscode.substring(0, 2))) {
                 ccMatchAmount = ccMatchAmount.add(itemAmount);
             }
 
             // 4자리 일치 비원산지 재료비
-            if ("N".equals(itemOrigin) && itemHsCode.startsWith(hsCode.substring(0, 4))) {
+            if ("N".equals(itemOrigin) && itemHscode.startsWith(hscode.substring(0, 4))) {
                 cthMatchAmount = cthMatchAmount.add(itemAmount);
             }
 
             // 6자리 일치 비원산지 재료비
-            if ("N".equals(itemOrigin) && itemHsCode.startsWith(hsCode.substring(0, 6))) {
+            if ("N".equals(itemOrigin) && itemHscode.startsWith(hscode.substring(0, 6))) {
                 ctshMatchAmount = ctshMatchAmount.add(itemAmount);
             }
 
         }
 
         // PSR 조회 추가 필요
-
-//        JudgmentDto judgmentDto2 = JudgmentDto.builder().amount(amount).psrStandard(psrStandard)
-//                .rvcStandardRate(rvcStandardRate).materialAmountOrigin(materialAmountOrigin)
-//                .materialAmountNonOrigin(materialAmountNonOrigin).hscodeErrorCount(hscodeErrorCount)
-//                .ccMatchCount(ccMatchCount).cthMatchCount(cthMatchCount).ctshMatchCount(ctshMatchCount)
-//                .ccMatchAmount(ccMatchAmount).cthMatchAmount(cthMatchAmount).ctshMatchAmount(ctshMatchAmount)
-//                .deminimisBuffer(3L).rvcBuffer(5L).sufficient(Boolean.FALSE).doSufficient(Boolean.FALSE)
-//                .woSufficient(Boolean.FALSE).spSufficient(Boolean.FALSE).ctcSufficient(Boolean.FALSE)
-//                .deminimisSufficient(Boolean.FALSE).rvcSufficient(Boolean.FALSE).conditionSufficient(Boolean.FALSE)
-//                .accmltstdr(Boolean.FALSE).etc(Boolean.FALSE).priceErrorOriginCount(priceErrorOriginCount)
-//                .priceErrorNonOriginCount(priceErrorNonOriginCount).build();
 
         JudgmentDto judgmentDto = new JudgmentDto();
 
@@ -209,11 +192,6 @@ public class JudgmentService {
         judgmentDto.setPriceErrorOriginCount(priceErrorOriginCount);
         judgmentDto.setPriceErrorNonOriginCount(priceErrorNonOriginCount);
 
-        // PSR 조회 후 update 해줘야함
-        // 1. deminimisBuffer (미소기준 버퍼)
-        // 2. rvcBuffer (부가가치기준 버퍼)
-        // 3. 예외기준??
-
         return judgmentDto;
     }
 
@@ -229,27 +207,27 @@ public class JudgmentService {
 
         // 완전 생산 기준 판정
         if (judgment.getWoUse()) {
-            // result = result && this.woPsr.judgment(companyId, judgment);
+            result = result && this.woPsr.judgment(companyId, judgment);
         }
 
         // 가공공정 기준 판정
         if (judgment.getSpUse()) {
-            // result = result && this.spPsr.judgment(companyId, judgment);
+            result = result && this.spPsr.judgment(companyId, judgment);
         }
 
         // 세번변경 기준 판정
         if (judgment.getCtcUse()) {
-            // result = result && this.ctcPsr.judgment(companyId, judgment);
+            result = result && this.ctcPsr.judgment(companyId, judgment);
         }
 
         // 부가가치 기준 판정
         if (judgment.getRvcUse()) {
-            // result = result && this.rvcPsr.judgment(companyId, judgment);
+            result = result && this.rvcPsr.judgment(companyId, judgment);
         }
 
         // 예외기준 판정
         if (judgment.getConditionUse()) {
-            // result = result && this.conditionPsr.judgment(companyId, judgment);
+            result = result && this.conditionPsr.judgment(companyId, judgment);
         }
 
         // 최종 결과 반영
@@ -264,6 +242,9 @@ public class JudgmentService {
         // 데이터 초기화
         this.clear(params);
 
+        // 임시 값임
+        params.put("companyId", tempCompanyId);
+
         // 설정정보 가져오기
         Map<Long, JudgmentSetupDto> setupMap = this.findSetupMap(params);
 
@@ -277,7 +258,7 @@ public class JudgmentService {
                 .map(item -> item.getHscode()).collect(Collectors.toList());
 
         psrParams.getHscodes().addAll(hscodes);
-        PsrSearchResultDto psrResult = psrService.selectPsrSearchResult(psrParams);
+        PsrSearchResultDto psrResult = psrService.searchPsrSearchResult(psrParams);
 
         for (JudgmentDto judgmentDto : judgmentDtos) {
             if (judgmentDto.getJudgmentType() == null) {
@@ -332,7 +313,7 @@ public class JudgmentService {
                     // PsrStdItemTypeDto itemType = explainOriginRepository
                     // .findItemTypeIdFrDto(judgmentDto.getClassificationId(), standardItemId);
 
-                    PsrStdItemTypeDto itemType = psrService.selectPsrStdItemType(judgmentDto.getClassificationId(),
+                    PsrStdItemTypeDto itemType = psrService.searchPsrStdItemType(judgmentDto.getClassificationId(),
                             standardItemId);
 
                     if (itemType != null) {
@@ -380,7 +361,7 @@ public class JudgmentService {
     }
 
     // 설정정보 가져오기
-    private Map<Long, JudgmentSetupDto> findSetupMap(Map<String, Object> params) {
+    public Map<Long, JudgmentSetupDto> findSetupMap(Map<String, Object> params) {
         // FTA 별 설정정보 가져오기
         List<JudgmentSetupDto> setups = judgmentMapper.selectJudgmentSetup(params);
 
@@ -418,11 +399,17 @@ public class JudgmentService {
     private void saveJudgmentError(List<JudgmentDto> judgmentEntities) {
         for (JudgmentDto judgment : judgmentEntities) {
             for (JudgmentErrorDetailDto error : judgment.getErrors()) {
+                // *mybatis forEach로 변경 필요
                 error.setGroupId(judgment.getGroupId());
                 error.setJudgmentId(judgment.getId());
 
                 judgmentMapper.insertJudgmentError(error);
             }
         }
+    }
+
+    public List<Map<String, Object>> searchJudgmentTest(Map<String, Object> pMap) {
+
+        return judgmentMapper.selectJudgmentTest(pMap);
     }
 }

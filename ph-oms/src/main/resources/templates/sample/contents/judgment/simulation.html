@@ -35,7 +35,7 @@
                 <label for="email">수출</label>
             </div>
             <div class="form-floating mb-3">
-                <input class="form-control" id="hsCode" name="hsCode" style="width:500px;">
+                <input class="form-control" id="hscode" name="hscode" style="width:500px;">
                 <label for="email">품목코드</label>
             </div>
             <div class="form-floating mb-3">
@@ -228,7 +228,7 @@
             fn.form.setData({
             	ftaId: 'fta-test',
             	destinationCode: 'test',
-            	hsCode: '830140',
+            	hscode: '830140',
             	amount: '100000',
             	psrStandard: 'CTH',
             });
@@ -237,9 +237,9 @@
         
         // test Data
         let materialList = [
-            {itemName: 'mtr1', hsCode: '830140', amount: '50000', origin: 'Y'},
-            {itemName: 'mtr2', hsCode: '830140', amount: '30000', origin: 'Y'},
-            {itemName: 'mtr3', hsCode: '830140', amount: '20000', origin: 'N'},
+            {itemName: 'mtr1', hscode: '830140', amount: '50000', origin: 'Y'},
+            {itemName: 'mtr2', hscode: '830140', amount: '30000', origin: 'Y'},
+            {itemName: 'mtr3', hscode: '830140', amount: '20000', origin: 'N'},
         ]
     </script>    
 </th:block>

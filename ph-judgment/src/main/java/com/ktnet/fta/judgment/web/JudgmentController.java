@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ktnet.common.response.ApiResponse;
 import com.ktnet.fta.common.web.BasicController;
 import com.ktnet.fta.judgment.service.JudgmentService;
 
@@ -43,7 +42,7 @@ public class JudgmentController extends BasicController {
 //    }
 
     @PostMapping("/api/post/test")
-    public ApiResponse test(@RequestBody Map<String, Object> reqMap) {
+    public String test(@RequestBody Map<String, Object> reqMap) {
 
         logger.debug(reqMap.toString());
 
@@ -55,7 +54,7 @@ public class JudgmentController extends BasicController {
 //        this.resultCode = resultCode;
 //        this.resultMsg = resultMsg;
 
-        return new ApiResponse("S", 1, "SUCCESS...");
+        return "SUCCESS";
     }
 
     @PostMapping("/api/simulation")

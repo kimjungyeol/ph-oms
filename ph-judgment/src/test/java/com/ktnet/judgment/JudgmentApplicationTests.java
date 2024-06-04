@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ktnet.fta.judgment.dto.TestDto;
+import com.ktnet.fta.judgment.dto.JudgmentSetupDto;
+import com.ktnet.fta.judgment.mapper.JudgmentMapper;
 import com.ktnet.fta.judgment.service.JudgmentService;
 
 @SpringBootTest
@@ -21,34 +22,33 @@ public class JudgmentApplicationTests {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    JudgmentService judgmentService;
+    private JudgmentService judgmentService;
+
+    @Autowired
+    private JudgmentMapper judgmentMapper;
 
     @Test
-    @DisplayName("DTO test.")
+    @DisplayName("test.")
     void dtoTest() {
         logger.debug("========================  JUnit judgment Test  ========================");
 
-        // TestDto testDto = TestDto.builder();
-        // TestDto testDto =
-        // TestDto.builder().value("aaaaaaaaaa").testValue("bbbbbbbbbbb").build();
+        // int cnt = judgmentMapper.selectJudgmentTest();
+        // Map<String, Object> pMap = new HashMap<String, Object>();
+        // judgmentMapper.selectJudgmentTest(pMap);
+        // int cnt = judgmentService.searchJudgmentTest(pMap);
 
-        // TestDto testDto = TestDto.builder().build();
-        TestDto testDto2 = new TestDto();
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("groupId", "274342");
+        params.put("detailsId", "97880");
+        // List<JudgmentSetupDto> setups = judgmentMapper.selectJudgmentSetup(pMap);
 
-        // logger.debug(testDto.getValue());
-        // logger.debug(testDto.getTestValue());
+        Map<Long, JudgmentSetupDto> setupMap = judgmentService.findSetupMap(params);
 
-        logger.debug(testDto2.getValue());
-        logger.debug(testDto2.getTestValue());
+        // pMap.put("ftaId", "78");
+        // List<Map<String, Object>> resultList =
+        // judgmentService.searchJudgmentTest(pMap);
 
-        // 초기화 확인 필요
-        // JudgmentDto judgment = JudgmentDto.builder().amount(new
-        // BigDecimal(10000)).build();
-        // JudgmentDto judgment2 = new JudgmentDto();
-
-        // logger.debug("judgmentDto", judgment.toString());
-        // logger.debug("judgment", judgment.toString());
-        // logger.debug("judgment2", judgment2.toString());
+        System.out.println("test success");
     }
 
     @Test

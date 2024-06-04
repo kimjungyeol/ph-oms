@@ -22,7 +22,7 @@ public class PsrService {
     @Autowired
     private PsrMapper psrMapper;
 
-    public PsrSearchResultDto selectPsrSearchResult(PsrSearchParamsDto params) {
+    public PsrSearchResultDto searchPsrSearchResult(PsrSearchParamsDto params) {
         PsrSearchResultDto psrSearchResultDto = new PsrSearchResultDto();
 
         params.setHscodes(params.getHscodes().stream().filter(item -> StringUtils.isNotBlank(item)).distinct()
@@ -47,7 +47,7 @@ public class PsrService {
         return psrSearchResultDto;
     }
 
-    public PsrStdItemTypeDto selectPsrStdItemType(Long classificationId, Long standardItemId) {
+    public PsrStdItemTypeDto searchPsrStdItemType(Long classificationId, Long standardItemId) {
         Map<String, Object> params = new HashMap<String, Object>();
 
         params.put("classificationId", classificationId);

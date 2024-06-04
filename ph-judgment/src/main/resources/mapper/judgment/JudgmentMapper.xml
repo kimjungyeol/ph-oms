@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.judgment.mapper.JudgmentMapper">
+
+    <select id="selectJudgmentTest" parameterType="map" resultType="camelMap">
+        /*queryId=JudgmentMapper.selectJudgmentTest*/
+        SELECT * 
+          FROM FTA_EO
+         WHERE 1=1
+           AND FTA_ID = #{ftaId}
+    </select>
+    
+    <!-- <select id="selectJudgmentSetup" parameterType="map" resultType="camelMap"> -->
+    <select id="selectJudgmentSetup" parameterType="map" resultType="com.ktnet.fta.judgment.dto.JudgmentSetupDto">
+        /*queryId=JudgmentMapper.selectJudgmentSetup*/
+        SELECT FE.FTA_ID
+             , CASE WHEN CF.CTC_BUFFER > 0 THEN CF.CTC_BUFFER                -- 회사설정
+		            WHEN FS.DEMIN_BUFFER_RATE > 0 THEN FS.DEMIN_BUFFER_RATE  -- 협정설정
+		            ELSE 3
+		       END  AS "DEMINIMIS_BUFFER"  -- 미소기준 버퍼
+		     , CASE WHEN CF.RVC_BUFFER > 0 THEN CF.RVC_BUFFER
+		            WHEN FS.RVC_BUFFER_RATE > 0 THEN FS.RVC_BUFFER_RATE
+		            ELSE 3
+		       END  AS "RVC_BUFFER"  -- 부가가치 버퍼
+		  FROM CMPNY_DTLS_ITEM CDI
+		 INNER JOIN FTA_EO FE
+		    ON FE.DTLS_ID = CDI.DTLS_ID
+		  LEFT OUTER JOIN FTA_SETUP FS
+		    ON FS.CMPNY_ID = CDI.CMPNY_ID
+		  LEFT OUTER JOIN CMPNY_FTA CF
+		    ON CF.FTA_ID = FE.FTA_ID 
+		   AND CF.CMPNY_ID = CDI.CMPNY_ID
+		 WHERE CDI.DTLS_GROUP_ID = #{groupId}
+		   <if test="detailsId != null and detailsId != ''">
+		       AND CDI.DTLS_ID = #{detailsId}
+		   </if>
+    </select>
+    
+    <!-- <select id="selectSampleList" parameterType="map" resultType="camelMap">
+        /*queryId=SampleMapper.selectSampleList*/
+        <include refid="pagingMapper.header"/>
+        SELECT * FROM TESTDB
+        <if test="pgStart != null and pgStart != '' and pgStart != 10">
+        WHERE 1=1
+        </if>
+        <include refid="pagingMapper.footer"/>
+    </select>
+
+    <select id="selectSample" parameterType="map" resultType="camelMap">
+        /*queryId=SampleMapper.selectSample*/
+        SELECT * FROM TESTDB
+         WHERE NAME = #{name} 
+    </select>
+    
+    <insert id="insertSample" parameterType="map">
+        /*queryId=SampleMapper.insertSample*/
+        INSERT INTO TESTDB
+        (NAME, NAME_ENG, AGE, EMAIL, USEYN)
+        VALUES
+        (#{name}, #{nameEng}, #{age}, #{email}, #{useyn})
+    </insert>
+    
+    <insert id="updateSample" parameterType="map">
+        /*queryId=SampleMapper.updateSample*/
+        UPDATE TESTDB
+           SET AGE = #{age}
+              ,EMAIL = #{email}
+              ,USEYN = #{useyn}
+         WHERE NAME = #{name}
+    </insert> -->
+
+</mapper>

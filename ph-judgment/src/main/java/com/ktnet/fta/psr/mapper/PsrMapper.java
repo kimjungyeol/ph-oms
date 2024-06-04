@@ -13,10 +13,10 @@ import com.ktnet.fta.psr.dto.PsrStdItemTypeDto;
 @Mapper
 public interface PsrMapper {
 
-    List<PsrSearchItemDto> selectPsrSearchItem(PsrSearchParamsDto params);
+    public List<PsrSearchItemDto> selectPsrSearchItem(PsrSearchParamsDto params);
 
-    List<PsrConditionDto> selectPsrCondition(PsrSearchParamsDto params);
+    public List<PsrConditionDto> selectPsrCondition(PsrSearchParamsDto params);
 
-    PsrStdItemTypeDto selectPsrStdItemType(Map<String, Object> params);
+    public PsrStdItemTypeDto selectPsrStdItemType(Map<String, Object> params);
 
 }

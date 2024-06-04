@@ -19,14 +19,18 @@ public interface JudgmentMapper {
 
     public List<JudgmentSetupDto> selectJudgmentSetup(Map<String, Object> params);
 
-    public void deleteJudgmentCondition(Map<String, Object> params);
+    public int deleteJudgmentCondition(Map<String, Object> params);
 
-    public void insertJudgment(JudgmentDto judgment);
+    public int insertJudgment(JudgmentDto judgment);
 
-    public void insertJudgmentCondition(JudgmentConditionDetailDto condition);
+    public int insertJudgmentCondition(JudgmentConditionDetailDto condition);
 
-    public void insertJudgmentError(JudgmentErrorDetailDto error);
+    public int insertJudgmentError(JudgmentErrorDetailDto error);
 
     public Map<String, Object> selectJudgmentPurchase(Long eoId);
+
+    public Map<String, Object> selectUserChoisePsr(Map<String, Object> params);
+
+    public List<Map<String, Object>> selectJudgmentTest(Map<String, Object> params);
 
 }
