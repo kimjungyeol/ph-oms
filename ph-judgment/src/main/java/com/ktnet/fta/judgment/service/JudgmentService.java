@@ -69,7 +69,7 @@ public class JudgmentService {
 
         JudgmentDto judgmentDto = this.generateJudgmentDto(ftaInfo, itemList);
 
-        this.judgment(tempCompanyId, judgmentDto);
+        this.judgment(judgmentDto);
 
 //        if ("RVC".equals(judgmentDto.getPsrStandard())) {
 //            result = rvcPsr.judgment(judgmentDto);
@@ -197,39 +197,39 @@ public class JudgmentService {
         return judgmentDto;
     }
 
-    private void judgment(final Long companyId, final JudgmentDto judgment) {
+    private void judgment(final JudgmentDto judgment) {
         boolean result = true;
 
         if (judgment.getJudgmentType().equals(JudgmentType.PURCHASE)) {
             // 상품 판정
-            result = this.doPsr.judgment(companyId, judgment);
+            result = this.doPsr.judgment(judgment);
             judgment.updateSufficient(result);
             return;
         }
 
         // 완전 생산 기준 판정
         if (judgment.getWoUse()) {
-            result = result && this.woPsr.judgment(companyId, judgment);
+            result = result && this.woPsr.judgment(judgment);
         }
 
         // 가공공정 기준 판정
         if (judgment.getSpUse()) {
-            result = result && this.spPsr.judgment(companyId, judgment);
+            result = result && this.spPsr.judgment(judgment);
         }
 
         // 세번변경 기준 판정
         if (judgment.getCtcUse()) {
-            result = result && this.ctcPsr.judgment(companyId, judgment);
+            result = result && this.ctcPsr.judgment(judgment);
         }
 
         // 부가가치 기준 판정
         if (judgment.getRvcUse()) {
-            result = result && this.rvcPsr.judgment(companyId, judgment);
+            result = result && this.rvcPsr.judgment(judgment);
         }
 
         // 예외기준 판정
         if (judgment.getConditionUse()) {
-            result = result && this.conditionPsr.judgment(companyId, judgment);
+            result = result && this.conditionPsr.judgment(judgment);
         }
 
         // 최종 결과 반영
@@ -239,19 +239,19 @@ public class JudgmentService {
 
     public void judgmentExecute(Map<String, Object> params) {
         // 임시 값임
-        Long tempCompanyId = -100L;
+        // Long companyId = -100L;
 
         // 데이터 초기화
         this.clear(params);
 
         // 임시 값임
-        params.put("companyId", tempCompanyId);
+        // params.put("companyId", tempCompanyId);
 
         // 설정정보 가져오기
         Map<Long, JudgmentSetupDto> setupMap = this.findSetupMap(params);
 
         // 판정 데이터 조회
-        List<JudgmentDto> judgmentDtos = this.judgmentMapper.selectJudgmentList(params);
+        List<JudgmentDto> judgmentDtos = judgmentMapper.selectJudgmentList(params);
         List<JudgmentDto> judgmentEntities = new ArrayList<>();
 
         // PSR 조회
@@ -345,7 +345,7 @@ public class JudgmentService {
                 judgmentDto.update(setupMap.get(psrDto.getFtaId()));
 
                 // 판정 실행
-                this.judgment(tempCompanyId, judgmentDto);
+                this.judgment(judgmentDto);
 
                 // 결정기준 별로 엔티티 저장
                 judgmentEntities.add(judgmentDto);
@@ -353,7 +353,7 @@ public class JudgmentService {
         }
 
         // 판정 정보 저장
-        this.save(tempCompanyId, judgmentEntities);
+        this.save(judgmentEntities);
     }
 
     // 초기화
@@ -376,7 +376,7 @@ public class JudgmentService {
         return setupMap;
     }
 
-    private void save(Long tempCompanyId, List<JudgmentDto> judgmentEntities) {
+    private void save(List<JudgmentDto> judgmentEntities) {
         this.saveJudgment(judgmentEntities);
         this.saveJudgmentCondition(judgmentEntities);
         this.saveJudgmentError(judgmentEntities);

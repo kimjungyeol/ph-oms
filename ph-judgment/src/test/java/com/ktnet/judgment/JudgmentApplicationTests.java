@@ -12,9 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.ktnet.fta.judgment.dto.JudgmentDto;
 import com.ktnet.fta.judgment.dto.JudgmentSetupDto;
 import com.ktnet.fta.judgment.mapper.JudgmentMapper;
 import com.ktnet.fta.judgment.service.JudgmentService;
+import com.ktnet.fta.psr.dto.PsrStdItemTypeDto;
+import com.ktnet.fta.psr.service.PsrService;
 
 @SpringBootTest
 public class JudgmentApplicationTests {
@@ -23,6 +26,9 @@ public class JudgmentApplicationTests {
 
     @Autowired
     private JudgmentService judgmentService;
+
+    @Autowired
+    private PsrService psrService;
 
     @Autowired
     private JudgmentMapper judgmentMapper;
@@ -43,16 +49,37 @@ public class JudgmentApplicationTests {
         // List<JudgmentSetupDto> setups = judgmentMapper.selectJudgmentSetup(pMap);
 
         Map<Long, JudgmentSetupDto> setupMap = judgmentService.findSetupMap(params);
-
-        // pMap.put("ftaId", "78");
-        // List<Map<String, Object>> resultList =
-        // judgmentService.searchJudgmentTest(pMap);
+        //////////////////////////////
+        PsrStdItemTypeDto itemType = psrService.searchPsrStdItemType(159420L, 104815L);
+        System.out.println(itemType.getStandardItemTypeId());
 
         System.out.println("test success");
+
+        /////////////////////////////
+        params.put("groupId", 274465);
+        params.put("detailsId", "");
+        List<JudgmentDto> judgmentDtos = judgmentMapper.selectJudgmentList(params);
+        System.out.println(judgmentDtos.size());
+        System.out.println(judgmentDtos.toString());
     }
 
     @Test
-    @DisplayName("Judgment test.")
+    @DisplayName("judgment test.")
+    void judgmentTest() {
+        logger.debug("========================  JUnit judgment Test  ========================");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("groupId", "275794");
+        map.put("companyId", "8048");
+
+        judgmentService.judgmentExecute(map);
+
+        System.out.println("SUCCESS");
+
+    }
+
+    @Test
+    @DisplayName("simulation test.")
     void simulationTest() {
         logger.debug("========================  JUnit simulation Test  ========================");
 

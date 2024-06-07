@@ -16,7 +16,7 @@ public class RVCPsr {
 
     private final DecimalFormat amountFormatter = new DecimalFormat("#,##0");
 
-    public boolean judgment(Long companyId, JudgmentDto judgment) {
+    public boolean judgment(JudgmentDto judgment) {
         if (judgment.getAmount().compareTo(new BigDecimal(0)) < 1) {
             judgment.addError("judgment.rvc.amount",
                     "[[ 판정물품 금액누락 ]]" + "<br>판매 물품의 금액 정보를 찾을 수 없습니다." + "<br>" + "<br> ** 아래 사항을 확인해 주세요."

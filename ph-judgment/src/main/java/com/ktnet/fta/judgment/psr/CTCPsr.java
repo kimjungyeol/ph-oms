@@ -13,7 +13,7 @@ import com.ktnet.fta.judgment.dto.JudgmentDto;
 public class CTCPsr {
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    public boolean judgment(Long companyId, JudgmentDto judgment) {
+    public boolean judgment(JudgmentDto judgment) {
         logger.debug("세번변경 유형 : " + judgment.getCtcStandard());
         if (judgmentCTC(judgment)) {
             return judgment.getCtcSufficient();

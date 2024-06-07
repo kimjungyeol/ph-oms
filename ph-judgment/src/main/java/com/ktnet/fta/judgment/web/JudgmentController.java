@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,13 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ktnet.fta.common.web.BasicController;
 import com.ktnet.fta.judgment.service.JudgmentService;
 
+import jakarta.annotation.Resource;
+
 @RestController
 public class JudgmentController extends BasicController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    JudgmentService judgmentService;
+    @Resource(name = "judgmentService")
+    private JudgmentService judgmentService;
 
     @GetMapping("/api/get/test")
     public String getTest() {

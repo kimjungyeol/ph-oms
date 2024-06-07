@@ -20,7 +20,7 @@ public class DOPsr {
     @Autowired
     private JudgmentMapper judgmentMapper;
 
-    public boolean judgment(Long companyId, JudgmentDto judgment) {
+    public boolean judgment(JudgmentDto judgment) {
 
         // Map쓸지 DTO쓸지 고민
 

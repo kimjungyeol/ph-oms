@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
+import lombok.ToString;
+
+@ToString
 public class PsrSearchResultDto {
 
     private List<PsrSearchItemDto> psrs = new ArrayList<>();

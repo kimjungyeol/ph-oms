@@ -10,7 +10,7 @@ import com.ktnet.fta.judgment.dto.JudgmentDto;
 public class ConditionPsr {
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    public boolean judgment(Long companyId, JudgmentDto judgment) {
+    public boolean judgment(JudgmentDto judgment) {
         // TODO Auto-generated method stub
         return false;
     }

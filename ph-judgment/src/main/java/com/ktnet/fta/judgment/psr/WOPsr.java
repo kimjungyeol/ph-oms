@@ -18,7 +18,7 @@ public class WOPsr {
     @Autowired
     private JudgmentMapper judgmentMapper;
 
-    public boolean judgment(Long companyId, JudgmentDto judgment) {
+    public boolean judgment(JudgmentDto judgment) {
         // 품목분류 누락의 경우
         if (judgment.getClassificationId() == null) {
             judgment.addError("judgment.wo.check", "[[ 품목분류 누락 ]]" + "<br>품목분류 등록 후, 선택기준을 설정해야 합니다." + "<br>"
@@ -29,7 +29,7 @@ public class WOPsr {
 //        ClassificationPsr userChoisePsr = classificationPsrRepository.findByPsrId(companyId,
 //                judgment.getClassificationId(), judgment.getPsrId());
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("companyId", companyId);
+        params.put("companyId", 8048);
         params.put("classificationId", judgment.getClassificationId());
         params.put("psrId", judgment.getPsrId());
 

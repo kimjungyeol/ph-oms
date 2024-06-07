@@ -3,35 +3,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ktnet.fta.psr.mapper.PsrMapper">
 
-    <select id="selectPsrList" parameterType="map" resultType="camelMap">
+    <select id="selectPsrList" parameterType="map" resultType="com.ktnet.fta.psr.dto.PsrSearchItemDto">
         /*queryId=PsrMapper.selectPsrList*/
-	    SELECT SP.PSR_ID,
-	         , SFP.FTA_ID
-	         , SF.FTA_CODE
-	         , SF.FTA_NM
-	         , SFP.HS_TY
-	         , SI.HS_CODE
-	         , SFP.FTA_PSR_ID
-	         , SI.STD_ITEM_ID
-	         , SI.ITEM_NM
-	         , SI.ITEM_NM_ENG
-	         , SIT.ITEM_TY_ID
-	         , SIT.CODE
-	         , SIT.DC
-	         , SP.SORT_SN
-	         , SP.CO_MARK
-	         , SP.DO_MARK
-	         , SP.PSR_DC
-	         , SP.WO_AT
-	         , SP.SP_AT
-	         , SP.CTC_AT
-	         , SP.CTC_STDR
-	         , SP.DEMIN_STDR
-	         , SP.DEMIN_RATE
-	         , SP.RVC_AT
-	         , SP.RVC_STDR
-	         , SP.RVC_RATE
-	         , SP.EXCP_AT 
+	    SELECT SP.PSR_ID       AS "id"
+	         , SFP.FTA_ID      AS "ftaId"
+	         , SF.FTA_CODE     AS "ftaCode"
+	         , SF.FTA_NM       AS "ftaName"
+	         , SFP.HS_TY       AS "hscodeType"
+	         , SI.HS_CODE      AS "hscode"
+	         , SFP.FTA_PSR_ID  AS "ftaPsrId"
+	         , SI.STD_ITEM_ID  AS "standardItemId"
+	         , SI.ITEM_NM      AS "standardItemName"
+	         , SI.ITEM_NM_ENG  AS "standardItemEnglishName"
+	         , SIT.ITEM_TY_ID  AS "standardItemTypeId"
+	         , SIT.CODE        AS "standardItemTypeCode"
+	         , SIT.DC          AS "standardItemTypeDescription"
+	         , SP.SORT_SN      AS "sortSn"
+	         , SP.CO_MARK      AS "nameOfCo"
+	         , SP.DO_MARK      AS "nameOfDo"
+	         , SP.PSR_DC       AS "description"
+	         , SP.WO_AT        AS "woUse"
+	         , SP.SP_AT        AS "spUse"
+	         , SP.CTC_AT       AS "ctcUse"
+	         , SP.CTC_STDR     AS "ctcStandard"
+	         , SP.DEMIN_STDR   AS "deminimisStandard"
+	         , SP.DEMIN_RATE   AS "deminimisRate"
+	         , SP.RVC_AT       AS "rvcUse"
+	         , SP.RVC_STDR     AS "rvcStandard"
+	         , SP.RVC_RATE     AS "rvcRate"
+	         , SP.EXCP_AT      AS "conditionUse"
 	      FROM STD_ITEM SI
 	     INNER JOIN STD_FTA_PSR SFP 
 	        ON SFP.FTA_PSR_ID=SI.FTA_PSR_ID
@@ -42,23 +42,26 @@
 	     INNER JOIN STD_PSR SP
 	        ON SP.ITEM_TY_ID = SIT.ITEM_TY_ID
 	     WHERE 1=1
-	       AND SI.HS_CODE = SUBSTR(#{hscode}, 1, LENGTH(SI.HS_CODE)) 
-	       AND SFP.BEGIN_DE <![CDATA[<=]]> #{beginDe}
-	       AND SFP.END_DE <![CDATA[>=]]> #{endDe} 
+	       AND SFP.BEGIN_DE <![CDATA[<=]]> SYSDATE
+	       AND SFP.END_DE <![CDATA[>=]]> SYSDATE
+	       AND SI.HS_CODE = SUBSTR(#{hscode}, 1, LENGTH(SI.HS_CODE))
+	       <foreach collection="params" item="hscodes" open="(" close=")" separator=",">
+	           #{hscodes}
+	       </foreach> 
 	       <if test="ftaId != null and ftaId != ''">
                AND SFP.FTA_ID = #{ftaId}
            </if>
 	     ORDER BY SFP.FTA_ID ASC
     </select>
     
-    <select id="selectPsrConditionList" parameterType="map" resultType="camelMap">
+    <select id="selectPsrConditionList" parameterType="map" resultType="com.ktnet.fta.psr.dto.PsrConditionDto">
         /*queryId=JudgmentMapper.selectPsrConditionList*/
-        SELECT SPE.PSR_EXCP_ID
-             , SPE.PSR_ID
-             , SPE.EXCP_TY
-             , SPE.EXCP_DC
-             , SPE.EXCP_RATE
-             , SPE.TRGET_HS_CODE
+        SELECT SPE.PSR_EXCP_ID    AS "id"
+             , SPE.PSR_ID         AS "psrId"
+             , SPE.EXCP_TY        AS "type"
+             , SPE.EXCP_DC        AS "description"
+             , SPE.EXCP_RATE      AS "rate"
+             , SPE.TRGET_HS_CODE  AS "hscode"
           FROM STD_ITEM SI
          INNER JOIN STD_FTA_PSR SFP
             ON SFP.FTA_PSR_ID = SI.FTA_PSR_ID
@@ -78,5 +81,13 @@
          ORDER BY SFP.FTA_ID ASC
     </select>
     
-
+    <select id="selectPsrStdItemType" parameterType="map" resultType="com.ktnet.fta.psr.dto.PsrStdItemTypeDto">
+        /*queryId=JudgmentMapper.selectPsrStdItemType*/
+		SELECT ITEM_TY_ID  AS "standardItemTypeId"
+		  FROM CMPNY_ITEM_CL_STD
+		 WHERE ITEM_CL_ID = #{classificationId}
+		   AND STD_ITEM_ID = #{standardItemId}
+		   AND ROWNUM = 1
+    </select>
+    
 </mapper>

@@ -9,6 +9,9 @@ import com.ktnet.fta.judgment.constant.DetailsType;
 import com.ktnet.fta.judgment.constant.JudgmentType;
 import com.ktnet.fta.psr.dto.PsrSearchItemDto;
 
+import lombok.ToString;
+
+@ToString
 public class JudgmentDto {
 
     private static DecimalFormat amountFormatter = new DecimalFormat("#,##0.00");

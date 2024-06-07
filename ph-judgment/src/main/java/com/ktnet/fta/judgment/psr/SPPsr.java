@@ -18,7 +18,7 @@ public class SPPsr {
     @Autowired
     private JudgmentMapper judgmentMapper;
 
-    public boolean judgment(Long companyId, JudgmentDto judgment) {
+    public boolean judgment(JudgmentDto judgment) {
         logger.debug(">>>> SPPsr : " + judgment);
 
         // 품목분류 누락의 경우
@@ -31,7 +31,7 @@ public class SPPsr {
 //        ClassificationPsr userChoisePsr = classificationPsrRepository.findByPsrId(companyId,
 //                judgment.getClassificationId(), judgment.getPsrId());
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("companyId", companyId);
+        params.put("companyId", 8048);
         params.put("classificationId", judgment.getClassificationId());
         params.put("psrId", judgment.getPsrId());
 

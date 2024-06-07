@@ -11,13 +11,4 @@ public class PsrStdItemTypeDto {
     public void setStandardItemTypeId(Long standardItemTypeId) {
         this.standardItemTypeId = standardItemTypeId;
     }
-
-    public PsrStdItemTypeDto() {
-
-    }
-
-    public PsrStdItemTypeDto(Long standardItemTypeId) {
-
-        this.standardItemTypeId = standardItemTypeId;
-    }
 }

@@ -45,17 +45,17 @@
 		                )
     </delete>
     
-    <select id="selectJudgmentSetupList" parameterType="map" resultType="camelMap">
+    <select id="selectJudgmentSetupList" parameterType="map" resultType="com.ktnet.fta.judgment.dto.JudgmentSetupDto">
         /*queryId=JudgmentMapper.selectJudgmentSetup*/
-        SELECT FE.FTA_ID
+        SELECT FE.FTA_ID  AS "ftaId"
              , CASE WHEN CF.CTC_BUFFER > 0 THEN CF.CTC_BUFFER                -- 회사설정
 		            WHEN FS.DEMIN_BUFFER_RATE > 0 THEN FS.DEMIN_BUFFER_RATE  -- 협정설정
 		            ELSE 3
-		       END  AS "DEMINIMIS_BUFFER"  -- 미소기준 버퍼
+		       END  AS "deminimisBuffer"  -- 미소기준 버퍼
 		     , CASE WHEN CF.RVC_BUFFER > 0 THEN CF.RVC_BUFFER
 		            WHEN FS.RVC_BUFFER_RATE > 0 THEN FS.RVC_BUFFER_RATE
 		            ELSE 3
-		       END  AS "RVC_BUFFER"  -- 부가가치 버퍼
+		       END  AS "rvcBuffer"  -- 부가가치 버퍼
 		  FROM CMPNY_DTLS_ITEM CDI
 		 INNER JOIN FTA_EO FE
 		    ON FE.DTLS_ID = CDI.DTLS_ID
@@ -70,43 +70,43 @@
 		 </if>
     </select>
     
-    <select id="selectJudgmentList" parameterType="map" resultType="camelMap">
+    <select id="selectJudgmentList" parameterType="map" resultType="com.ktnet.fta.judgment.dto.JudgmentDto">
         /*queryId=JudgmentMapper.selectJudgment*/
-        SELECT FE.DTLS_GROUP_ID AS "GROUP_ID"
-			 , FE.EO_ID AS "EO_ID"
-			 , FE.FTA_ID AS "FTA_ID"
-			 , CDI.DTLS_TY AS "DETAILS_TYPE"
-			 , FIJ.JDGMNT_TY AS "JUDGMENT_TYPE"
-			 , NVL(FIJ.JDGMNT_USE, TRUE) AS "USE_JUDGMENT"
-			 , FE.HS_CODE AS "HSCODE"
-			 , CDI.ITEM_CL_ID AS "CLASSIFICATION_ID"
-			 , FE.QY AS "QUANTITY"
-			 , FE.AMOUNT AS "AMOUNT"
-			 , FE.WT AS "WEIGHT"
-			 , FE.MTRIL_AMOUNT_INTRA AS "MATERIAL_AMOUNT_ORIGIN"
-			 , FE.MTRIL_AMOUNT_OFSHR AS "MATERIAL_AMOUNT_NON_ORIGIN"
-			 , FE.MTRIL_WT_INTRA AS "MATERIAL_WEIGHT_ORIGIN"
-			 , FE.MTRIL_WT_OFSHR AS "MATERIAL_WEIGHT_NON_ORIGIN"
-			 , FE.UNTPC_ERROR_INTRA_CNT AS "PRICE_ERROR_ORIGIN_COUNT"
-			 , FE.UNTPC_ERROR_OFSHR_CNT AS "PRICE_ERROR_NON_ORIGIN_COUNT"
-			 , FE.WT_ERROR_INTRA_CNT AS "WEIGHT_ERROR_ORIGIN_COUNT"
-			 , FE.WT_ERROR_OFSHR_CNT AS "WEIGHT_ERROR_NON_ORIGIN_COUNT"
-			 , FE.HS_CODE_ERROR_CNT AS "HSCODE_ERROR_COUNT"
-			 , FE.CC_MTCH_CNT AS "CC_MATCH_COUNT"
-			 , FE.CTH_MTCH_CNT AS "CTH_MATCH_COUNT"
-			 , FE.CTSH_MTCH_CNT AS "CTSH_MATCH_COUNT"
-			 , FE.CC_MTCH_AMOUNT AS "CC_MATCH_AMOUNT"
-			 , FE.CTH_MTCH_AMOUNT AS "CTH_MATCH_AMOUNT"
-			 , FE.CTSH_MTCH_AMOUNT AS "CTSH_MATCH_AMOUNT"
-			 , FE.CC_MTCH_WT AS "CC_MATCH_WEIGHT"
-			 , FE.CTH_MTCH_WT AS "CTH_MATCH_WEIGHT"
-			 , FE.CTSH_MTCH_WT AS "CTSH_MATCH_WEIGHT"
-			 , FE.CC_AMOUNT_ERROR_CNT AS "CC_MATCH_AMOUNT_ERROR_COUNT"
-			 , FE.CTH_AMOUNT_ERROR_CNT AS "CTH_MATCH_AMOUNT_ERROR_COUNT"
-			 , FE.CTSH_AMOUNT_ERROR_CNT AS "CTSH_MATCH_AMOUNT_ERROR_COUNT"
-			 , FE.CC_WT_ERROR_CNT AS "CC_MATCH_WEIGHT_ERROR_COUNT"
-			 , FE.CTH_WT_ERROR_CNT AS "CTH_MATCH_WEIGHT_ERROR_COUNT"
-			 , FE.CTSH_WT_ERROR_CNT AS "CTSH_MATCH_WEIGHT_ERROR_COUNT" 
+        SELECT FE.DTLS_GROUP_ID          AS "groupId"
+			 , FE.EO_ID                  AS "eoId"
+			 , FE.FTA_ID                 AS "ftaId"
+			 , CDI.DTLS_TY               AS "detailsType"
+			 , FIJ.JDGMNT_TY             AS "judgmentType"
+			 , NVL(FIJ.JDGMNT_USE, 1)    AS "useJudgment"
+			 , FE.HS_CODE                AS "hscode"
+			 , CDI.ITEM_CL_ID            AS "classificationId"
+			 , FE.QY                     AS "quantity"
+			 , FE.AMOUNT                 AS "amount"
+			 , FE.WT                     AS "weight"
+			 , FE.MTRIL_AMOUNT_INTRA     AS "materialAmountOrigin"
+			 , FE.MTRIL_AMOUNT_OFSHR     AS "materialAmountNonOrigin"
+			 , FE.MTRIL_WT_INTRA         AS "materialWeightOrigin"
+			 , FE.MTRIL_WT_OFSHR         AS "materialWeightNonOrigin"
+			 , FE.UNTPC_ERROR_INTRA_CNT  AS "priceErrorOriginCount"
+			 , FE.UNTPC_ERROR_OFSHR_CNT  AS "priceErrorNonOriginCount"
+			 , FE.WT_ERROR_INTRA_CNT     AS "weightErrorOriginCount"
+			 , FE.WT_ERROR_OFSHR_CNT     AS "weightErrorNonOriginCount"
+			 , FE.HS_CODE_ERROR_CNT      AS "hscodeErrorCount"
+			 , FE.CC_MTCH_CNT            AS "ccMatchCount"
+			 , FE.CTH_MTCH_CNT           AS "cthMatchCount"
+			 , FE.CTSH_MTCH_CNT          AS "ctshMatchCount"
+			 , FE.CC_MTCH_AMOUNT         AS "ccMatchAmount"
+			 , FE.CTH_MTCH_AMOUNT        AS "cthMatchAmount"
+			 , FE.CTSH_MTCH_AMOUNT       AS "ctshMatchAmount"
+			 , FE.CC_MTCH_WT             AS "ccMatchWeight"
+			 , FE.CTH_MTCH_WT            AS "cthMatchWeight"
+			 , FE.CTSH_MTCH_WT           AS "ctshMatchWeight"
+			 , FE.CC_AMOUNT_ERROR_CNT    AS "ccMatchAmountErrorCount"
+			 , FE.CTH_AMOUNT_ERROR_CNT   AS "cthMatchAmountErrorCount"
+			 , FE.CTSH_AMOUNT_ERROR_CNT  AS "ctshMatchAmountErrorCount"
+			 , FE.CC_WT_ERROR_CNT        AS "ccMatchWeightErrorCount"
+			 , FE.CTH_WT_ERROR_CNT       AS "cthMatchWeightErrorCount"
+			 , FE.CTSH_WT_ERROR_CNT      AS "ctshMatchWeightErrorCount" 
 		  FROM CMPNY_DTLS_GROUP CDG 
 		 INNER JOIN CMPNY_DTLS_ITEM CDI 
 			ON CDI.DTLS_GROUP_ID = CDG.DTLS_GROUP_ID
@@ -119,5 +119,157 @@
              AND FE.DTLS_ID = #{detailsId}
          </if>
     </select>
+    
+    <insert id="insertJudgment" parameterType="com.ktnet.fta.judgment.dto.JudgmentDto">
+        /*queryId=JudgmentMapper.insertJudgment*/
+        INSERT INTO FTA_JUDGMENT
+		    (
+		        JDGMNT_ID
+		      , DTLS_GROUP_ID
+		      , JDGMNT_TY
+		      , EO_ID
+		      , PSR_ID
+		      , ITEM_TY_ID
+		      , SORT_SN
+		      , CO_MARK
+		      , DO_MARK
+		      , PSR_DC
+		      , DO_AT
+		      , DO_SUFFCN_AT
+		      , WO_AT
+		      , WO_SUFFCN_AT
+		      , SP_AT
+		      , SP_SUFFCN_AT
+		      , CTC_AT
+		      , CTC_SUFFCN_AT
+		      , CTC_STDR
+		      , DEMIN_STDR
+		      , DEMIN_STDR_RATE
+		      , DEMIN_BUFFER_RATE
+		      , DEMIN_CALC_RATE
+		      , DEMIN_SUFFCN_AT
+		      , RVC_AT
+		      , RVC_STDR
+		      , RVC_STDR_RATE
+		      , RVC_BUFFER_RATE
+		      , RVC_CALC_RATE
+		      , RVC_SUFFCN_AT
+		      , RVC_DETAIL
+		      , EXCP_AT
+		      , EXCP_SUFFCN_AT
+		      , PSR_STD
+		      , SUFFCN_AT
+		      , CREAT_DT
+		      , CREAT_ID
+		      , UPDT_DT
+		      , UPDT_ID
+		      , ACCMLTSTDR_AT
+		      , ETC_AT
+		    )
+		VALUES
+		    (
+		        #{id}
+		      , #{groupId}
+		      , #{judgmentType}
+		      , #{eoId}
+		      , #{psrId}
+		      , #{itemTypeId}
+		      , #{sortSn}
+		      , #{nameOfCo}
+		      , #{nameOfDo}
+		      , #{psrDescription}
+		      , #{doUse}
+		      , #{doSufficient}
+		      , #{woUse}
+		      , #{woSufficient}
+		      , #{spUse}
+		      , #{spSufficient}
+		      , #{ctcUse}
+		      , #{ctcSufficient}
+		      , #{ctcStandard}
+		      , #{deminimisStandard}
+		      , #{deminimisStandardRate}
+		      , #{deminimisBuffer}
+		      , #{deminimisCalculationRate}
+		      , #{deminimisSufficient}
+		      , #{rvcUse}
+		      , #{rvcStandard}
+		      , #{rvcStandardRate}
+		      , #{rvcBuffer}
+		      , #{rvcCalculationRate}
+		      , #{rvcSufficient}
+		      , #{rvcDetail}
+		      , #{conditionUse}
+		      , #{conditionSufficient}
+		      , #{psrStandard}
+		      , #{sufficient}
+		      , SYSDATE
+		      , 'SYSTEM'
+		      , SYSDATE
+		      , 'SYSTEM'
+		      , #{accmltstdr}
+		      , #{etc}
+		    )
+    </insert>
+    
+    <insert id="insertJudgmentCondition" parameterType="com.ktnet.fta.judgment.dto.JudgmentConditionDetailDto">
+        /*queryId=JudgmentMapper.insertJudgmentCondition*/
+        INSERT INTO FTA_JDGMNT_EXCP
+		    (
+		        JDGMNT_EXCP_ID
+		      , DTLS_GROUP_ID
+		      , JDGMNT_ID
+		      , EXCP_TY
+		      , EXCP_DC
+		      , EXCP_RATE
+		      , TRGET_HS_CODE
+		      , CREAT_DT
+		      , CREAT_ID
+		      , UPDT_DT
+		      , UPDT_ID
+		    )
+		VALUES
+		    (
+		        #{id}
+		      , #{groupId}
+		      , #{judgmentId}
+		      , #{type}
+		      , #{description}
+		      , #{rate}
+		      , #{targetHsCode}
+		      , SYSDATE
+		      , 'SYSTEM'
+		      , SYSDATE
+		      , 'SYSTEM'
+		    )
+    </insert>
+    
+        <insert id="insertJudgmentError" parameterType="com.ktnet.fta.judgment.dto.JudgmentErrorDetailDto">
+        /*queryId=JudgmentMapper.insertJudgmentError*/
+		INSERT INTO FTA_JDGMNT_ERROR
+		    (
+		        JDGMNT_ERROR_ID
+		      , DTLS_GROUP_ID
+		      , JDGMNT_ID
+		      , ERROR_TY
+		      , CN
+		      , CREAT_DT
+		      , CREAT_ID
+		      , UPDT_DT
+		      , UPDT_ID
+		    )
+		VALUES
+		    (
+		        #{id}
+		      , #{groupId}
+		      , #{judgmentId}
+		      , #{errorType}
+		      , #{contents}
+		      , SYSDATE
+		      , 'SYSTEM'
+		      , SYSDATE
+		      , 'SYSTEM'
+		    )
+    </insert>
 
 </mapper>

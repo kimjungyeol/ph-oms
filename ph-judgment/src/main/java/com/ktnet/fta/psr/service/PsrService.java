@@ -25,6 +25,7 @@ public class PsrService {
     public PsrSearchResultDto searchPsrSearchResult(PsrSearchParamsDto params) {
         PsrSearchResultDto psrSearchResultDto = new PsrSearchResultDto();
 
+        // HS 이상 값 및 중복 제거
         params.setHscodes(params.getHscodes().stream().filter(item -> StringUtils.isNotBlank(item)).distinct()
                 .collect(Collectors.toList()));
 
@@ -43,6 +44,9 @@ public class PsrService {
             psr.setConditions(conditions.stream().filter(item -> item.getPsrId().equals(psr.getId()))
                     .collect(Collectors.toList()));
         }
+
+        // 결과 담기
+        psrSearchResultDto.getPsrs().addAll(psrs);
 
         return psrSearchResultDto;
     }
