@@ -1,6 +1,5 @@
 package com.ktnet.fta.judgment.web;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ktnet.fta.common.web.BasicController;
 import com.ktnet.fta.judgment.service.JudgmentService;
+import com.ktnet.fta.simulation.service.SimulationService;
 
 import jakarta.annotation.Resource;
 
@@ -24,6 +24,9 @@ public class JudgmentController extends BasicController {
 
     @Resource(name = "judgmentService")
     private JudgmentService judgmentService;
+
+    @Resource(name = "simulationService")
+    private SimulationService simulationService;
 
     @GetMapping("/api/get/test")
     public String getTest() {
@@ -58,20 +61,27 @@ public class JudgmentController extends BasicController {
         return "SUCCESS";
     }
 
-    @PostMapping("/api/simulation")
-    public void simulation() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        Map<String, Object> ftaInfo = new HashMap<String, Object>();
-        List<Map<String, Object>> itemList = new ArrayList<>();
-
+    @PostMapping("/api/co/judgment")
+    public void judgment(@RequestBody Map<String, Object> reqMap) {
+        // Map<String, Object> reqMap = new HashMap<String, Object>();
         reqMap.put("k", "v");
-        judgmentService.simulationExecute(ftaInfo, itemList);
-    }
 
-    @PostMapping("/api/judgment")
-    public void judgment() {
-        Map<String, Object> reqMap = new HashMap<String, Object>();
-        reqMap.put("k", "v");
         judgmentService.judgmentExecute(reqMap);
+
+        // Invoice No 기준으로 판정
+        List<String> invoiceNos = (List<String>) reqMap.get("invoiceNos");
+
+        for (String invoiceNo : invoiceNos) {
+            // 1. 품목명세 생성
+            // 2. BOM명세 생성
+            // 3. 자재명세 생성
+            // 4. 구매명세 생성
+            // 5. 소명서 생성
+            // 6. 원산지 판정
+            // 7. 판정결과 반영
+
+            // Invoice No 기준으로 판정
+            // judgmentService.judgmentExecute(reqMap);
+        }
     }
 }

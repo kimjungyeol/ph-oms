@@ -1,15 +1,23 @@
 package com.ktnet.fta.simulation.service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ktnet.fta.judgment.dto.JudgmentDto;
+import com.ktnet.fta.psr.dto.PsrSearchParamsDto;
+import com.ktnet.fta.psr.dto.PsrSearchResultDto;
+import com.ktnet.fta.psr.service.PsrService;
 
 @Service("simulationService")
 public class SimulationService {
+
+    @Autowired
+    private PsrService psrService;
 
     public boolean simulationExecute(Map<String, Object> ftaInfo, List<Map<String, Object>> itemList) {
         boolean result = false;
@@ -19,15 +27,14 @@ public class SimulationService {
 
         JudgmentDto judgmentDto = this.generateJudgmentDto(ftaInfo, itemList);
 
-        // this.judgment(tempCompanyId, judgmentDto);
+        // PSR 조회
+        PsrSearchParamsDto psrParams = new PsrSearchParamsDto();
+        List<String> hscodes = new ArrayList<String>();
 
-//        if ("RVC".equals(judgmentDto.getPsrStandard())) {
-//            result = rvcPsr.judgment(judgmentDto);
-//        }
-//
-//        if ("CTH".equals(ftaInfo.get("psrStandard"))) {
-//            // result = ctcPsr.judgment(judgmentDto);
-//        }
+        hscodes.add(String.valueOf(ftaInfo.get("hscode")));
+
+        psrParams.setHscodes(hscodes);
+        PsrSearchResultDto psrResult = psrService.searchPsrSearchResult(psrParams);
 
         return result;
     }

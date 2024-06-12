@@ -1,4 +1,4 @@
-package com.ktnet.judgment;
+package com.ktnet.fta.judgment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +18,7 @@ import com.ktnet.fta.judgment.mapper.JudgmentMapper;
 import com.ktnet.fta.judgment.service.JudgmentService;
 import com.ktnet.fta.psr.dto.PsrStdItemTypeDto;
 import com.ktnet.fta.psr.service.PsrService;
+import com.ktnet.fta.simulation.service.SimulationService;
 
 @SpringBootTest
 public class JudgmentApplicationTests {
@@ -26,6 +27,9 @@ public class JudgmentApplicationTests {
 
     @Autowired
     private JudgmentService judgmentService;
+
+    @Autowired
+    private SimulationService simulationService;
 
     @Autowired
     private PsrService psrService;
@@ -38,15 +42,9 @@ public class JudgmentApplicationTests {
     void dtoTest() {
         logger.debug("========================  JUnit judgment Test  ========================");
 
-        // int cnt = judgmentMapper.selectJudgmentTest();
-        // Map<String, Object> pMap = new HashMap<String, Object>();
-        // judgmentMapper.selectJudgmentTest(pMap);
-        // int cnt = judgmentService.searchJudgmentTest(pMap);
-
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("groupId", "274342");
         params.put("detailsId", "97880");
-        // List<JudgmentSetupDto> setups = judgmentMapper.selectJudgmentSetup(pMap);
 
         Map<Long, JudgmentSetupDto> setupMap = judgmentService.findSetupMap(params);
         //////////////////////////////
@@ -119,7 +117,7 @@ public class JudgmentApplicationTests {
         map.put("origin", "N");
         itemList.add(map);
 
-        judgmentService.simulationExecute(ftaInfo, itemList);
+        simulationService.simulationExecute(ftaInfo, itemList);
 
     }
 }

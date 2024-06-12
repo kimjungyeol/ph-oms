@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 
 import com.ktnet.fta.psr.dto.PsrConditionDto;
 
+import lombok.ToString;
+
+@ToString
 public class JudgmentConditionDetailDto {
 
     private Long id;
@@ -73,20 +76,6 @@ public class JudgmentConditionDetailDto {
     }
 
     public void setTargetHsCode(String targetHsCode) {
-        this.targetHsCode = targetHsCode;
-    }
-
-    public JudgmentConditionDetailDto() {
-    }
-
-    public JudgmentConditionDetailDto(Long id, Long groupId, Long judgmentId, String type, String description,
-            BigDecimal rate, String targetHsCode) {
-        this.id = id;
-        this.groupId = groupId;
-        this.judgmentId = judgmentId;
-        this.type = type;
-        this.description = description;
-        this.rate = rate;
         this.targetHsCode = targetHsCode;
     }
 

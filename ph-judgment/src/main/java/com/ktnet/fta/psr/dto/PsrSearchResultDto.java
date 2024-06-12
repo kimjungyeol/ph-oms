@@ -22,14 +22,6 @@ public class PsrSearchResultDto {
         this.psrs = psrs;
     }
 
-    public PsrSearchResultDto() {
-
-    }
-
-    public PsrSearchResultDto(List<PsrSearchItemDto> psrs) {
-        this.psrs = psrs != null ? psrs : this.psrs;
-    }
-
     public List<PsrSearchItemDto> getPsrs(String hscode, Long ftaId) {
         if (StringUtils.isBlank(hscode)) {
             return new ArrayList<>();

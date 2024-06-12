@@ -2,6 +2,9 @@ package com.ktnet.fta.psr.dto;
 
 import java.math.BigDecimal;
 
+import lombok.ToString;
+
+@ToString
 public class PsrConditionDto {
 
     private Long id;
@@ -81,21 +84,6 @@ public class PsrConditionDto {
     }
 
     public void setHscode(String hscode) {
-        this.hscode = hscode;
-    }
-
-    public PsrConditionDto() {
-    }
-
-    public PsrConditionDto(Long id, Long groupId, Long psrId, PsrDto psr, String type, String description,
-            BigDecimal rate, String hscode) {
-        this.id = id;
-        this.groupId = groupId;
-        this.psrId = psrId;
-        this.psr = psr;
-        this.type = type;
-        this.description = description;
-        this.rate = rate;
         this.hscode = hscode;
     }
 }

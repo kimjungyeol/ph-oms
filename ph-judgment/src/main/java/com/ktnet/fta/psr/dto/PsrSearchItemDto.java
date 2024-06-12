@@ -6,6 +6,9 @@ import java.util.List;
 
 import com.ktnet.core.hscode.constant.HscodeType;
 
+import lombok.ToString;
+
+@ToString
 public class PsrSearchItemDto {
 
     private Long id;
@@ -567,80 +570,6 @@ public class PsrSearchItemDto {
 
     public void setChoiceUse(Boolean choiceUse) {
         this.choiceUse = choiceUse;
-    }
-
-    public PsrSearchItemDto() {
-    }
-
-    public PsrSearchItemDto(Long id, Long ftaId, String ftaCode, String ftaName, HscodeType hscodeType, String hscode,
-            Long standardItemId, String standardItemName, String standardItemEnglishName, Long standardItemTypeId,
-            String standardItemTypeCode, String standardItemTypeDescription, Long sortSn, String nameOfCo,
-            String nameOfDo, String description, Boolean woUse, Boolean spUse, Boolean ctcUse, String ctcStandard,
-            String deminimisStandard, BigDecimal deminimisRate, Boolean rvcUse, String rvcStandard, BigDecimal rvcRate,
-            Boolean conditionUse, Boolean choiceUse, List<PsrConditionDto> conditions, BigDecimal quantity,
-            BigDecimal amount, BigDecimal weight, BigDecimal materialAmountOrigin, BigDecimal materialAmountNonOrigin,
-            BigDecimal materialWeightOrigin, BigDecimal materialWeightNonOrigin, Integer priceErrorOriginCount,
-            Integer priceErrorNonOriginCount, Integer weightErrorOriginCount, Integer weightErrorNonOriginCount,
-            Integer hscodeErrorCount, Integer ccMatchCount, Integer cthMatchCount, Integer ctshMatchCount,
-            BigDecimal ccMatchAmount, BigDecimal cthMatchAmount, BigDecimal ctshMatchAmount, BigDecimal ccMatchWeight,
-            BigDecimal cthMatchWeight, BigDecimal ctshMatchWeight, Integer ccMatchAmountErrorCount,
-            Integer cthMatchAmountErrorCount, Integer ctshMatchAmountErrorCount, Integer ccMatchWeightErrorCount,
-            Integer cthMatchWeightErrorCount, Integer ctshMatchWeightErrorCount) {
-        this.id = id;
-        this.ftaId = ftaId;
-        this.ftaCode = ftaCode;
-        this.ftaName = ftaName;
-        this.hscodeType = hscodeType;
-        this.hscode = hscode;
-        this.standardItemId = standardItemId;
-        this.standardItemName = standardItemName;
-        this.standardItemEnglishName = standardItemEnglishName;
-        this.standardItemTypeId = standardItemTypeId;
-        this.standardItemTypeCode = standardItemTypeCode;
-        this.standardItemTypeDescription = standardItemTypeDescription;
-        this.sortSn = sortSn;
-        this.nameOfCo = nameOfCo;
-        this.nameOfDo = nameOfDo;
-        this.description = description;
-        this.woUse = woUse;
-        this.spUse = spUse;
-        this.ctcUse = ctcUse;
-        this.ctcStandard = ctcStandard;
-        this.deminimisStandard = deminimisStandard;
-        this.deminimisRate = deminimisRate;
-        this.rvcUse = rvcUse;
-        this.rvcStandard = rvcStandard;
-        this.rvcRate = rvcRate;
-        this.conditionUse = conditionUse;
-        this.choiceUse = choiceUse;
-        this.conditions = conditions;
-        this.quantity = quantity;
-        this.amount = amount;
-        this.weight = weight;
-        this.materialAmountOrigin = materialAmountOrigin;
-        this.materialAmountNonOrigin = materialAmountNonOrigin;
-        this.materialWeightOrigin = materialWeightOrigin;
-        this.materialWeightNonOrigin = materialWeightNonOrigin;
-        this.priceErrorOriginCount = priceErrorOriginCount;
-        this.priceErrorNonOriginCount = priceErrorNonOriginCount;
-        this.weightErrorOriginCount = weightErrorOriginCount;
-        this.weightErrorNonOriginCount = weightErrorNonOriginCount;
-        this.hscodeErrorCount = hscodeErrorCount;
-        this.ccMatchCount = ccMatchCount;
-        this.cthMatchCount = cthMatchCount;
-        this.ctshMatchCount = ctshMatchCount;
-        this.ccMatchAmount = ccMatchAmount;
-        this.cthMatchAmount = cthMatchAmount;
-        this.ctshMatchAmount = ctshMatchAmount;
-        this.ccMatchWeight = ccMatchWeight;
-        this.cthMatchWeight = cthMatchWeight;
-        this.ctshMatchWeight = ctshMatchWeight;
-        this.ccMatchAmountErrorCount = ccMatchAmountErrorCount;
-        this.cthMatchAmountErrorCount = cthMatchAmountErrorCount;
-        this.ctshMatchAmountErrorCount = ctshMatchAmountErrorCount;
-        this.ccMatchWeightErrorCount = ccMatchWeightErrorCount;
-        this.cthMatchWeightErrorCount = cthMatchWeightErrorCount;
-        this.ctshMatchWeightErrorCount = ctshMatchWeightErrorCount;
     }
 
     public Boolean getChoiceUse() {

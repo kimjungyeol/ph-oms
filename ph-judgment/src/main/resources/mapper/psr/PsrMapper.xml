@@ -42,20 +42,20 @@
 	     INNER JOIN STD_PSR SP
 	        ON SP.ITEM_TY_ID = SIT.ITEM_TY_ID
 	     WHERE 1=1
-	       AND SFP.BEGIN_DE <![CDATA[<=]]> SYSDATE
-	       AND SFP.END_DE <![CDATA[>=]]> SYSDATE
-	       AND SI.HS_CODE = SUBSTR(#{hscode}, 1, LENGTH(SI.HS_CODE))
-	       <foreach collection="params" item="hscodes" open="(" close=")" separator=",">
-	           #{hscodes}
-	       </foreach> 
-	       <if test="ftaId != null and ftaId != ''">
+	       AND SFP.BEGIN_DE <![CDATA[<=]]> #{applicationDate}
+	       AND SFP.END_DE <![CDATA[>=]]> #{applicationDate}
+	       AND SI.HS_CODE IN
+           <foreach collection="hscodes" item="hscode" open="(" close=")" separator=",">
+               #{hscode}
+           </foreach>
+           <if test="ftaId != null and ftaId != ''">
                AND SFP.FTA_ID = #{ftaId}
            </if>
 	     ORDER BY SFP.FTA_ID ASC
     </select>
     
     <select id="selectPsrConditionList" parameterType="map" resultType="com.ktnet.fta.psr.dto.PsrConditionDto">
-        /*queryId=JudgmentMapper.selectPsrConditionList*/
+        /*queryId=PsrMapper.selectPsrConditionList*/
         SELECT SPE.PSR_EXCP_ID    AS "id"
              , SPE.PSR_ID         AS "psrId"
              , SPE.EXCP_TY        AS "type"
@@ -72,9 +72,12 @@
          INNER JOIN STD_PSR_EXCP SPE
             ON SPE.PSR_ID = SP.PSR_ID
          WHERE 1=1
-           AND SI.HS_CODE = SUBSTR(#{hscode}, 1, LENGTH(SI.HS_CODE))
-           AND SFP.BEGIN_DE <![CDATA[<=]]> #{beginDe}
-           AND SFP.END_DE <![CDATA[>=]]> #{endDe}
+           AND SFP.BEGIN_DE <![CDATA[<=]]> #{applicationDate}
+           AND SFP.END_DE <![CDATA[>=]]> #{applicationDate}
+           AND SI.HS_CODE IN
+           <foreach collection="hscodes" item="hscode" open="(" close=")" separator=",">
+               #{hscode}
+           </foreach>
            <if test="ftaId != null and ftaId != ''">
                AND SFP.FTA_ID = #{ftaId}
            </if>

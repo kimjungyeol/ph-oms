@@ -1,5 +1,8 @@
 package com.ktnet.fta.judgment.dto;
 
+import lombok.ToString;
+
+@ToString
 public class JudgmentErrorDetailDto {
 
     private Long id;
@@ -49,17 +52,6 @@ public class JudgmentErrorDetailDto {
     }
 
     public void setContents(String contents) {
-        this.contents = contents;
-    }
-
-    public JudgmentErrorDetailDto() {
-    }
-
-    public JudgmentErrorDetailDto(Long id, Long groupId, Long judgmentId, String errorType, String contents) {
-        this.id = id;
-        this.groupId = groupId;
-        this.judgmentId = judgmentId;
-        this.errorType = errorType;
         this.contents = contents;
     }
 }

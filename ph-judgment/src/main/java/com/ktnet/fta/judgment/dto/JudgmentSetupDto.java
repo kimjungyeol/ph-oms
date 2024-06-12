@@ -1,5 +1,8 @@
 package com.ktnet.fta.judgment.dto;
 
+import lombok.ToString;
+
+@ToString
 public class JudgmentSetupDto {
 
     private Long ftaId;
@@ -59,19 +62,6 @@ public class JudgmentSetupDto {
     }
 
     public void setRvcBuffer(Long rvcBuffer) {
-        this.rvcBuffer = rvcBuffer;
-    }
-
-    public JudgmentSetupDto() {
-    }
-
-    public JudgmentSetupDto(Long ftaId, Boolean ctcUse, Boolean deminimisUse, Long deminimisBuffer, Boolean rvcUse,
-            Long rvcBuffer) {
-        this.ftaId = ftaId;
-        this.ctcUse = ctcUse;
-        this.deminimisUse = deminimisUse;
-        this.deminimisBuffer = deminimisBuffer;
-        this.rvcUse = rvcUse;
         this.rvcBuffer = rvcBuffer;
     }
 

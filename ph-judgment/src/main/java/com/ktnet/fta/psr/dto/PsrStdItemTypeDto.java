@@ -1,5 +1,8 @@
 package com.ktnet.fta.psr.dto;
 
+import lombok.ToString;
+
+@ToString
 public class PsrStdItemTypeDto {
 
     private Long standardItemTypeId;

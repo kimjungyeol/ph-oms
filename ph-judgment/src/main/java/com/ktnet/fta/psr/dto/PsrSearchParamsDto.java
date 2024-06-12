@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.ktnet.common.util.DateUtil;
 
+import lombok.ToString;
+
+@ToString
 public class PsrSearchParamsDto {
 
     private String applicationDate = DateUtil.now();

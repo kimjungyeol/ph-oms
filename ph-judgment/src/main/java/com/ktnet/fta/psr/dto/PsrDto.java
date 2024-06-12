@@ -1,12 +1,14 @@
 package com.ktnet.fta.psr.dto;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.ktnet.fta.common.dto.FtaDto;
 import com.ktnet.fta.common.dto.StandardItemTypeDto;
 
+import lombok.ToString;
+
+@ToString
 public class PsrDto {
 
     private Long id;
@@ -221,37 +223,6 @@ public class PsrDto {
 
     public void setConditions(List<PsrConditionDto> conditions) {
         this.conditions = conditions;
-    }
-
-    public PsrDto() {
-    }
-
-    public PsrDto(Long id, Long ftaId, FtaDto fta, Long standardItemTypeId, Long sortSn,
-            StandardItemTypeDto standardItemType, String nameOfCo, String nameOfDo, String description, Boolean woUse,
-            Boolean spUse, Boolean ctcUse, String ctcStandard, String deminimisStandard, BigDecimal deminimisRate,
-            Boolean rvcUse, String rvcStandard, BigDecimal rvcRate, Boolean conditionUse, Boolean choiseUse,
-            List<PsrConditionDto> conditions) {
-        this.id = id;
-        this.ftaId = ftaId;
-        this.fta = fta;
-        this.standardItemTypeId = standardItemTypeId;
-        this.sortSn = sortSn;
-        this.standardItemType = standardItemType;
-        this.nameOfCo = nameOfCo;
-        this.nameOfDo = nameOfDo;
-        this.description = description;
-        this.woUse = woUse;
-        this.spUse = spUse;
-        this.ctcUse = ctcUse;
-        this.ctcStandard = ctcStandard;
-        this.deminimisStandard = deminimisStandard;
-        this.deminimisRate = deminimisRate;
-        this.rvcUse = rvcUse;
-        this.rvcStandard = rvcStandard;
-        this.rvcRate = rvcRate;
-        this.conditionUse = conditionUse;
-        this.choiceUse = choiseUse;
-        this.conditions = conditions != null ? conditions : new ArrayList<>();
     }
 
     public void setChoiceUse() {

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ktnet.core.map.ParamMap;
@@ -75,10 +74,10 @@ public class SampleSimulationController extends BasicController {
         rtMap.put("result", result);
 
         //////////////////////////////////////////////////////////
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.postForObject("http://localhost:8090/api/post/test",
-                mapper.writeValueAsString(pMap), String.class);
-        System.out.println("response : " + response);
+//        RestTemplate restTemplate = new RestTemplate();
+//        String response = restTemplate.postForObject("http://localhost:8090/api/post/test",
+//                mapper.writeValueAsString(pMap), String.class);
+//        System.out.println("response : " + response);
 
         return rtMap;
     }
