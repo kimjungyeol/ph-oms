@@ -14,5 +14,6 @@ public class DetailsInvoiceService {
     // JudgmentExecutor.execute - 원산지 판정
     // ExplainOriginGenerator.update - 판정결과 반영 (공통)
 
-    // DetailsDoService.insertDetailsItem
+    // DetailsDoService.insertDetailsItem 
+	//
 }
