@@ -31,6 +31,4 @@ public interface JudgmentMapper {
 
     public Map<String, Object> selectUserChoisePsr(Map<String, Object> params);
 
-    public List<Map<String, Object>> selectJudgmentTest(Map<String, Object> params);
-
 }

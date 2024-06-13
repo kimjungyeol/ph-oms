@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.details.group.mapper.DetailsGroupMapper">
+    
+    <select id="selectDetailsGroup" parameterType="Long" resultType="camelMap">
+        /*queryId=DetailsGroupMapper.selectDetailsGroup*/
+        SELECT DTLS_GROUP_ID
+             , LOCK_AT
+          FROM CMPNY_DTLS_GROUP
+         WHERE DTLS_GROUP_ID = #{id}
+           AND ROWNUM = 1
+    </select>
+    
+    <insert id="insertDetailsGroup" parameterType="map">
+        /*queryId=DetailsGroupMapper.insertDetailsGroup*/
+        <selectKey keyProperty="dtlsGroupId" resultType="Long" order="BEFORE">
+	        SELECT NEXT_VAL
+	          FROM COMMON_SEQUENCE
+	         WHERE SEQUENCE_NAME = 'CMPNY_DTLS_GROUP' 
+        </selectKey>
+        INSERT INTO CMPNY_DTLS_GROUP
+            (
+                DTLS_GROUP_ID
+			  , LOCK_AT
+			  , CMPNY_ID
+			  , CREAT_DT
+			  , CREAT_ID
+			  , UPDT_DT
+			  , UPDT_ID
+            )
+        VALUES
+            (
+                #{dtlsGroupId}
+              , #{lockAt}
+              , #{cmpnyId}
+              , SYSDATE
+              , #{loginUserId}
+              , SYSDATE
+              , #{loginUserId}
+            )
+    </insert>
+</mapper>

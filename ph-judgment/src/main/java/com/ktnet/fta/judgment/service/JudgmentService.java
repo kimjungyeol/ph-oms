@@ -272,9 +272,4 @@ public class JudgmentService {
             }
         }
     }
-
-    public List<Map<String, Object>> searchJudgmentTest(Map<String, Object> pMap) {
-
-        return judgmentMapper.selectJudgmentTest(pMap);
-    }
 }

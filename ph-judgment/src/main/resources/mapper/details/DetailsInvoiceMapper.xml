@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.details.document.mapper.DetailsInvoiceMapper">
+    
+    <select id="selectGroupId" parameterType="map" resultType="Long">
+        /*queryId=DetailsInvoiceMapper.selectGroupId*/
+        SELECT DTLS_GROUP_ID
+          FROM CMPNY_XPORT_INVE
+         WHERE CMPNY_ID = #{cmpnyId}
+           AND INVE_NO = #{inveNo}
+           AND ROWNUM = 1
+    </select>
+    
+    <select id="selectInvoiceId" parameterType="map" resultType="Long">
+        /*queryId=DetailsInvoiceMapper.selectInvoiceId*/
+        SELECT INVE_ID
+          FROM CMPNY_XPORT_INVE
+         WHERE CMPNY_ID = #{cmpnyId}
+           AND INVE_NO = #{inveNo}
+           AND ROWNUM = 1
+    </select>
+    
+    <update id="updateGroupId" parameterType="map">
+        /*queryId=DetailsInvoiceMapper.updateGroupId*/
+        UPDATE CMPNY_XPORT_INVE
+           SET DTLS_GROUP_ID = #{groupId}
+         WHERE CMPNY_ID = #{cmpnyId}
+           AND INVE_NO = #{inveNo} 
+    </update>
+</mapper>

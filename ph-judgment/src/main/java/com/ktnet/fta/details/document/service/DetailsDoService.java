@@ -1,4 +1,4 @@
-package com.ktnet.fta.details.service;
+package com.ktnet.fta.details.document.service;
 
 import org.springframework.stereotype.Service;
 
