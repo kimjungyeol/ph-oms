@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.details.item.mapper.DetailsItemMapper">
+    
+    <delete id="deleteDetailsItem" parameterType="map">
+        /*queryId=DetailsItemMapper.deleteDetailsItem*/
+        DELETE
+          FROM CMPNY_DTLS_ITEM
+	     WHERE DTLS_GROUP_ID = #{groupId}
+           AND CMPNY_ID = #{companyId}
+	       <if test="detailsId != null and detailsId != ''" >
+	           AND DTLS_ID = #{detailsId}
+	       </if>
+    </delete>
+    
+    <update id="updateForIssueItem" parameterType="map">
+        /*queryId=DetailsItemMapper.updateForIssueItem*/
+        MERGE INTO CMPNY_DTLS_ITEM AA
+        USING (
+            <![CDATA[
+            SELECT CDI.DTLS_ID AS DTLS_ID,
+                 , MAX(CII.ISSU_ITEM_CODE)   AS ISSU_ITEM_CODE
+                 , MAX(CII.ISSU_ITEM_NM)     AS ISSU_ITEM_NM
+                 , MAX(CII.ISSU_ITEM_ID)     AS ISSU_ITEM_ID
+                 , MAX(CII.ISSU_ITEM_STNDRD) AS ISSU_ITEM_STNDRD
+                 , MAX(CII.HS_CODE)          AS ISSU_ITEM_HS_CODE
+              FROM CMPNY_DTLS_ITEM CDI
+             INNER JOIN CMPNY_ISSU_ITEM CII
+                ON CII.ITEM_ID = CDI.ITEM_ID
+               AND CII.CSTMR_ID = CDI.CSTMR_ID
+            ]]>
+             WHERE CDI.DTLS_GROUP_ID = #{groupId}
+               AND CDI.CMPNY_ID = #{companyId}
+               <if test="detailsId != null and detailsId != ''">
+                   AND CDI.DTLS_ID = #{detailsId}
+               </if>
+             GROUP BY CDI.DTLS_ID
+        ) BB ON  (
+            AA.DTLS_ID = BB.DTLS_ID
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+                ISSU_ITEM_CODE = BB.ISSU_ITEM_CODE,
+                ISSU_ITEM_NM = BB.ISSU_ITEM_NM,
+                ISSU_ITEM_ID = BB.ISSU_ITEM_ID,
+                ISSU_ITEM_STNDRD = BB.ISSU_ITEM_STNDRD,
+                ISSU_ITEM_HS_CODE = BB.ISSU_ITEM_HS_CODE
+    </update>
+    
+    <update id="updateForBom" parameterType="map">
+        /*queryId=DetailsItemMapper.updateForBom*/
+        MERGE INTO CMPNY_DTLS_ITEM AA
+        USING (
+            <![CDATA[
+            SELECT CDI.DTLS_ID                                    AS DTLS_ID
+                 , CASE WHEN CDI.BOM_ID IS NOT NULL THEN 'PRODUCT'
+                        ELSE CDI.DTLS_TY
+                    END                                           AS DTLS_TY
+                 , CASE -- 하나의 단위라도 없는 경우 그대로 사용
+                        WHEN COALESCE(CB.PRDCTN_QY_UNIT, '-') = '' OR COALESCE(CDI.SELNG_QY_UNIT, '-') = '-' THEN 1
+                        -- 단위 같은 경우 그대로 사용
+                        WHEN COALESCE(CB.PRDCTN_QY_UNIT, CDI.SELNG_QY_UNIT) = COALESCE(CDI.SELNG_QY_UNIT, CB.PRDCTN_QY_UNIT) THEN 1
+                        -- PC, EA 단위 동일 취급
+                        WHEN CDI.SELNG_QY_UNIT IN ('PC', 'EA') AND CB.PRDCTN_QY_UNIT IN ('PC', 'EA') THEN 1
+                        -- 환산율이 있다면, 환산
+                        WHEN CUC.UNIT_CNVR_ID IS NOT NULL AND COALESCE(CUC.CNVR_RT, 0) > 0 THEN CUC.CNVR_RT
+                        -- 기타의 경우, 환산 불가
+                        ELSE 0
+                    END                                           AS CNVRSN_RT
+                 , CASE -- 하나의 단위라도 없는 경우 그대로 사용
+                        WHEN COALESCE(CB.PRDCTN_QY_UNIT, '-') = '' OR COALESCE(CDI.SELNG_QY_UNIT, '-') = '-' THEN 1
+                        -- 단위 같은 경우 그대로 사용
+                        WHEN COALESCE(CB.PRDCTN_QY_UNIT, CDI.SELNG_QY_UNIT) = COALESCE(CDI.SELNG_QY_UNIT, CB.PRDCTN_QY_UNIT) THEN 1
+                        -- PC, EA 단위 동일 취급
+                        WHEN CDI.SELNG_QY_UNIT IN ('PC', 'EA') AND CB.PRDCTN_QY_UNIT IN ('PC', 'EA') THEN 1
+                        -- 환산율이 있다면, 환산
+                        WHEN CUC.UNIT_CNVR_ID IS NOT NULL AND COALESCE(CUC.CNVR_RT, 0) > 0 THEN CUC.CNVR_RT
+                        -- 기타의 경우, 환산 불가
+                        ELSE 0
+                    END * CDI.SELNG_QY                            AS BOM_QY
+                 , COALESCE(CB.PRDCTN_QY_UNIT, CDI.SELNG_QY_UNIT) AS BOM_QY_UNIT
+              FROM CMPNY_DTLS_ITEM CDI
+             INNER JOIN CMPNY_BOM CB
+                ON CB.BOM_ID = CDI.BOM_ID
+              LEFT OUTER JOIN CMPNY_UNIT_CNVR CUC
+                ON CUC.ITEM_ID = CB.PRDUCT_ITEM_ID
+               AND CUC.STDR_UNIT = CB.PRDCTN_QY_UNIT
+               AND CUC.CNVR_UNIT = CDI.SELNG_QY_UNIT
+               AND CUC.CMPNY_ID = CDI.CMPNY_ID
+            ]]>
+             WHERE CDI.DTLS_GROUP_ID = #{groupId}
+               AND CDI.CMPNY_ID = #{companyId, jdbcType=NUMERIC}
+               <if test="params.detailsId != null">
+                   AND CDI.DTLS_ID = #{detailsId}
+               </if>
+        ) BB ON  (
+          AA.DTLS_ID = BB.DTLS_ID
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+                DTLS_TY = BB.DTLS_TY,
+                CNVRSN_RT = BB.CNVRSN_RT,
+                BOM_QY = BB.BOM_QY,
+                BOM_QY_UNIT = BB.BOM_QY_UNIT
+  </update>
+</mapper>

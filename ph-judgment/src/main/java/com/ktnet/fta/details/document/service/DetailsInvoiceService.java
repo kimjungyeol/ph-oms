@@ -6,12 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ktnet.fta.details.document.mapper.DetailsInvoiceMapper;
+import com.ktnet.fta.details.item.mapper.DetailsItemMapper;
 
 @Service("detailsInvoiceService")
 public class DetailsInvoiceService {
 
     @Autowired
     private DetailsInvoiceMapper detailsInvoiceMapper;
+
+    @Autowired
+    private DetailsItemMapper detailsItemMapper;
 
     public Long searchGroupId(Map<String, Object> map) {
         Long groupId = detailsInvoiceMapper.selectGroupId(map);
@@ -25,6 +29,36 @@ public class DetailsInvoiceService {
 
     public Long searchInvoiceId(Map<String, Object> map) {
         return detailsInvoiceMapper.selectInvoiceId(map);
+    }
+
+    public int updateStatus(Map<String, Object> map) {
+        return detailsInvoiceMapper.updateStatus(map);
+    }
+
+    public Long insertDetailsItem(Map<String, Object> map) {
+        // 기 데이터 삭제
+        detailsItemMapper.deleteDetailsItem(map);
+
+        // 업데이트 카운트
+        Long count = detailsInvoiceMapper.countDetailsItem(map);
+        // 판정가능한 품목 없는 경우 오류 처리
+        if (count == 0) {
+            return count;
+        }
+
+        // 시퀀스 업데이트
+        /* TODO : 1. 시퀀스 Generator 생성해야함 */
+
+        // 데이터 처리
+        detailsInvoiceMapper.insertDetailsItem(map);
+
+        // 발급품명 반영
+        detailsItemMapper.updateForIssueItem(map);
+
+        // BOM 정보 반영
+        detailsItemMapper.updateForBom(map);
+
+        return count;
     }
 
     // DetailsInvoiceService.insertDetailsItem - 품목 명세 생성

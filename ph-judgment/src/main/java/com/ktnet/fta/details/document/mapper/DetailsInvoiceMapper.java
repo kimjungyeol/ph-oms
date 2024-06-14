@@ -13,4 +13,10 @@ public interface DetailsInvoiceMapper {
 
     public Long selectInvoiceId(Map<String, Object> map);
 
+    public int updateStatus(Map<String, Object> map);
+
+    public Long countDetailsItem(Map<String, Object> map);
+
+    public int insertDetailsItem(Map<String, Object> map);
+
 }

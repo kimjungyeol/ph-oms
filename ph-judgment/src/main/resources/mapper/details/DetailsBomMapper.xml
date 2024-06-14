@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.details.bom.mapper.DetailsBomMapper">
+    
+    <delete id="deleteDetailsBom" parameterType="map">
+        /*queryId=DetailsBomMapper.deleteDetailsBom*/
+        DELETE
+          FROM CMPNY_DTLS_BOM
+         WHERE DTLS_GROUP_ID = #{groupId}
+           AND CMPNY_ID = #{companyId}
+           <if test="params.detailsId != null">
+               AND DTLS_ID = #{detailsId}
+           </if>
+    </delete>
+    
+    <select id="countForRoot" parameterType="map">
+        /*queryId=DetailsBomMapper.countForRoot*/
+        SELECT COUNT(CDI.DTLS_ID)
+          FROM CMPNY_DTLS_ITEM CDI
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           AND CDI.CMPNY_ID = #{companyId}
+           <if test="params.detailsId != null">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </select>
+    
+    <insert id="insertForRoot" parameterType="map">
+        /*queryId=DetailsBomMapper.insertForRoot*/
+        INSERT INTO CMPNY_DTLS_BOM 
+            (
+                DTLS_BOM_ID,
+              , DTLS_GROUP_ID
+              , DTLS_ID
+              , PARNTS_DTLS_BOM_ID
+              , BOM_LEVEL
+              , BOM_ID
+              , PRDUCT_ITEM_ID
+              , APPLC_DE
+              , BOM_MANAGE_NO
+              , BOM_MTRIL_ID
+              , MTRIL_ITEM_ID
+              , REQRE_QY
+              , REQRE_QY_UNIT
+              , TOT_REQRE_QY
+              , TOT_REQRE_QY_UNIT
+              , MTRIL_AT
+              , CMPNY_ID
+              , CREAT_DT
+              , CREAT_ID
+              , UPDT_DT
+              , UPDT_ID
+        )
+        SELECT #{startId} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID) AS DTLS_BOM_ID
+             , CDI.DTLS_GROUP_ID AS                        DTLS_GROUP_ID
+             , CDI.DTLS_ID       AS                        DTLS_ID
+             , NULL              AS                        PARNTS_DTLS_BOM_ID
+             , 1                 AS                        BOM_LEVEL
+             , CDI.BOM_ID        AS                        BOM_ID
+             , CDI.ITEM_ID       AS                        PRDUCT_ITEM_ID
+             , CDI.APPLC_DE      AS                        APPLC_DE
+             , CDI.BOM_MANAGE_NO AS                        BOM_MANAGE_NO
+             , NULL              AS                        BOM_MTRIL_ID
+             , CDI.ITEM_ID       AS                        MTRIL_ITEM_ID
+             , CDI.SELNG_QY      AS                        REQRE_QY
+             , CDI.SELNG_QY_UNIT AS                        REQRE_QY_UNIT
+             , CDI.BOM_QY        AS                        TOT_REQRE_QY
+             , CDI.BOM_QY_UNIT   AS                        TOT_REQRE_QY_UNIT
+             , 0                 AS                        MTRIL_AT
+             , CMPNY_ID
+             , CDI.CREAT_DT
+             , CDI.CREAT_ID
+             , CDI.UPDT_DT
+             , CDI.UPDT_ID
+        FROM CMPNY_DTLS_ITEM CDI
+       WHERE CDI.DTLS_GROUP_ID = #{groupId}
+         AND CDI.CMPNY_ID = #{companyId}
+         <if test="detailsId != null and detailsId != ''">
+             AND CDI.DTLS_ID = #{detailsId}
+         </if>
+    </insert>
+</mapper>
