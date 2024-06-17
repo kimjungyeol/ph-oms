@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 import com.ktnet.fta.details.bom.service.DetailsBomService;
 import com.ktnet.fta.details.document.service.DetailsInvoiceService;
 import com.ktnet.fta.details.group.service.DetailsGroupService;
+import com.ktnet.fta.details.material.service.DetailsMaterialService;
+import com.ktnet.fta.details.purchase.service.DetailsPurchaseService;
+import com.ktnet.fta.eo.origin.service.ExplainOriginService;
 import com.ktnet.fta.judgment.constant.CertificateOriginStatus;
 
 import jakarta.annotation.Resource;
@@ -22,6 +25,15 @@ public class DetailsInvoiceGenerator {
 
     @Resource(name = "detailsBomService")
     private DetailsBomService detailsBomService;
+
+    @Resource(name = "detailsMaterialService")
+    private DetailsMaterialService detailsMaterialService;
+
+    @Resource(name = "detailsPurchaseService")
+    private DetailsPurchaseService detailsPurchaseService;
+
+    @Resource(name = "expalinOriginService")
+    private ExplainOriginService explainOriginService;
 
     public void generate(Map<String, Object> map) {
         // 문서 기존 group id 가져오기
@@ -60,5 +72,23 @@ public class DetailsInvoiceGenerator {
 
         // BOM 명세 생성
         detailsBomService.insertDetailsBom(map);
+
+        // 자재명세 생성
+        detailsMaterialService.insertDetailsMaterial(map);
+
+        // 구매명세 생성
+        detailsPurchaseService.insertDetailsPurchase(map);
+
+        // 소명서 생성
+        this.generateEo(map);
+    }
+
+    private void generateEo(Map<String, Object> map) {
+        // 소명서 생성
+        detailsInvoiceService.insertExplainOrigin(map);
+
+        // 소명서 자재 내역 생성
+        explainOriginService.insertExplainOriginMaterial(map);
+
     }
 }

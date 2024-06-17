@@ -103,5 +103,61 @@
                 CNVRSN_RT = BB.CNVRSN_RT,
                 BOM_QY = BB.BOM_QY,
                 BOM_QY_UNIT = BB.BOM_QY_UNIT
-  </update>
+    </update>
+    
+    <select id="selectDetailsItem" parameterType="map" resultType="camelMap">
+        /*queryId=DetailsItemMapper.selectDetailsItem*/
+        SELECT DTLS_ID
+             , DTLS_GROUP_ID
+             , DTLS_TY
+             , ITEM_ID
+             , CSTMR_ID
+             , INVE_ID
+             , INVE_NO
+             , INVE_ITEM_ID
+             , DO_ID
+             , DO_ISSU_NO
+             , DO_ITEM_ID
+             , BOM_ID
+             , APPLC_DE
+             , BOM_MANAGE_NO
+             , ITEM_CODE
+             , ITEM_NM
+             , ITEM_STNDRD
+             , ISSU_ITEM_ID
+             , ISSU_ITEM_CODE
+             , ISSU_ITEM_NM
+             , ISSU_ITEM_STNDRD
+             , ISSU_ITEM_HS_CODE
+             , ITEM_CL_ID
+             , ITEM_CL_NM
+             , HS_17
+             , HS_12
+             , HS_07
+             , HS_02
+             , SELNG_QY
+             , SELNG_QY_UNIT
+             , CNVRSN_RT
+             , BOM_QY
+             , BOM_QY_UNIT
+             , UNTPC
+             , AMOUNT
+             , CRNCY_CODE
+             , FOB_UNTPC_KRW
+             , FOB_AMOUNT_KRW
+             , FOB_UNTPC_USD
+             , FOB_AMOUNT_USD
+             , WT
+             , WT_UNIT
+             , LOCK_AT
+             , CMPNY_ID
+             , CREAT_DT
+             , CREAT_ID
+             , UPDT_DT
+             , UPDT_ID
+             , HS_22
+             , HS_221
+          FROM CMPNY_DTLS_ITEM a
+         WHERE DTLS_GROUP_ID = #{groupId}     
+    </select>
 </mapper>

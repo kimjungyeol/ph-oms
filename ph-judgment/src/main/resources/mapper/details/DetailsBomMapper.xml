@@ -9,18 +9,18 @@
           FROM CMPNY_DTLS_BOM
          WHERE DTLS_GROUP_ID = #{groupId}
            AND CMPNY_ID = #{companyId}
-           <if test="params.detailsId != null">
+           <if test="detailsId != null and detailsId != ''">
                AND DTLS_ID = #{detailsId}
            </if>
     </delete>
     
-    <select id="countForRoot" parameterType="map">
+    <select id="countForRoot" parameterType="map" resultType="Long">
         /*queryId=DetailsBomMapper.countForRoot*/
         SELECT COUNT(CDI.DTLS_ID)
           FROM CMPNY_DTLS_ITEM CDI
          WHERE CDI.DTLS_GROUP_ID = #{groupId}
            AND CDI.CMPNY_ID = #{companyId}
-           <if test="params.detailsId != null">
+           <if test="detailsId != null and detailsId != ''">
                AND CDI.DTLS_ID = #{detailsId}
            </if>
     </select>
@@ -50,7 +50,7 @@
               , CREAT_ID
               , UPDT_DT
               , UPDT_ID
-        )
+            )
         SELECT #{startId} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID) AS DTLS_BOM_ID
              , CDI.DTLS_GROUP_ID AS                        DTLS_GROUP_ID
              , CDI.DTLS_ID       AS                        DTLS_ID
@@ -79,4 +79,130 @@
              AND CDI.DTLS_ID = #{detailsId}
          </if>
     </insert>
+    
+    <select id="countForChild" parameterType="map" resultType="Long">
+        /*queryId=DetailsBomMapper.countForChild*/
+        SELECT COUNT(CDI.DTLS_ID)
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN CMPNY_DTLS_BOM CDB
+            ON CDB.DTLS_ID = CDI.DTLS_ID
+         INNER JOIN CMPNY_BOM CB
+            ON CB.BOM_ID = CDB.BOM_ID
+          LEFT OUTER JOIN FTA_ITEM_JDGMNT FIJ
+            ON FIJ.ITEM_ID  = CB.PRDUCT_ITEM_ID
+         INNER JOIN CMPNY_BOM_MTRIL CBM
+            ON CBM.BOM_ID = CDB.BOM_ID
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           AND CDI.CMPNY_ID = #{companyId}
+           AND COALESCE(FIJ.BOM_USE, 1) = 1
+           AND COALESCE(FIJ.JDGMNT_TY, 'PSR') = 'PSR'
+           AND CDB.BOM_LEVEL = #{bomLevel}
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </select>
+    
+    <insert id="insertForChild">
+        /*queryId=DetailsBomMapper.insertForChild*/
+        INSERT INTO CMPNY_DTLS_BOM 
+            (
+                DTLS_BOM_ID
+              , DTLS_GROUP_ID
+              , DTLS_ID
+              , PARNTS_DTLS_BOM_ID
+              , BOM_LEVEL
+              , BOM_ID
+              , PRDUCT_ITEM_ID
+              , APPLC_DE
+              , BOM_MANAGE_NO
+              , BOM_MTRIL_ID
+              , MTRIL_ITEM_ID
+              , REQRE_QY
+              , REQRE_QY_UNIT
+              , TOT_REQRE_QY
+              , TOT_REQRE_QY_UNIT
+              , MTRIL_AT
+              , CMPNY_ID
+              , CREAT_DT
+              , CREAT_ID
+              , UPDT_DT
+              , UPDT_ID
+            )
+        <![CDATA[
+        SELECT #{startId, jdbcType=NUMERIC} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID) AS DTLS_BOM_ID
+             , CDB.DTLS_GROUP_ID                   AS      DTLS_GROUP_ID
+             , CDB.DTLS_ID                         AS      DTLS_ID
+             , CDB.DTLS_BOM_ID                     AS      PARNTS_DTLS_BOM_ID
+             , CDB.BOM_LEVEL + 1                   AS      BOM_LEVEL
+             ,(
+               SELECT MAX(CBC.BOM_ID) KEEP (DENSE_RANK FIRST ORDER BY
+                          CASE WHEN COALESCE(CBC.MANAGE_NO, '-') = COALESCE(CDI.BOM_MANAGE_NO, '-') THEN 0
+                               ELSE 1
+                          END,
+                          CBC.APPLC_DE DESC)
+                 FROM CMPNY_BOM CBC
+                WHERE CBC.PRDUCT_ITEM_ID = CBM.ITEM_ID
+                  AND CBC.APPLC_DE <= CDI.APPLC_DE
+              )                                    AS      BOM_ID
+             , CDB.PRDUCT_ITEM_ID                  AS      PRDUCT_ITEM_ID
+             , CB.APPLC_DE                         AS      APPLC_DE
+             , CB.MANAGE_NO                        AS      BOM_MANAGE_NO
+             , CBM.BOM_MTRIL_ID                    AS      BOM_MTRIL_ID
+             , CBM.ITEM_ID                         AS      MTRIL_ITEM_ID
+             , CBM.TOT_REQRE_QY                    AS      REQRE_QY
+             , CBM.REQRE_QY_UNIT                   AS      REQRE_QY_UNIT
+             , CBM.TOT_REQRE_QY * CDB.TOT_REQRE_QY AS      TOT_REQRE_QY
+             , CBM.REQRE_QY_UNIT                   AS      TOT_REQRE_QY_UNIT
+             , 0                                   AS      MTRIL_AT
+             , CDI.CMPNY_ID                        AS      CMPNY_ID
+             , CDI.CREAT_DT                        AS      CREAT_DT
+             , CDI.CREAT_ID                        AS      CREAT_ID
+             , CDI.UPDT_DT                         AS      UPDT_DT
+             , CDI.UPDT_ID                         AS      UPDT_ID
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN CMPNY_DTLS_BOM CDB
+            ON CDB.DTLS_ID = CDI.DTLS_ID
+         INNER JOIN CMPNY_BOM CB
+            ON CB.BOM_ID = CDB.BOM_ID
+          LEFT OUTER JOIN FTA_ITEM_JDGMNT FIJ
+            ON FIJ.ITEM_ID  = CB.PRDUCT_ITEM_ID
+         INNER JOIN CMPNY_BOM_MTRIL CBM
+            ON CBM.BOM_ID = CDB.BOM_ID
+        ]]>
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           AND CDI.CMPNY_ID = #{companyId}
+           AND COALESCE(FIJ.BOM_USE, 1) = 1
+           AND COALESCE(FIJ.JDGMNT_TY, 'PSR') = 'PSR'
+           AND CDB.BOM_LEVEL = #{bomLevel}
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </insert>
+
+    <update id="updateForMaterialAt" parameterType="map">
+        /*queryId=DetailsBomMapper.updateForMaterialAt*/
+        MERGE INTO CMPNY_DTLS_BOM AA
+        USING (
+            SELECT CDB.DTLS_BOM_ID
+              FROM CMPNY_DTLS_BOM CDB
+              LEFT OUTER JOIN (
+                               SELECT PARNTS_DTLS_BOM_ID
+                                    , DTLS_BOM_ID 
+                                 FROM CMPNY_DTLS_BOM 
+                                WHERE CMPNY_ID = #{companyId}
+                              ) CDBC
+                ON CDBC.PARNTS_DTLS_BOM_ID = CDB.DTLS_BOM_ID
+             WHERE CDB.DTLS_GROUP_ID = #{groupId}
+               AND   CDB.CMPNY_ID = #{companyId}
+               AND CDBC.DTLS_BOM_ID IS NULL
+               <if test="detailsId != null and detailsId !=''">
+                   AND CDB.DTLS_ID = #{detailsId}
+               </if>
+        ) BB ON (
+            AA.DTLS_BOM_ID = BB.DTLS_BOM_ID
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+                AA.MTRIL_AT = 1
+    </update>    
 </mapper>

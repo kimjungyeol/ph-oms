@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.eo.origin.mapper.ExplainOriginMapper">
+    
+    <delete id="deleteExplainOrigin" parameterType="map">
+        /*queryId=ExplainOriginMapper.deleteExplainOrigin*/
+        DELETE
+          FROM FTA_EO
+         WHERE DTLS_GROUP_ID = #{groupId}
+           <if test="detailsId != null and detailsId != ''">
+               AND DTLS_ID = #{detailsId}
+           </if>
+    </delete>
+    
+    <delete id="deleteExplainOriginMaterial" parameterType="map">
+        /*queryId=ExplainOriginMapper.deleteExplainOriginMaterial*/
+        DELETE
+          FROM FTA_EO_MTRIL
+         WHERE DTLS_GROUP_ID = #{groupId}
+           <if test="detailsId != null and detailsId != ''">
+               AND DTLS_ID = #{detailsId}
+           </if>
+    </delete>
+    
+    <select id="countExplainOriginMaterial" parameterType="map" resultType="Long">
+        /*queryId=ExplainOriginMapper.countExplainOriginMaterial*/
+        SELECT COUNT(1)
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN FTA_EO FE
+            ON FE.DTLS_ID  = CDI.DTLS_ID
+         INNER JOIN CMPNY_DTLS_MTRIL CDM
+            ON CDM.DTLS_ID = FE.DTLS_ID
+         INNER JOIN CMPNY_ITEM CI
+            ON CI.ITEM_ID  = CDM.ITEM_ID
+          LEFT OUTER JOIN CMPNY_ITEM_CL CIC
+            ON CIC.ITEM_CL_ID = CI.ITEM_CL_ID
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </select>
+    
+    <insert id="insertExplainOriginMaterial" parameterType="map">
+        /*queryId=ExplainOriginMapper.insertExplainOriginMaterial*/
+        INSERT INTO FTA_EO_MTRIL 
+            (
+                EO_MTRIL_ID
+              , DTLS_GROUP_ID
+              , DTLS_ID
+              , EO_ID
+              , DTLS_MTRIL_ID
+              , HS_CODE
+              , TOT_REQRE_QY
+              , TOT_REQRE_QY_UNIT
+              , TOT_WT
+              , UNTPC
+              , AMOUNT
+              , CRNCY
+              , CSTMR_ID
+              , CSTMR_CODE
+              , CSTMR_NM
+              , CSTMR_BSNM_NO
+              , CSTMR_REPRSNT_NM
+              , CSTMR_TLPHON_NO
+              , CSTMR_MOBILE_NO
+              , CSTMR_FAX_NO
+              , CSTMR_EMAIL
+              , CSTMR_ADRES
+              , CSTMR_ADRES_DETAIL
+              , ORGPLCE_AT
+              , DTLS_PUCHAS_ID
+              , ORGPLCE_NATION_CODE
+              , EO_RECEPT_DO_ID
+              , CREAT_DT
+              , CREAT_ID
+              , UPDT_DT
+              , UPDT_ID
+            )
+        <![CDATA[
+        SELECT #{startId} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID, FE.EO_ID, CDM.DTLS_MTRIL_ID) AS EO_MTRIL_ID
+             , CDI.DTLS_GROUP_ID
+             , CDI.DTLS_ID
+             , FE.EO_ID
+             , CDM.DTLS_MTRIL_ID
+             , COALESCE(
+                        CASE WHEN FE.HS_TY = 'HS2017' THEN SUBSTR(COALESCE(CDM.HS_17, CI.HS_CODE), 1, 6)
+                             WHEN FE.HS_TY = 'HS2012' THEN SUBSTR(COALESCE(CDM.HS_12, CI.HS_CODE), 1, 6)
+                             WHEN FE.HS_TY = 'HS2007' THEN SUBSTR(COALESCE(CDM.HS_07, CI.HS_CODE), 1, 6)
+                             WHEN FE.HS_TY = 'HS2002' THEN SUBSTR(COALESCE(CDM.HS_02, CI.HS_CODE), 1, 6)
+                             ELSE SUBSTR(COALESCE(CDM.HS_17, CI.HS_CODE), 1, 6)
+                         END, CASE WHEN CDI.DTLS_TY = 'MATERIAL' THEN FE.HS_CODE
+                                   ELSE SUBSTR(COALESCE(CDM.HS_17, CI.HS_CODE), 1, 6)
+                               END
+                       ) AS HS_CODE
+             , CDM.TOT_REQRE_QY AS TOT_REQRE_QY
+             , CDM.TOT_REQRE_QY_UNIT AS TOT_REQRE_QY_UNIT
+             , CDM.TOT_WT AS TOT_WT
+             , CDM.UNTPC AS UNTPC
+             , CDM.AMOUNT AS AMOUNT
+             , CDM.CRNCY AS CRNCY
+             , NULL AS CSTMR_ID
+             , NULL AS CSTMR_CODE
+             , NULL AS CSTMR_NM
+             , NULL AS CSTMR_BSNM_NO
+             , NULL AS CSTMR_REPRSNT_NM
+             , NULL AS CSTMR_TLPHON_NO
+             , NULL AS CSTMR_MOBILE_NO
+             , NULL AS CSTMR_FAX_NO
+             , NULL AS CSTMR_EMAIL
+             , NULL AS CSTMR_ADRES
+             , NULL AS CSTMR_ADRES_DETAIL
+             , 0 AS ORGPLCE_AT
+             , NULL AS DTLS_PUCHAS_ID
+             , NULL AS ORGPLCE_NATION_CODE
+             , NULL AS EO_RECEPT_DO_ID
+             , CDI.CREAT_DT
+             , CDI.CREAT_ID
+             , CDI.UPDT_DT
+             , CDI.UPDT_ID
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN FTA_EO FE
+            ON FE.DTLS_ID  = CDI.DTLS_ID
+         INNER JOIN CMPNY_DTLS_MTRIL CDM
+            ON CDM.DTLS_ID = FE.DTLS_ID
+         INNER JOIN CMPNY_ITEM CI
+            ON CI.ITEM_ID  = CDM.ITEM_ID
+          LEFT OUTER JOIN CMPNY_ITEM_CL CIC
+            ON CIC.ITEM_CL_ID = CI.ITEM_CL_ID
+        ]]>
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </insert>
+    
+    <select id="countExplainOriginReceiptByCo" parameterType="map" resultType="Long">
+        /*queryId=ExplainOriginMapper.countExplainOriginReceiptByCo*/
+        SELECT COUNT(1)
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN FTA_EO FE
+            ON FE.DTLS_ID  = CDI.DTLS_ID
+         INNER JOIN CMPNY_DTLS_PUCHAS CDP
+            ON CDP.DTLS_ID = FE.DTLS_ID
+         INNER JOIN FTA_RECEPT_CO FRC
+            ON FRC.PUCHAS_ID = CDP.PUCHAS_ID
+           AND FRC.FTA_ID = FE.FTA_ID
+         INNER JOIN CMPNY_PUCHAS CP
+            ON CP.PUCHAS_ID = FRC.PUCHAS_ID
+         INNER JOIN CMPNY_PUCHAS_ITEM CPI
+            ON CPI.PUCHAS_ID = CP.PUCHAS_ID
+           AND CPI.PUCHAS_ITEM_ID = FRC.PUCHAS_ITEM_ID
+           AND CPI.ITEM_ID = CDP.ITEM_ID
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </select>
+    
+    <insert id="insertExplainOriginReceiptByCo" parameterType="map">
+        /*queryId=ExplainOriginMapper.insertExplainOriginReceiptByCo*/
+        INSERT INTO FTA_EO_RECEPT_DO 
+            (
+                EO_RECEPT_DO_ID
+              , DTLS_GROUP_ID
+              , DTLS_ID
+              , DTLS_PUCHAS_ID
+              , EO_ID
+              , RECEPT_DO_ID
+              , ISSU_NO
+              , ISSU_DE
+              , SUPLER_ID
+              , SUPLER_CODE
+              , SUPLER_NM
+              , SUPLER_BSNM_NO
+              , SUPLER_REPRSNT_NM
+              , SUPLER_TLPHON_NO
+              , SUPLER_FAX_NO
+              , SUPLER_EMAIL
+              , SUPLER_ADRES
+              , SUPLER_ADRES_DETAIL
+              , SUPLER_AUTHEXPTER_NO
+              , SUPLYOFFIC_CODE
+              , SUPLYOFFIC_NM
+              , SUPLYOFFIC_BSNM_NO
+              , SUPLYOFFIC_REPRSNT_NM
+              , SUPLYOFFIC_TLPHON_NO
+              , SUPLYOFFIC_FAX_NO
+              , SUPLYOFFIC_EMAIL
+              , SUPLYOFFIC_ADRES
+              , SUPLYOFFIC_ADRES_DETAIL
+              , SIGNER_NM
+              , SIGNER_ENG_NM
+              , SIGNER_CLSF_NM
+              , SIGNER_CLSF_ENG_NM
+              , SIGNER_DEPT_NM
+              , WRITNG_DE
+              , ITEM_ID
+              , ITEM_CODE
+              , ITEM_NM
+              , ITEM_STNDRD
+              , HS_CODE
+              , BEGIN_DE
+              , END_DE
+              , ORGPLCE_PSR
+              , ORGPLCE_AT
+              , ORGPLCE_NATION_CODE
+              , USE_AT
+              , CMPNY_ID
+              , CREAT_DT
+              , CREAT_ID
+              , UPDT_DT
+              , UPDT_ID
+            )
+        <![CDATA[
+        SELECT #{startId} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID, FE.EO_ID, CDP.DTLS_PUCHAS_ID) AS EO_RECEPT_DO_ID
+             , CDI.DTLS_GROUP_ID AS DTLS_GROUP_ID
+             , CDI.DTLS_ID AS DTLS_ID
+             , CDP.DTLS_PUCHAS_ID AS DTLS_PUCHAS_ID
+             , FE.EO_ID AS RECEPT_DO_ID
+             , FRC.RECEPT_CRTF_ID AS RECEPT_DO_ID
+             , FRC.RECEPT_CRTF_NO AS ISSU_NO
+             , FRC.WRITNG_DE AS ISSU_DE
+             , CDP.CSTMR_ID AS SUPLER_ID
+             , CDP.CSTMR_CODE AS SUPLER_CODE
+             , CDP.CSTMR_NM AS SUPLER_NM
+             , CDP.CSTMR_BSNM_NO AS SUPLER_BSNM_NO
+             , CDP.CSTMR_REPRSNT_NM AS SUPLER_REPRSNT_NM
+             , CDP.CSTMR_TLPHON_NO AS SUPLER_TLPHON_NO
+             , CDP.CSTMR_FAX_NO AS SUPLER_FAX_NO
+             , CDP.CSTMR_EMAIL AS SUPLER_EMAIL
+             , CDP.CSTMR_ADRES AS SUPLER_ADRES
+             , CDP.CSTMR_ADRES_DETAIL AS SUPLER_ADRES_DETAIL
+             , NULL AS SUPLER_AUTHEXPTER_NO
+             , NULL AS SUPLYOFFIC_CODE
+             , NULL AS SUPLYOFFIC_NM
+             , NULL AS SUPLYOFFIC_BSNM_NO
+             , NULL AS SUPLYOFFIC_REPRSNT_NM
+             , NULL AS SUPLYOFFIC_TLPHON_NO
+             , NULL AS SUPLYOFFIC_FAX_NO
+             , NULL AS SUPLYOFFIC_EMAIL
+             , NULL AS SUPLYOFFIC_ADRES
+             , NULL AS SUPLYOFFIC_ADRES_DETAIL
+             , NULL AS SIGNER_NM
+             , NULL AS SIGNER_ENG_NM
+             , NULL AS SIGNER_CLSF_NM
+             , NULL AS SIGNER_CLSF_ENG_NM
+             , NULL AS SIGNER_DEPT_NM
+             , FRC.WRITNG_DE AS WRITNG_DE
+             , CI.ITEM_ID AS ITEM_ID
+             , CI.ITEM_CODE AS ITEM_CODE
+             , CI.ITEM_NM AS ITEM_NM
+             , CI.STNDRD AS ITEM_STNDRD
+             , FRC.HS_CODE AS HS_CODE
+             , FRC.PROOF_BGNDE AS BEGIN_DE
+             , FRC.PROOF_ENDDE AS END_DE
+             , FRC.ORGPLCE_PSR AS ORGPLCE_PSR
+             , 1 AS ORGPLCE_AT
+             , FRC.NATION_CODE AS ORGPLCE_NATION_CODE
+             , 1 AS USE_AT
+             , CDI.CMPNY_ID
+             , CDI.CREAT_DT
+             , CDI.CREAT_ID
+             , CDI.UPDT_DT
+             , CDI.UPDT_ID
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN FTA_EO FE
+            ON FE.DTLS_ID  = CDI.DTLS_ID
+         INNER JOIN CMPNY_DTLS_PUCHAS CDP
+            ON CDP.DTLS_ID = FE.DTLS_ID
+         INNER JOIN CMPNY_ITEM CI
+            ON CI.ITEM_ID = CDP.ITEM_ID
+         INNER JOIN FTA_RECEPT_CO FRC
+            ON FRC.PUCHAS_ID = CDP.PUCHAS_ID
+           AND FRC.FTA_ID = FE.FTA_ID
+         INNER JOIN CMPNY_PUCHAS CP
+            ON CP.PUCHAS_ID = FRC.PUCHAS_ID
+         INNER JOIN CMPNY_PUCHAS_ITEM CPI
+            ON CPI.PUCHAS_ID = CP.PUCHAS_ID
+           AND CPI.PUCHAS_ITEM_ID = FRC.PUCHAS_ITEM_ID
+           AND CPI.ITEM_ID = CDP.ITEM_ID
+        ]]>
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </insert>
+</mapper>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ktnet.fta.details.document.mapper.DetailsInvoiceMapper;
 import com.ktnet.fta.details.item.mapper.DetailsItemMapper;
+import com.ktnet.fta.eo.origin.mapper.ExplainOriginMapper;
 
 @Service("detailsInvoiceService")
 public class DetailsInvoiceService {
@@ -16,6 +17,9 @@ public class DetailsInvoiceService {
 
     @Autowired
     private DetailsItemMapper detailsItemMapper;
+
+    @Autowired
+    private ExplainOriginMapper explainOriginMapper;
 
     public Long searchGroupId(Map<String, Object> map) {
         Long groupId = detailsInvoiceMapper.selectGroupId(map);
@@ -41,6 +45,7 @@ public class DetailsInvoiceService {
 
         // 업데이트 카운트
         Long count = detailsInvoiceMapper.countDetailsItem(map);
+
         // 판정가능한 품목 없는 경우 오류 처리
         if (count == 0) {
             return count;
@@ -59,6 +64,23 @@ public class DetailsInvoiceService {
         detailsItemMapper.updateForBom(map);
 
         return count;
+    }
+
+    public void insertExplainOrigin(Map<String, Object> map) {
+        // 기 데이터 삭제
+        explainOriginMapper.deleteExplainOrigin(map);
+
+        // 업데이트 카운트
+        Long count = detailsInvoiceMapper.countExplainOrigin(map);
+
+        // 시퀀스 업데이트
+        /* TODO : 시퀀스 생성 */
+        // String key = "FTA_EO";
+        // Long startId = sequenceGenerator.getSequence(key, count);
+
+        // 데이터 처리
+        // detailsInvoiceMapper.insertExplainOrigin(companyId, params, startId);
+        detailsInvoiceMapper.insertExplainOrigin(map);
     }
 
     // DetailsInvoiceService.insertDetailsItem - 품목 명세 생성

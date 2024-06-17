@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.details.purchase.mapper.DetailsPurchaseMapper">
+    
+    <delete id="deleteDetailsPurchase" parameterType="map">
+        /*queryId=DetailsPurchaseMapper.deleteDetailsPurchase*/
+        DELETE
+          FROM CMPNY_DTLS_PUCHAS
+         WHERE DTLS_GROUP_ID = #{groupId}
+           AND CMPNY_ID = #{companyId}
+           <if test="detailsId != null and detailsId != ''">
+               AND DTLS_ID = #{detailsId}
+           </if>
+    </delete>
+    
+    <select id="countDetailsPurchase" parameterType="map" resultType="Long">
+        /*queryId=DetailsPurchaseMapper.countDetailsPurchase*/
+        <![CDATA[
+        SELECT COUNT(1)
+          FROM (
+                SELECT MAX(CPI.APPLC_DE) AS APPLC_DE
+                     , MAX(CPI.DTLS_MTRIL_ID) AS DTLS_MTRIL_ID
+                     , CPI.ITEM_ID AS ITEM_ID
+                     , CPI.PUCHAS_ID AS PUCHAS_ID
+                     , MAX(CPI.BOM_QY) AS BOM_QY
+                     , MAX(CPI.PUCHAS_QY) AS PUCHAS_QY
+                     , MAX(CPI.PUCHAS_QY_UNIT) AS PUCHAS_QY_UNIT
+                     , MAX(CPI.PUCHAS_UNTPC) AS PUCHAS_UNTPC
+                     , SUM(COALESCE(CDP.PUCHAS_QY, 0)) AS PUCHAS_USED_QY
+                     , MAX(CPI.PUCHAS_QY) - SUM(COALESCE(CDP.PUCHAS_QY, 0)) AS PUCHAS_REMAIN_QY
+                     , ROW_NUMBER() OVER (PARTITION BY CPI.ITEM_ID ORDER BY MAX(CP.PUCHAS_DE) DESC) AS RANK
+                  FROM (
+                        SELECT MAX(CDM.APPLC_DE) AS APPLC_DE,
+                             , MAX(CDM.DTLS_MTRIL_ID) AS DTLS_MTRIL_ID,
+                             , CPI.PUCHAS_ID AS PUCHAS_ID,
+                             , CPI.ITEM_ID AS ITEM_ID,
+                             , MAX(CDM.BOM_QY) AS BOM_QY,
+                             , SUM(CPI.QY) AS PUCHAS_QY,
+                             , MAX(CPI.QY_UNIT) AS PUCHAS_QY_UNIT,
+                             , MAX(CPI.UNTPC) AS PUCHAS_UNTPC
+                          FROM (
+                                SELECT MAX(CDI.APPLC_DE) AS APPLC_DE,
+                                     , MAX(CDM.DTLS_MTRIL_ID) AS DTLS_MTRIL_ID,
+                                     , CDM.ITEM_ID AS ITEM_ID,
+                                     , MAX(CDM.TOT_REQRE_QY) - SUM(COALESCE(CDP.BOM_QY, 0)) AS BOM_QY
+                                  FROM CMPNY_DTLS_ITEM CDI
+                                 INNER JOIN CMPNY_DTLS_MTRIL CDM
+                                    ON CDM.DTLS_ID = CDI.DTLS_ID
+                                  LEFT OUTER JOIN CMPNY_DTLS_PUCHAS CDP
+                                    ON CDP.DTLS_MTRIL_ID = CDM.DTLS_MTRIL_ID
+                                 WHERE CDI.DTLS_ID = #{detailsId}
+                                 GROUP BY CDM.ITEM_ID
+                                HAVING MAX(CDM.TOT_REQRE_QY) - SUM(COALESCE(CDP.BOM_QY, 0)) > 0
+                               ) CDM
+                         INNER JOIN CMPNY_PUCHAS_ITEM CPI
+                            ON CPI.ITEM_ID = CDM.ITEM_ID
+                           AND CPI.QY > 0
+                           AND CPI.UNTPC > 0
+                         GROUP BY CPI.PUCHAS_ID, CPI.ITEM_ID
+                       ) CPI
+                 INNER JOIN CMPNY_PUCHAS CP
+                    ON CP.PUCHAS_ID = CPI.PUCHAS_ID
+                   AND CP.PUCHAS_DE <= CPI.APPLC_DE
+                  LEFT OUTER JOIN CMPNY_DTLS_PUCHAS CDP
+                    ON CDP.PUCHAS_ID = CPI.PUCHAS_ID
+                   AND CDP.ITEM_ID = CPI.ITEM_ID
+                 GROUP BY CPI.PUCHAS_ID, CPI.ITEM_ID
+                HAVING MAX(CPI.PUCHAS_QY) > SUM(COALESCE(CDP.PUCHAS_QY, 0))
+               ) CPI
+         INNER JOIN CMPNY_DTLS_MTRIL CDM
+            ON CDM.DTLS_MTRIL_ID = CPI.DTLS_MTRIL_ID
+         INNER JOIN CMPNY_DTLS_ITEM CDI
+            ON CDI.DTLS_ID = CDM.DTLS_ID
+         INNER JOIN CMPNY_PUCHAS CP
+            ON CP.PUCHAS_ID = CPI.PUCHAS_ID
+         INNER JOIN CMPNY_CSTMR CC
+            ON CC.CSTMR_ID = CP.CSTMR_ID
+          LEFT OUTER JOIN CMPNY_UNIT_CNVR CUC
+            ON CUC.ITEM_ID = CPI.ITEM_ID
+           AND CUC.STDR_UNIT = CDM.TOT_REQRE_QY_UNIT
+           AND CUC.CNVR_UNIT = CPI.PUCHAS_QY_UNIT
+           AND CUC.CMPNY_ID = CDM.CMPNY_ID
+         WHERE CPI.RANK = 1
+        ]]>
+    </select>
+    
+    <insert id="insertDetailsPurchase" parameterType="map">
+        /*queryId=DetailsPurchaseMapper.insertDetailsPurchase*/
+        INSERT INTO CMPNY_DTLS_PUCHAS
+            (
+                DTLS_PUCHAS_ID
+              , DTLS_GROUP_ID
+              , DTLS_ID
+              , DTLS_MTRIL_ID
+              , PUCHAS_ID
+              , PUCHAS_NO
+              , PUCHAS_DE
+              , PUCHAS_TY
+              , CSTMR_ID
+              , CSTMR_CODE
+              , CSTMR_NM
+              , CSTMR_BSNM_NO
+              , CSTMR_REPRSNT_NM
+              , CSTMR_TLPHON_NO
+              , CSTMR_MOBILE_NO
+              , CSTMR_FAX_NO
+              , CSTMR_EMAIL
+              , CSTMR_ADRES
+              , CSTMR_ADRES_DETAIL
+              , PUCHAS_ITEM_ID
+              , ITEM_ID
+              , BOM_QY
+              , BOM_QY_UNIT
+              , BOM_UNTPC
+              , BOM_AMOUNT
+              , CNVRSN_RT
+              , PUCHAS_QY
+              , PUCHAS_QY_UNIT
+              , PUCHAS_UNTPC
+              , PUCHAS_AMOUNT
+              , CRNCY
+              , CMPNY_ID
+              , CREAT_DT
+              , CREAT_ID
+              , UPDT_DT
+              , UPDT_ID
+            )
+        <![CDATA[
+        SELECT #{startId} + ROW_NUMBER() OVER (ORDER BY CDM.DTLS_MTRIL_ID) AS DTLS_PUCHAS_ID
+             , CDM.DTLS_GROUP_ID AS DTLS_GROUP_ID
+             , CDM.DTLS_ID AS DTLS_ID
+             , CDM.DTLS_MTRIL_ID AS DTLS_MTRIL_ID
+             , CP.PUCHAS_ID AS PUCHAS_ID
+             , CP.PUCHAS_NO AS PUCHAS_NO
+             , CP.PUCHAS_DE AS PUCHAS_DE
+             , CP.PUCHAS_TY AS PUCHAS_TY
+             , CP.CSTMR_ID AS CSTMR_ID
+             , CC.CSTMR_CODE AS CSTMR_CODE
+             , CC.CSTMR_NM AS CSTMR_NM
+             , CC.BSNM_NO AS CSTMR_BSNM_NO
+             , CC.REPRSNT_NM AS CSTMR_REPRSNT_NM
+             , CC.TLPHON_NO AS CSTMR_TLPHON_NO
+             , CC.MOBILE_NO AS CSTMR_MOBILE_NO
+             , CC.FAX_NO AS CSTMR_FAX_NO
+             , CC.EMAIL AS CSTMR_EMAIL
+             , CC.ADRES AS CSTMR_ADRES
+             , CC.ADRES_DETAIL AS CSTMR_ADRES_DETAIL
+             , NULL AS PUCHAS_ITEM_ID
+             , CDM.ITEM_ID AS ITEM_ID
+             , CASE -- 구매잔량이 필요수량보다 적은 경우, 구매잔량을 BOM 수량으로 환산
+                    WHEN CPI.BOM_QY > (CPI.PUCHAS_REMAIN_QY / CASE WHEN COALESCE(CUC.CNVR_RT, 1) = 0 THEN 1 ELSE COALESCE(CUC.CNVR_RT, 1) END) THEN
+                         CPI.PUCHAS_REMAIN_QY / CASE WHEN COALESCE(CUC.CNVR_RT, 1) = 0 THEN 1 ELSE COALESCE(CUC.CNVR_RT, 1) END
+                    -- 구매잔량이 필요수량보다 많은 경우, 필요수량 사용
+                    ELSE CPI.BOM_QY
+                END AS BOM_QY
+             , CDM.TOT_REQRE_QY_UNIT AS BOM_QY_UNIT,
+             , CASE -- 단위가 같다면 : 구매 단가 사용
+                    WHEN COALESCE(CDM.TOT_REQRE_QY_UNIT, CPI.PUCHAS_QY_UNIT, '-')  = COALESCE(CPI.PUCHAS_QY_UNIT, CDM.TOT_REQRE_QY_UNIT, '-') THEN
+                         CPI.PUCHAS_UNTPC
+                    -- 단위가 다르다면 : 구매 단가 환산
+                    WHEN COALESCE(CUC.CNVR_RT, 0) > 0 THEN
+                         CPI.PUCHAS_UNTPC * COALESCE(CUC.CNVR_RT, 0)
+                    -- 환산정보가 없는 경우, 0
+                    ELSE 0
+                END AS BOM_UNTPC
+             , CASE -- 구매잔량이 필요수량보다 적은 경우, 구매잔량을 BOM 수량으로 환산
+                    WHEN CPI.BOM_QY > (CPI.PUCHAS_REMAIN_QY / CASE WHEN COALESCE(CUC.CNVR_RT, 1) = 0 THEN 1 ELSE COALESCE(CUC.CNVR_RT, 1) END) THEN
+                         CPI.PUCHAS_REMAIN_QY / CASE WHEN COALESCE(CUC.CNVR_RT, 1) = 0 THEN 1 ELSE COALESCE(CUC.CNVR_RT, 1) END
+                    -- 구매잔량이 필요수량보다 많은 경우, 필요수량 사용
+                    ELSE CPI.BOM_QY
+                    END * CASE -- 단위가 같다면 : 구매 단가 사용
+                               WHEN COALESCE(CDM.TOT_REQRE_QY_UNIT, CPI.PUCHAS_QY_UNIT, '-')  = COALESCE(CPI.PUCHAS_QY_UNIT, CDM.TOT_REQRE_QY_UNIT, '-') THEN
+                                    CPI.PUCHAS_UNTPC
+                               -- 단위가 다르다면 : 구매 단가 환산
+                               WHEN COALESCE(CUC.CNVR_RT, 0) > 0 THEN
+                                    CPI.PUCHAS_UNTPC * COALESCE(CUC.CNVR_RT, 0)
+                               -- 환산정보가 없는 경우, 0
+                               ELSE 0
+                           END AS BOM_AMOUNT,
+             , CASE -- 단위가 같은 경우, 1
+                    WHEN COALESCE(CDM.TOT_REQRE_QY_UNIT, CPI.PUCHAS_QY_UNIT, '-')  = COALESCE(CPI.PUCHAS_QY_UNIT, CDM.TOT_REQRE_QY_UNIT, '-') THEN
+                         1
+                    -- 단위가 다른 경우, 환산율 적용
+                    ELSE COALESCE(CUC.CNVR_RT, 0)
+                END AS CNVRSN_RT
+             , CASE -- 구매잔량이 필요수량보다 적은 경우, 구매잔량
+                    WHEN CPI.BOM_QY > (CPI.PUCHAS_REMAIN_QY / CASE WHEN COALESCE(CUC.CNVR_RT, 1) = 0 THEN 1 ELSE COALESCE(CUC.CNVR_RT, 1) END) THEN
+                         CPI.PUCHAS_REMAIN_QY
+                    -- 단위가 같다면 : 필요수량 사용
+                    WHEN COALESCE(CDM.TOT_REQRE_QY_UNIT, CPI.PUCHAS_QY_UNIT, '-')  = COALESCE(CPI.PUCHAS_QY_UNIT, CDM.TOT_REQRE_QY_UNIT, '-') THEN
+                         CPI.BOM_QY
+                    -- 단위가 다르다면 : 필요수량 환산
+                    WHEN COALESCE(CUC.CNVR_RT, 0) > 0 THEN
+                    CPI.BOM_QY * COALESCE(CUC.CNVR_RT, 0)
+                    -- 환산정보가 없는 경우, 0
+                    ELSE 0
+                END AS PUCHAS_QY
+             , CPI.PUCHAS_QY_UNIT AS PUCHAS_QY_UNIT,
+             , COALESCE(CPI.PUCHAS_UNTPC, 0) AS PUCHAS_UNTPC
+             , CASE -- 구매잔량이 필요수량보다 적은 경우, 구매잔량
+                    WHEN CPI.BOM_QY > (CPI.PUCHAS_REMAIN_QY / CASE WHEN COALESCE(CUC.CNVR_RT, 1) = 0 THEN 1 ELSE COALESCE(CUC.CNVR_RT, 1) END) THEN
+                         CPI.PUCHAS_REMAIN_QY / CASE WHEN COALESCE(CUC.CNVR_RT, 1) = 0 THEN 1 ELSE COALESCE(CUC.CNVR_RT, 1) END
+                    -- 단위가 같다면 : 필요수량 사용
+                    WHEN COALESCE(CDM.TOT_REQRE_QY_UNIT, CPI.PUCHAS_QY_UNIT, '-')  = COALESCE(CPI.PUCHAS_QY_UNIT, CDM.TOT_REQRE_QY_UNIT, '-') THEN
+                         CPI.BOM_QY
+                    -- 단위가 다르다면 : 필요수량 환산
+                    WHEN COALESCE(CUC.CNVR_RT, 0) > 0 THEN
+                         CPI.BOM_QY * COALESCE(CUC.CNVR_RT, 0)
+                    -- 환산정보가 없는 경우, 0
+                    ELSE 0
+                END * CPI.PUCHAS_UNTPC AS PUCHAS_AMOUNT
+             , 'KRW' AS CRNCY,
+             , CDM.CMPNY_ID AS CMPNY_ID
+             , CDM.CREAT_DT AS CREAT_DT
+             , CDM.CREAT_ID AS CREAT_ID
+             , CDM.UPDT_DT AS UPDT_DT
+             , CDM.UPDT_ID AS UPDT_ID
+          FROM (
+                SELECT MAX(CPI.APPLC_DE) AS APPLC_DE
+                     , MAX(CPI.DTLS_MTRIL_ID) AS DTLS_MTRIL_ID
+                     , CPI.ITEM_ID AS ITEM_ID
+                     , CPI.PUCHAS_ID AS PUCHAS_ID
+                     , MAX(CPI.BOM_QY) AS BOM_QY
+                     , MAX(CPI.PUCHAS_QY) AS PUCHAS_QY
+                     , MAX(CPI.PUCHAS_QY_UNIT) AS PUCHAS_QY_UNIT
+                     , MAX(CPI.PUCHAS_UNTPC) AS PUCHAS_UNTPC
+                     , SUM(COALESCE(CDP.PUCHAS_QY, 0)) AS PUCHAS_USED_QY
+                     , MAX(CPI.PUCHAS_QY) - SUM(COALESCE(CDP.PUCHAS_QY, 0)) AS PUCHAS_REMAIN_QY
+                     , ROW_NUMBER() OVER (PARTITION BY CPI.ITEM_ID ORDER BY MAX(CP.PUCHAS_DE) DESC) AS RANK
+                  FROM (
+                        SELECT MAX(CDM.APPLC_DE) AS APPLC_DE
+                             , MAX(CDM.DTLS_MTRIL_ID) AS DTLS_MTRIL_ID
+                             , CPI.PUCHAS_ID AS PUCHAS_ID
+                             , CPI.ITEM_ID AS ITEM_ID
+                             , MAX(CDM.BOM_QY) AS BOM_QY
+                             , SUM(CPI.QY) AS PUCHAS_QY
+                             , MAX(CPI.QY_UNIT) AS PUCHAS_QY_UNIT
+                             , MAX(CPI.UNTPC) AS PUCHAS_UNTPC
+                          FROM (
+                                SELECT MAX(CDI.APPLC_DE) AS APPLC_DE
+                                     , MAX(CDM.DTLS_MTRIL_ID) AS DTLS_MTRIL_ID
+                                     , CDM.ITEM_ID AS ITEM_ID
+                                     , MAX(CDM.TOT_REQRE_QY) - SUM(COALESCE(CDP.BOM_QY, 0)) AS BOM_QY
+                                  FROM CMPNY_DTLS_ITEM CDI
+                                 INNER JOIN CMPNY_DTLS_MTRIL CDM
+                                    ON CDM.DTLS_ID = CDI.DTLS_ID
+                                  LEFT OUTER JOIN CMPNY_DTLS_PUCHAS CDP
+                                    ON CDP.DTLS_MTRIL_ID = CDM.DTLS_MTRIL_ID
+                                 WHERE CDI.DTLS_ID = #{detailsId}
+                                 GROUP BY CDM.ITEM_ID
+                                HAVING MAX(CDM.TOT_REQRE_QY) - SUM(COALESCE(CDP.BOM_QY, 0)) > 0
+                               ) CDM
+                         INNER JOIN CMPNY_PUCHAS_ITEM CPI
+                            ON  CPI.ITEM_ID = CDM.ITEM_ID
+                           AND CPI.QY > 0
+                           AND CPI.UNTPC > 0
+                         GROUP BY CPI.PUCHAS_ID, CPI.ITEM_ID
+                       ) CPI
+                 INNER JOIN CMPNY_PUCHAS CP
+                    ON CP.PUCHAS_ID = CPI.PUCHAS_ID
+                   AND CP.PUCHAS_DE <= CPI.APPLC_DE
+                  LEFT OUTER JOIN CMPNY_DTLS_PUCHAS CDP
+                    ON  CDP.PUCHAS_ID = CPI.PUCHAS_ID
+                   AND CDP.ITEM_ID = CPI.ITEM_ID
+                 GROUP BY CPI.PUCHAS_ID, CPI.ITEM_ID
+                HAVING MAX(CPI.PUCHAS_QY) > SUM(COALESCE(CDP.PUCHAS_QY, 0))
+               ) CPI
+         INNER JOIN CMPNY_DTLS_MTRIL CDM
+            ON CDM.DTLS_MTRIL_ID = CPI.DTLS_MTRIL_ID
+         INNER JOIN CMPNY_DTLS_ITEM CDI
+            ON CDI.DTLS_ID = CDM.DTLS_ID
+         INNER JOIN CMPNY_PUCHAS CP
+            ON CP.PUCHAS_ID = CPI.PUCHAS_ID
+         INNER JOIN CMPNY_CSTMR CC
+            ON CC.CSTMR_ID = CP.CSTMR_ID
+          LEFT OUTER JOIN CMPNY_UNIT_CNVR CUC
+            ON CUC.ITEM_ID = CPI.ITEM_ID
+           AND CUC.STDR_UNIT = CDM.TOT_REQRE_QY_UNIT
+           AND CUC.CNVR_UNIT = CPI.PUCHAS_QY_UNIT
+           AND CUC.CMPNY_ID = CDM.CMPNY_ID
+         WHERE CPI.RANK = 1
+           /* AND CASE
+                  -- 단위가 같은 경우, 1
+                  WHEN COALESCE(CDM.TOT_REQRE_QY_UNIT, CPI.PUCHAS_QY_UNIT, '-')  = COALESCE(CPI.PUCHAS_QY_UNIT, CDM.TOT_REQRE_QY_UNIT, '-') THEN
+                    1
+                  -- 단위가 다른 경우,
+                  ELSE
+                    -- 환산율 없을 경우 0
+                    CASE WHEN COALESCE(CUC.CNVR_RT,0) = 0 THEN 0
+                    -- 환산율 있을 경우 1
+                    ELSE 1 END
+                END = 1 */
+        ]]>
+    </insert>
+    
+</mapper>

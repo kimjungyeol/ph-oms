@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.details.material.mapper.DetailsMaterialMapper">
+    
+    <delete id="deleteDetailsMaterial" parameterType="map">
+        /*queryId=DetailsMaterialMapper.deleteDetailsMaterial*/
+        DELETE
+          FROM CMPNY_DTLS_MTRIL
+         WHERE DTLS_GROUP_ID = #{groupId}
+           AND CMPNY_ID = #{companyId, jdbcType=NUMERIC}
+           <if test="detailsId != null and detailsId != ''">
+               AND DTLS_ID = #{detailsId}
+           </if>
+    </delete>
+    
+    <select id="countDetailsMaterial" parameterType="map" resultType="Long">
+        /*queryId=DetailsMaterialMapper.countDetailsMaterial*/
+        SELECT COUNT(1)
+          FROM (
+                SELECT COUNT(CDI.DTLS_ID) AS DTLS_ID
+                  FROM CMPNY_DTLS_ITEM CDI
+                 INNER JOIN CMPNY_DTLS_BOM CDB
+                    ON CDB.DTLS_ID = CDI.DTLS_ID
+                   AND CDB.MTRIL_AT = 1
+                 INNER JOIN CMPNY_ITEM CI
+                    ON CI.ITEM_ID = CDB.MTRIL_ITEM_ID
+                  LEFT OUTER JOIN CMPNY_ITEM_CL CIC
+                    ON CIC.ITEM_CL_ID = CI.ITEM_CL_ID
+                 WHERE CDI.DTLS_GROUP_ID = #{groupId}
+                   AND CDI.CMPNY_ID = #{companyId}
+                   <if test="detailsId != null and detailsId != ''">
+                       AND CDI.DTLS_ID = #{params.detailsId, jdbcType=NUMERIC}
+                   </if>
+                 GROUP BY CDI.DTLS_GROUP_ID, CDI.DTLS_ID, CDB.MTRIL_ITEM_ID
+               ) DATA
+    </select> 
+ 
+    <insert id="insertDetailsMaterial" parameterType="map">
+        /*queryId=DetailsMaterialMapper.insertDetailsMaterial*/
+        INSERT INTO CMPNY_DTLS_MTRIL 
+            (
+                DTLS_MTRIL_ID
+              , DTLS_GROUP_ID
+              , DTLS_ID
+              , ITEM_ID
+              , ITEM_CODE
+              , ITEM_NM
+              , ITEM_STNDRD
+              , ITEM_CL_ID
+              , HS_17
+              , HS_12
+              , HS_07
+              , HS_02
+              , REQRE_QY
+              , REQRE_QY_UNIT
+              , TOT_REQRE_QY
+              , TOT_REQRE_QY_UNIT
+              , TOT_WT
+              , UNTPC
+              , AMOUNT
+              , CRNCY
+              , CMPNY_ID
+              , CREAT_DT
+              , CREAT_ID
+              , UPDT_DT
+              , UPDT_ID
+            )
+        SELECT #{startId} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID, CDB.MTRIL_ITEM_ID) AS DTLS_MTRIL_ID
+             , CDI.DTLS_GROUP_ID                               AS DTLS_GROUP_ID
+             , CDI.DTLS_ID                                     AS DTLS_ID
+             , CDB.MTRIL_ITEM_ID                               AS ITEM_ID
+             , MAX(CI.ITEM_CODE)                               AS ITEM_CODE
+             , MAX(CI.ITEM_NM)                                 AS ITEM_NM
+             , MAX(CI.STNDRD)                                  AS ITEM_STNDRD
+             , MAX(CI.ITEM_CL_ID)                              AS ITEM_CL_ID
+             , COALESCE(MAX(CIC.HS_17), MAX(CI.HS_CODE))       AS HS_17
+             , MAX(CIC.HS_12)                                  AS HS_12
+             , MAX(CIC.HS_07)                                  AS HS_07
+             , MAX(CIC.HS_02)                                  AS HS_02
+             , COALESCE(MAX(CDB.REQRE_QY), 0)                  AS REQRE_QY
+             , MAX(CDB.REQRE_QY_UNIT)                          AS REQRE_QY_UNIT
+             , SUM(CDB.TOT_REQRE_QY)                           AS TOT_REQRE_QY
+             , MAX(CDB.TOT_REQRE_QY_UNIT)                      AS TOT_REQRE_QY_UNIT
+             , SUM(CDB.TOT_REQRE_QY) * COALESCE(MAX(CI.WT), 0) AS TOT_WT
+             , COALESCE(MAX(CI.PURCHS_UNTPC), 0)               AS UNTPC
+             , SUM(CDB.TOT_REQRE_QY) * COALESCE(MAX(CI.PURCHS_UNTPC), 0)   AS AMOUNT
+             , 'KRW'                                           AS CRNCY
+             , MAX(CDI.CMPNY_ID)                               AS CMPNY_ID
+             , MAX(CDI.CREAT_DT)                               AS CREAT_DT
+             , MAX(CDI.CREAT_ID)                               AS CREAT_ID
+             , MAX(CDI.UPDT_DT)                                AS UPDT_DT
+             , MAX(CDI.UPDT_ID)                                AS UPDT_ID
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN CMPNY_DTLS_BOM CDB
+            ON CDB.DTLS_ID = CDI.DTLS_ID
+           AND CDB.MTRIL_AT = 1
+         INNER JOIN CMPNY_ITEM CI
+            ON CI.ITEM_ID = CDB.MTRIL_ITEM_ID
+          LEFT OUTER JOIN FTA_ITEM_JDGMNT FIJ
+            ON  FIJ.ITEM_ID = CDB.MTRIL_ITEM_ID
+          LEFT OUTER JOIN CMPNY_ITEM_CL CIC
+            ON CIC.ITEM_CL_ID = CI.ITEM_CL_ID
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           AND CDI.CMPNY_ID = #{companyId}
+            -- 자재명세 불포함 자재 제외
+           AND COALESCE(FIJ.BOM_EXCL, 1) = 1
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+         GROUP BY CDI.DTLS_GROUP_ID, CDI.DTLS_ID, CDB.MTRIL_ITEM_ID
+  </insert>
+        
+</mapper>

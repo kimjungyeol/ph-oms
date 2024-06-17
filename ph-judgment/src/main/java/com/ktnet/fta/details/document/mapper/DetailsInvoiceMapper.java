@@ -19,4 +19,8 @@ public interface DetailsInvoiceMapper {
 
     public int insertDetailsItem(Map<String, Object> map);
 
+    public Long countExplainOrigin(Map<String, Object> map);
+
+    public int insertExplainOrigin(Map<String, Object> map);
+
 }

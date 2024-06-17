@@ -25,9 +25,30 @@ public class DetailsBomService {
 
         // 시퀀스 업데이트
         /* TODO : 시퀀스 생성해야함 */
+        // String key = "CMPNY_DTLS_BOM";
+        // Long startId = sequenceGenerator.getSequence(key, count);
 
         // ROOT LEVEL BOM 생성
         detailsBomMapper.insertForRoot(map);
+        Long bomLevel = 1L;
+        while (bomLevel < 20) {
+            // 업데이트 카운트
+            count = detailsBomMapper.countForChild(map);
+            totalCount += count;
+
+            if (count == 0) {
+                // 하위 BOM 없으면 종료
+                break;
+            }
+            /* TODO : 시퀀스 생성해야함 */
+            // startId = sequenceGenerator.getSequence(key, count);
+            // 최대 20 레벨
+            // detailsBomMapper.insertForChild(companyId, params, bomLevel++, startId);
+            detailsBomMapper.insertForChild(map);
+        }
+
+        // 자재 여부 설정
+        detailsBomMapper.updateForMaterialAt(map);
 
         return totalCount;
     }

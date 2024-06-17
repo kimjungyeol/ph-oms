@@ -57,7 +57,7 @@
     </select>
     
     <insert id="insertDetailsItem" parameterType="map">
-        /*queryId=DetailsInvoiceMapper.countDetailsItem*/        
+        /*queryId=DetailsInvoiceMapper.countDetailsItem*/
         INSERT INTO CMPNY_DTLS_ITEM 
             (
                 DTLS_ID
@@ -123,12 +123,10 @@
              , NULL                                            AS DO_ITEM_ID
 	         ,(
 	           SELECT MAX(CB.BOM_ID) KEEP (DENSE_RANK FIRST ORDER BY
-                     CASE WHEN COALESCE(CB.MANAGE_NO, '-') = COALESCE(CXII.BOM_MANAGE_NO, '-') THEN
-	                    0
-	                 ELSE
-	                    1
-	                 END,
-	                 CB.APPLC_DE DESC)
+                          CASE WHEN COALESCE(CB.MANAGE_NO, '-') = COALESCE(CXII.BOM_MANAGE_NO, '-') THEN 0
+    	                       ELSE 1
+    	                  END,
+    	                  CB.APPLC_DE DESC)
 	            FROM CMPNY_BOM CB
 	           WHERE CB.PRDUCT_ITEM_ID = CXII.ITEM_ID
 	             AND CB.APPLC_DE <= CXI.INVE_DE
@@ -186,4 +184,182 @@
          WHERE CXI.DTLS_GROUP_ID = #{groupId}
            AND CXI.CMPNY_ID = #{companyId}
     </insert>
+    
+    <select id="countExplainOrigin" parameterType="map" resultType="Long">
+        /*queryId=DetailsInvoiceMapper.countExplainOrigin*/
+        <![CDATA[
+        SELECT COUNT(1)
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN CMPNY_XPORT_INVE CXI
+            ON CXI.INVE_ID = CDI.INVE_ID
+         INNER JOIN CMPNY_XPORT_INVE_FTA CXIF
+            ON CXIF.INVE_ID = CXI.INVE_ID
+         INNER JOIN CMPNY_FTA CF
+            ON CF.FTA_ID = CXIF.FTA_ID
+           AND CF.CMPNY_ID = CDI.CMPNY_ID
+          LEFT OUTER JOIN CMPNY_CMPNM CCE
+            ON CCE.CMPNY_ID = CDI.CMPNY_ID
+           AND CCE.CMPNM_TY = 'EXPORTER'
+          LEFT OUTER JOIN CMPNY_CMPNM CCP
+            ON CCP.CMPNY_ID = CDI.CMPNY_ID
+           AND CCP.CMPNM_TY = 'PRODUCER'
+        ]]>
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </select>
+    
+    <insert id="insertExplainOrigin" parameterType="map">
+        /*queryId=DetailsInvoiceMapper.insertExplainOrigin*/
+        INSERT INTO FTA_EO 
+            (
+                EO_ID
+              , DTLS_GROUP_ID
+              , DTLS_ID
+              , FTA_ID
+              , FTA_NM
+              , HS_TY
+              , HS_CODE
+              , ORGPLCE_AT
+              , EXPTER_CODE
+              , EXPTER_NM
+              , EXPTER_NM_ENG
+              , EXPTER_BSNM_NO
+              , EXPTER_REPRSNT_NM
+              , EXPTER_REPRSNT_NM_ENG
+              , EXPTER_TLPHON_NO
+              , EXPTER_MOBILE_NO
+              , EXPTER_FAX_NO
+              , EXPTER_EMAIL
+              , EXPTER_ADRES
+              , EXPTER_ADRES_DETAIL
+              , MKER_CODE
+              , MKER_NM
+              , MKER_NM_ENG
+              , MKER_BSNM_NO
+              , MKER_REPRSNT_NM
+              , MKER_REPRSNT_NM_ENG
+              , MKER_TLPHON_NO
+              , MKER_MOBILE_NO
+              , MKER_FAX_NO
+              , MKER_EMAIL
+              , MKER_ADRES
+              , MKER_ADRES_DETAIL
+              , DELNG_TY
+              , PROCS_DC
+              , SIGNER_ID
+              , SIGNER_NM
+              , SIGNER_ENG_NM
+              , SIGNER_CLSF_NM
+              , SIGNER_CLSF_ENG_NM
+              , SIGNER_DEPT_NM
+              , WRITNG_DE
+              , JDGMNT_ID
+              , CMPNY_ID
+              , CREAT_DT
+              , CREAT_ID
+              , UPDT_DT
+              , UPDT_ID
+            )
+        <![CDATA[
+        SELECT #{startId} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID, CXIF.FTA_ID) AS EO_ID
+             , CDI.DTLS_GROUP_ID
+             , CDI.DTLS_ID
+             , CXIF.FTA_ID
+             , CXIF.FTA_NM
+             , CXIF.HS_TY
+             , COALESCE(
+                        CASE WHEN CXIF.HS_TY = 'HS2017' THEN CDI.HS_17
+                             WHEN CXIF.HS_TY = 'HS2012' THEN CDI.HS_12
+                             WHEN CXIF.HS_TY = 'HS2007' THEN CDI.HS_07
+                             WHEN CXIF.HS_TY = 'HS2002' THEN CDI.HS_02
+                             ELSE SUBSTR(CDI.HS_17, 1, 6)
+                         END, CDI.HS_17
+                       ) AS HS_CODE
+             , 0 AS ORGPLCE_AT
+             , NULL AS EXPTER_CODE
+             , CCE.CMPNY_NM AS EXPTER_NM
+             , CCE.CMPNY_NM_ENG AS EXPTER_NM_ENG
+             , CCE.BSNM_NO AS EXPTER_BSNM_NO
+             , CCE.REPRSNT_NM AS EXPTER_REPRSNT_NM
+             , CCE.REPRSNT_NM_ENG AS EXPTER_REPRSNT_NM_ENG
+             , CCE.TLPHON_NO AS EXPTER_TLPHON_NO
+             , CCE.MOBILE_NO AS EXPTER_MOBILE_NO
+             , CCE.FAX_NO AS EXPTER_FAX_NO
+             , CCE.EMAIL AS EXPTER_EMAIL
+             , CCE.ADRES AS EXPTER_ADRES
+             , CCE.ADRES_DETAIL AS EXPTER_ADRES_DETAIL
+             , NULL AS MKER_CODE
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.CMPNY_NM
+                    ELSE NULL
+                END AS MKER_NM
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.CMPNY_NM_ENG
+                    ELSE NULL
+                END AS MKER_NM_ENG
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.BSNM_NO
+                    ELSE NULL
+                END AS MKER_BSNM_NO
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.REPRSNT_NM
+                    ELSE NULL
+                END AS MKER_REPRSNT_NM
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.REPRSNT_NM_ENG
+                    ELSE NULL
+                END AS MKER_REPRSNT_NM_ENG
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.TLPHON_NO
+                    ELSE NULL
+                END AS MKER_TLPHON_NO
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.MOBILE_NO
+                    ELSE NULL
+                END AS MKER_MOBILE_NO
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.FAX_NO
+                    ELSE NULL
+                END AS MKER_FAX_NO
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.EMAIL
+                    ELSE NULL
+                END AS MKER_EMAIL
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.ADRES
+                    ELSE NULL
+                END AS MKER_ADRES
+             , CASE WHEN CDI.DTLS_TY = 'PRODUCT' THEN CCP.ADRES_DETAIL
+                    ELSE NULL
+                END AS MKER_ADRES_DETAIL
+             , CF.DELNG_TY AS DELNG_TY
+             , CICP.PROCS_DC AS PROCS_DC
+             , NULL AS SIGNER_ID
+             , NULL AS SIGNER_NM
+             , NULL AS SIGNER_ENG_NM
+             , NULL AS SIGNER_CLSF_NM
+             , NULL AS SIGNER_CLSF_ENG_NM
+             , NULL AS SIGNER_DEPT_NM
+             , CDI.APPLC_DE AS WRITNG_DE
+             , NULL AS JDGMNT_ID
+             , CDI.CMPNY_ID AS CMPNY_ID
+             , CDI.CREAT_DT AS CREAT_DT
+             , CDI.CREAT_ID AS CREAT_ID
+             , CDI.UPDT_DT AS UPDT_DT
+             , CDI.UPDT_ID AS UPDT_ID
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN CMPNY_XPORT_INVE CXI
+            ON CXI.INVE_ID = CDI.INVE_ID
+         INNER JOIN CMPNY_XPORT_INVE_FTA CXIF
+            ON CXIF.INVE_ID = CXI.INVE_ID
+         INNER JOIN CMPNY_FTA CF
+            ON CF.FTA_ID = CXIF.FTA_ID
+           AND CF.CMPNY_ID = CDI.CMPNY_ID
+          LEFT OUTER JOIN CMPNY_CMPNM CCE
+            ON CCE.CMPNY_ID = CDI.CMPNY_ID
+           AND CCE.CMPNM_TY = 'EXPORTER'
+          LEFT OUTER JOIN CMPNY_CMPNM CCP
+            ON CCP.CMPNY_ID = CDI.CMPNY_ID
+           AND CCP.CMPNM_TY = 'PRODUCER'
+          LEFT OUTER JOIN CMPNY_ITEM_CL_PROCS CICP
+            ON CDI.ITEM_CL_ID = CICP.ITEM_CL_ID 
+        ]]>
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           <if test="detailsId != null and detailsIs != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </insert>
+    
 </mapper>
