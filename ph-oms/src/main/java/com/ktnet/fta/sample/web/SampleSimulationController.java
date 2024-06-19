@@ -65,9 +65,15 @@ public class SampleSimulationController extends BasicController {
 
         System.out.println("pMap : " + mapper.writeValueAsString(pMap));
 
-        String result = restClient.post().uri("http://localhost:8090/api/post/test")
+//        String result = restClient.post().uri("http://localhost:8090/api/post/test")
+//                .contentType(MediaType.APPLICATION_JSON).body(mapper.writeValueAsString(pMap)).retrieve()
+//                .body(String.class);
+//
+//        System.out.println("result : " + result);
+
+        Map<?, ?> result = restClient.post().uri("http://localhost:8090/api/post/test")
                 .contentType(MediaType.APPLICATION_JSON).body(mapper.writeValueAsString(pMap)).retrieve()
-                .body(String.class);
+                .body(Map.class);
 
         System.out.println("result : " + result);
 

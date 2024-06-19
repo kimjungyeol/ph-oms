@@ -11,6 +11,7 @@ import com.ktnet.fta.details.material.service.DetailsMaterialService;
 import com.ktnet.fta.details.purchase.service.DetailsPurchaseService;
 import com.ktnet.fta.eo.origin.service.ExplainOriginService;
 import com.ktnet.fta.judgment.constant.CertificateOriginStatus;
+import com.ktnet.fta.judgment.service.JudgmentService;
 
 import jakarta.annotation.Resource;
 
@@ -32,8 +33,11 @@ public class DetailsInvoiceGenerator {
     @Resource(name = "detailsPurchaseService")
     private DetailsPurchaseService detailsPurchaseService;
 
-    @Resource(name = "expalinOriginService")
+    @Resource(name = "explainOriginService")
     private ExplainOriginService explainOriginService;
+
+    @Resource(name = "judgmentService")
+    private JudgmentService judgmentService;
 
     public void generate(Map<String, Object> map) {
         // 문서 기존 group id 가져오기
@@ -49,7 +53,7 @@ public class DetailsInvoiceGenerator {
         // 문서에 group id 반영
         detailsInvoiceService.updateGroupId(map);
 
-        // invoice id 가져오기
+        // invoice id 가져오기 (detailsInvoiceService.updateStatus 실행 시 키값)
         Long inveId = detailsInvoiceService.searchInvoiceId(map);
         map.put("inveId", inveId);
 
@@ -89,6 +93,12 @@ public class DetailsInvoiceGenerator {
 
         // 소명서 자재 내역 생성
         explainOriginService.insertExplainOriginMaterial(map);
+
+        // 원산지 판정
+        judgmentService.judgmentExecute(map);
+
+        // 판정 결과 반영
+        explainOriginService.updateExplainOriginByJudgment(map);
 
     }
 }

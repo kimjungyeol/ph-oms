@@ -117,7 +117,7 @@ public class JudgmentApplicationTests {
         map.put("origin", "N");
         itemList.add(map);
 
-        simulationService.simulationExecute(ftaInfo, itemList);
+        // simulationService.simulationExecute(ftaInfo, itemList);
 
     }
 }

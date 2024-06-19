@@ -212,7 +212,6 @@
               , UPDT_DT
               , UPDT_ID
             )
-        <![CDATA[
         SELECT #{startId} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID, FE.EO_ID, CDP.DTLS_PUCHAS_ID) AS EO_RECEPT_DO_ID
              , CDI.DTLS_GROUP_ID AS DTLS_GROUP_ID
              , CDI.DTLS_ID AS DTLS_ID
@@ -279,10 +278,803 @@
             ON CPI.PUCHAS_ID = CP.PUCHAS_ID
            AND CPI.PUCHAS_ITEM_ID = FRC.PUCHAS_ITEM_ID
            AND CPI.ITEM_ID = CDP.ITEM_ID
-        ]]>
          WHERE CDI.DTLS_GROUP_ID = #{groupId}
            <if test="detailsId != null and detailsId != ''">
                AND CDI.DTLS_ID = #{detailsId}
            </if>
     </insert>
+    
+    <select id="countExplainOriginReceipt" parameterType="map" resultType="Long">
+        /*queryId=ExplainOriginMapper.countExplainOriginReceipt*/
+        <![CDATA[
+        SELECT COUNT(1)
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN FTA_EO FE
+            ON FE.DTLS_ID  = CDI.DTLS_ID
+         INNER JOIN CMPNY_DTLS_PUCHAS CDP
+            ON CDP.DTLS_ID = FE.DTLS_ID
+         INNER JOIN FTA_RECEPT_DO_ITEM FRDI
+            ON  FRDI.ITEM_ID = CDP.ITEM_ID
+         INNER JOIN FTA_RECEPT_DO_ORGPLCE FRDO
+            ON  FRDO.RECEPT_DO_ITEM_ID = FRDI.RECEPT_DO_ITEM_ID
+           AND FRDO.FTA_ID   = FE.FTA_ID
+           AND FRDO.BEGIN_DE   <= CDP.PUCHAS_DE
+           AND FRDO.END_DE   >= CDP.PUCHAS_DE
+         INNER JOIN FTA_RECEPT_DO FRD
+            ON  FRD.RECEPT_DO_ID  = FRDI.RECEPT_DO_ID
+           AND FRD.SUPLER_ID     = CDP.CSTMR_ID
+           AND FRD.CMPNY_ID    = CDI.CMPNY_ID
+        ]]>           
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </select>
+    
+    <insert id="insertExplainOriginReceipt" parameterType="map">
+        /*queryId=ExplainOriginMapper.insertExplainOriginReceipt*/
+        INSERT INTO FTA_EO_RECEPT_DO 
+            (
+                EO_RECEPT_DO_ID
+              , DTLS_GROUP_ID
+              , DTLS_ID
+              , DTLS_PUCHAS_ID
+              , EO_ID
+              , RECEPT_DO_ID
+              , ISSU_NO
+              , ISSU_DE
+              , SUPLER_ID
+              , SUPLER_CODE
+              , SUPLER_NM
+              , SUPLER_BSNM_NO
+              , SUPLER_REPRSNT_NM
+              , SUPLER_TLPHON_NO
+              , SUPLER_FAX_NO
+              , SUPLER_EMAIL
+              , SUPLER_ADRES
+              , SUPLER_ADRES_DETAIL
+              , SUPLER_AUTHEXPTER_NO
+              , SUPLYOFFIC_CODE
+              , SUPLYOFFIC_NM
+              , SUPLYOFFIC_BSNM_NO
+              , SUPLYOFFIC_REPRSNT_NM
+              , SUPLYOFFIC_TLPHON_NO
+              , SUPLYOFFIC_FAX_NO
+              , SUPLYOFFIC_EMAIL
+              , SUPLYOFFIC_ADRES
+              , SUPLYOFFIC_ADRES_DETAIL
+              , SIGNER_NM
+              , SIGNER_ENG_NM
+              , SIGNER_CLSF_NM
+              , SIGNER_CLSF_ENG_NM
+              , SIGNER_DEPT_NM
+              , WRITNG_DE
+              , ITEM_ID
+              , ITEM_CODE
+              , ITEM_NM
+              , ITEM_STNDRD
+              , HS_CODE
+              , BEGIN_DE
+              , END_DE
+              , ORGPLCE_PSR
+              , ORGPLCE_AT
+              , ORGPLCE_NATION_CODE
+              , USE_AT
+              , CMPNY_ID
+              , CREAT_DT
+              , CREAT_ID
+              , UPDT_DT
+              , UPDT_ID
+            )
+        <![CDATA[
+        SELECT #{startId} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID, FE.EO_ID, CDP.DTLS_PUCHAS_ID) AS EO_RECEPT_DO_ID
+             , CDI.DTLS_GROUP_ID AS DTLS_GROUP_ID
+             , CDI.DTLS_ID AS DTLS_ID
+             , CDP.DTLS_PUCHAS_ID AS DTLS_PUCHAS_ID
+             , FE.EO_ID AS RECEPT_DO_ID
+             , FRD.RECEPT_DO_ID AS RECEPT_DO_ID
+             , FRD.ISSU_NO AS ISSU_NO
+             , FRD.ISSU_DE AS ISSU_DE
+             , FRD.SUPLER_ID AS SUPLER_ID
+             , FRD.SUPLER_CODE AS SUPLER_CODE
+             , FRD.SUPLER_NM AS SUPLER_NM
+             , FRD.SUPLER_BSNM_NO AS SUPLER_BSNM_NO
+             , FRD.SUPLER_REPRSNT_NM AS SUPLER_REPRSNT_NM
+             , FRD.SUPLER_TLPHON_NO AS SUPLER_TLPHON_NO
+             , FRD.SUPLER_FAX_NO AS SUPLER_FAX_NO
+             , FRD.SUPLER_EMAIL AS SUPLER_EMAIL
+             , FRD.SUPLER_ADRES AS SUPLER_ADRES
+             , FRD.SUPLER_ADRES_DETAIL AS SUPLER_ADRES_DETAIL
+             , FRD.SUPLER_AUTHEXPTER_NO AS SUPLER_AUTHEXPTER_NO
+             , FRD.SUPLYOFFIC_CODE AS SUPLYOFFIC_CODE
+             , FRD.SUPLYOFFIC_NM AS SUPLYOFFIC_NM
+             , FRD.SUPLYOFFIC_BSNM_NO AS SUPLYOFFIC_BSNM_NO
+             , FRD.SUPLYOFFIC_REPRSNT_NM AS SUPLYOFFIC_REPRSNT_NM
+             , FRD.SUPLYOFFIC_TLPHON_NO AS SUPLYOFFIC_TLPHON_NO
+             , FRD.SUPLYOFFIC_FAX_NO AS SUPLYOFFIC_FAX_NO
+             , FRD.SUPLYOFFIC_EMAIL AS SUPLYOFFIC_EMAIL
+             , FRD.SUPLYOFFIC_ADRES AS SUPLYOFFIC_ADRES
+             , FRD.SUPLYOFFIC_ADRES_DETAIL AS SUPLYOFFIC_ADRES_DETAIL
+             , FRD.SIGNER_NM AS SIGNER_NM
+             , FRD.SIGNER_ENG_NM AS SIGNER_ENG_NM
+             , FRD.SIGNER_CLSF_NM AS SIGNER_CLSF_NM
+             , FRD.SIGNER_CLSF_ENG_NM AS SIGNER_CLSF_ENG_NM
+             , FRD.SIGNER_DEPT_NM AS SIGNER_DEPT_NM
+             , FRD.WRITNG_DE AS WRITNG_DE
+             , FRDI.ITEM_ID AS ITEM_ID
+             , FRDI.ITEM_CODE AS ITEM_CODE
+             , FRDI.ITEM_NM AS ITEM_NM
+             , FRDI.ITEM_STNDRD AS ITEM_STNDRD
+             , FRDI.HS_CODE AS HS_CODE
+             , FRDO.BEGIN_DE AS BEGIN_DE
+             , FRDO.END_DE AS END_DE
+             , FRDO.ORGPLCE_PSR AS ORGPLCE_PSR
+             , FRDO.ORGPLCE_AT AS ORGPLCE_AT
+             , CASE WHEN FRDO.ORGPLCE_AT = 1 THEN COALESCE(FRDO.ORGPLCE_NATION_CODE, 'KR')
+                    ELSE FRDO.ORGPLCE_NATION_CODE
+                END AS ORGPLCE_NATION_CODE
+             , 1 AS USE_AT
+             , CDI.CMPNY_ID
+             , CDI.CREAT_DT
+             , CDI.CREAT_ID
+             , CDI.UPDT_DT
+             , CDI.UPDT_ID
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN FTA_EO FE
+            ON FE.DTLS_ID  = CDI.DTLS_ID
+         INNER JOIN CMPNY_DTLS_PUCHAS CDP
+            ON CDP.DTLS_ID = FE.DTLS_ID
+         INNER JOIN FTA_RECEPT_DO_ITEM FRDI
+            ON FRDI.ITEM_ID = CDP.ITEM_ID
+         INNER JOIN FTA_RECEPT_DO_ORGPLCE FRDO
+            ON FRDO.RECEPT_DO_ITEM_ID = FRDI.RECEPT_DO_ITEM_ID
+           AND FRDO.FTA_ID = FE.FTA_ID
+           AND FRDO.BEGIN_DE <= CDP.PUCHAS_DE
+           AND FRDO.END_DE >= CDP.PUCHAS_DE
+         INNER JOIN FTA_RECEPT_DO FRD
+            ON FRD.RECEPT_DO_ID = FRDI.RECEPT_DO_ID
+           AND FRD.SUPLER_ID = CDP.CSTMR_ID
+           AND FRD.CMPNY_ID = CDI.CMPNY_ID
+          LEFT OUTER JOIN FTA_EO_RECEPT_DO FERD
+            ON FERD.DTLS_GROUP_ID = CDI.DTLS_GROUP_ID
+           AND FERD.DTLS_PUCHAS_ID = CDP.DTLS_PUCHAS_ID
+           AND FERD.DTLS_ID = CDI.DTLS_ID
+           AND FERD.EO_ID = FE.EO_ID
+        ]]>
+         WHERE CDI.DTLS_GROUP_ID = #{groupId}
+           AND FERD.EO_RECEPT_DO_ID IS NULL
+           <if test="detailsId != null and detailsId != ''">
+               AND CDI.DTLS_ID = #{detailsId}
+           </if>
+    </insert>
+    
+    <update id="updateExplainOriginMaterialForMainPurchase" parameterType="map">
+        /*queryId=ExplainOriginMapper.updateExplainOriginMaterialForMainPurchase*/
+        MERGE INTO FTA_EO_MTRIL AA
+        USING (
+               <![CDATA[
+               SELECT FEM.EO_MTRIL_ID
+                    , MIN(COALESCE(FERD.ORGPLCE_AT, 0)) AS ORGPLCE_AT
+                    , CASE WHEN MIN(COALESCE(FERD.ORGPLCE_AT, 0)) = 1 THEN
+                                -- 모든 구매가 원산지 확인이 될 때, 가장 낮은 단가의 구매를 대표 구매
+                                (
+                                 SELECT MAX(CDPMIN.DTLS_PUCHAS_ID) KEEP
+                                        (
+                                         DENSE_RANK FIRST ORDER BY
+                                         CDPMIN.PUCHAS_UNTPC ASC
+                                        )
+                                   FROM CMPNY_DTLS_PUCHAS CDPMIN
+                                  WHERE CDPMIN.DTLS_MTRIL_ID = FEM.DTLS_MTRIL_ID
+                                )
+                           ELSE -- 모든 구매의 원산지 확인이 되지 않을 때, 가장 높은 단가의 구매를 대표 구매
+                                (
+                                 SELECT MAX(CDPMAX.DTLS_PUCHAS_ID) KEEP
+                                        (
+                                         DENSE_RANK FIRST ORDER BY
+                                         CDPMAX.PUCHAS_UNTPC DESC
+                                        )
+                                   FROM CMPNY_DTLS_PUCHAS CDPMAX
+                                  WHERE CDPMAX.DTLS_MTRIL_ID = FEM.DTLS_MTRIL_ID
+                                )
+                       END AS DTLS_PUCHAS_ID
+                 FROM FTA_EO_MTRIL FEM
+                INNER JOIN CMPNY_DTLS_PUCHAS CDP
+                   ON CDP.DTLS_MTRIL_ID = FEM.DTLS_MTRIL_ID
+                 LEFT OUTER JOIN FTA_EO_RECEPT_DO FERD
+                   ON  FERD.DTLS_PUCHAS_ID = CDP.DTLS_PUCHAS_ID
+                  -- 수취확인서의 HS 코드가 같아야 함
+                  AND FEM.HS_CODE = FERD.HS_CODE
+                ]]>
+                WHERE FEM.DTLS_GROUP_ID = #{groupId}
+                  <if test="detailsId != null and detailsId != ''">
+                      AND FEM.DTLS_ID = #{detailsId}
+                  </if>
+                GROUP BY FEM.DTLS_MTRIL_ID, FEM.EO_MTRIL_ID
+        ) BB ON (
+          AA.EO_MTRIL_ID = BB.EO_MTRIL_ID
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+                AA.ORGPLCE_AT = BB.ORGPLCE_AT,
+                AA.DTLS_PUCHAS_ID = BB.DTLS_PUCHAS_ID
+    </update>
+    
+    <update id="updateExplainOriginMaterialByPurchase" parameterType="map">
+        /*queryId=ExplainOriginMapper.updateExplainOriginMaterialByPurchase*/
+        MERGE INTO FTA_EO_MTRIL AA
+        USING (
+            SELECT FEM.EO_MTRIL_ID
+                 , COALESCE(CDP.BOM_UNTPC, 0) AS UNTPC
+                 , CDP.BOM_UNTPC * FEM.TOT_REQRE_QY AS AMOUNT
+                 , CDP.CSTMR_ID AS CSTMR_ID
+                 , CDP.CSTMR_CODE AS CSTMR_CODE
+                 , CDP.CSTMR_NM AS CSTMR_NM
+                 , CDP.CSTMR_BSNM_NO AS CSTMR_BSNM_NO
+                 , CDP.CSTMR_REPRSNT_NM AS CSTMR_REPRSNT_NM
+                 , CDP.CSTMR_TLPHON_NO AS CSTMR_TLPHON_NO
+                 , CDP.CSTMR_MOBILE_NO AS CSTMR_MOBILE_NO
+                 , CDP.CSTMR_FAX_NO AS CSTMR_FAX_NO
+                 , CDP.CSTMR_EMAIL AS CSTMR_EMAIL
+                 , CDP.CSTMR_ADRES AS CSTMR_ADRES
+                 , CDP.CSTMR_ADRES_DETAIL AS CSTMR_ADRES_DETAIL
+              FROM FTA_EO_MTRIL FEM
+             INNER JOIN CMPNY_DTLS_PUCHAS CDP
+                ON CDP.DTLS_PUCHAS_ID = FEM.DTLS_PUCHAS_ID
+             WHERE FEM.DTLS_GROUP_ID = #{params.groupId, jdbcType=NUMERIC}
+               <if test="detailsId != null and detailsId != ''">
+                   AND FEM.DTLS_ID = #{detailsId}
+               </if>
+        ) BB ON (
+          AA.EO_MTRIL_ID = BB.EO_MTRIL_ID
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+                UNTPC = BB.UNTPC,
+                AMOUNT = BB.AMOUNT,
+                CSTMR_ID = BB.CSTMR_ID,
+                CSTMR_CODE = BB.CSTMR_CODE,
+                CSTMR_NM = BB.CSTMR_NM,
+                CSTMR_BSNM_NO = BB.CSTMR_BSNM_NO,
+                CSTMR_REPRSNT_NM = BB.CSTMR_REPRSNT_NM,
+                CSTMR_TLPHON_NO = BB.CSTMR_TLPHON_NO,
+                CSTMR_MOBILE_NO = BB.CSTMR_MOBILE_NO,
+                CSTMR_FAX_NO = BB.CSTMR_FAX_NO,
+                CSTMR_EMAIL = BB.CSTMR_EMAIL,
+                CSTMR_ADRES = BB.CSTMR_ADRES,
+                CSTMR_ADRES_DETAIL = BB.CSTMR_ADRES_DETAIL
+    </update>
+    
+    <update id="updateExplainOriginMaterialByDoReceipt" parameterType="map">
+        /*queryId=ExplainOriginMapper.updateExplainOriginMaterialByDoReceipt*/
+        MERGE INTO FTA_EO_MTRIL AA
+        USING (
+            SELECT FEM.EO_MTRIL_ID
+                 , MIN(
+                       CASE WHEN COALESCE(FERD.ORGPLCE_NATION_CODE,'KR') = 'KR' THEN COALESCE(FERD.ORGPLCE_AT, 0)
+                            ELSE 1 END
+                      ) AS ORGPLCE_AT
+                 , CASE MIN(
+                            CASE WHEN COALESCE(FERD.ORGPLCE_NATION_CODE,'KR') = 'KR' THEN COALESCE(FERD.ORGPLCE_AT, 0)
+                                 ELSE 99 
+                             END
+                           ) WHEN 1 THEN 'KR'
+                             WHEN 2 THEN MIN(FERD.ORGPLCE_NATION_CODE)
+                             ELSE NULL
+                    END AS ORGPLCE_NATION_CODE
+                 , MAX(FERD.EO_RECEPT_DO_ID) AS EO_RECEPT_DO_ID
+              FROM FTA_EO FE
+             INNER JOIN FTA_EO_MTRIL FEM
+                ON FEM.EO_ID = FE.EO_ID
+             INNER JOIN CMPNY_DTLS_PUCHAS CDP
+                ON CDP.DTLS_MTRIL_ID = FEM.DTLS_MTRIL_ID
+              LEFT OUTER JOIN FTA_EO_RECEPT_DO FERD
+                ON FERD.EO_ID = FE.EO_ID
+               AND FERD.DTLS_PUCHAS_ID = CDP.DTLS_PUCHAS_ID
+                -- 수취확인서의 HS 코드가 같아야 함
+                -- 수취증명서의 경우, HS코드가 불일치되어도 수용
+               AND (CASE WHEN COALESCE(FERD.ORGPLCE_NATION_CODE,'KR') = 'KR' THEN COALESCE(FEM.HS_CODE, FERD.HS_CODE)
+                         ELSE FEM.HS_CODE 
+                     END = FEM.HS_CODE)
+             WHERE FE.DTLS_GROUP_ID = #{groupId}
+               <if test="detailsId != null and detailsId != ''">
+                   AND FE.DTLS_ID = #{detailsId}
+               </if>
+             GROUP BY FEM.EO_MTRIL_ID
+        ) BB ON (
+          AA.EO_MTRIL_ID = BB.EO_MTRIL_ID
+        )
+        WHEN MATCHED THEN
+                UPDATE SET
+                    ORGPLCE_AT = BB.ORGPLCE_AT,
+                    ORGPLCE_NATION_CODE = BB.ORGPLCE_NATION_CODE,
+                    EO_RECEPT_DO_ID = BB.EO_RECEPT_DO_ID
+    </update>
+    
+    <update id="updateExplainOriginByPurchase" parameterType="map">
+        /*queryId=ExplainOriginMapper.updateExplainOriginByPurchase*/
+        MERGE INTO FTA_EO AA
+        USING (
+            SELECT FE.EO_ID AS EO_ID
+                 , FEM.CSTMR_CODE AS MKER_CODE
+                 , FEM.CSTMR_NM AS MKER_NM
+                 , FEM.CSTMR_NM AS MKER_NM_ENG
+                 , FEM.CSTMR_BSNM_NO AS MKER_BSNM_NO
+                 , FEM.CSTMR_REPRSNT_NM AS MKER_REPRSNT_NM
+                 , FEM.CSTMR_REPRSNT_NM AS MKER_REPRSNT_NM_ENG
+                 , FEM.CSTMR_TLPHON_NO AS MKER_TLPHON_NO
+                 , FEM.CSTMR_MOBILE_NO AS MKER_MOBILE_NO
+                 , FEM.CSTMR_FAX_NO AS MKER_FAX_NO
+                 , FEM.CSTMR_EMAIL AS MKER_EMAIL
+                 , FEM.CSTMR_ADRES AS MKER_ADRES
+                 , FEM.CSTMR_ADRES_DETAIL AS MKER_ADRES_DETAIL
+              FROM CMPNY_DTLS_ITEM CDI
+             INNER JOIN FTA_EO FE
+                ON FE.DTLS_ID = CDI.DTLS_ID
+             INNER JOIN FTA_EO_MTRIL FEM
+                ON FE.EO_ID = FEM.EO_ID
+             WHERE CDI.DTLS_GROUP_ID = #{groupId}
+               AND CDI.DTLS_TY = 'MATERIAL'
+               <if test="detailsId != null and detailsId != ''">
+                   AND CDI.DTLS_ID = #{detailsId}
+               </if>
+        ) BB ON (
+          AA.EO_ID = BB.EO_ID
+        )
+        WHEN MATCHED THEN
+          UPDATE SET
+                    AA.MKER_CODE = BB.MKER_CODE,
+                    AA.MKER_NM = BB.MKER_NM,
+                    AA.MKER_NM_ENG = BB.MKER_NM_ENG,
+                    AA.MKER_BSNM_NO = BB.MKER_BSNM_NO,
+                    AA.MKER_REPRSNT_NM = BB.MKER_REPRSNT_NM,
+                    AA.MKER_REPRSNT_NM_ENG = BB.MKER_REPRSNT_NM_ENG,
+                    AA.MKER_TLPHON_NO = BB.MKER_TLPHON_NO,
+                    AA.MKER_MOBILE_NO = BB.MKER_MOBILE_NO,
+                    AA.MKER_FAX_NO = BB.MKER_FAX_NO,
+                    AA.MKER_EMAIL = BB.MKER_EMAIL,
+                    AA.MKER_ADRES = BB.MKER_ADRES,
+                    AA.MKER_ADRES_DETAIL = BB.MKER_ADRES_DETAIL
+    </update>
+  
+    <update id="updateExplainOriginByMaterial" parameterType="map">
+        /*queryId=ExplainOriginMapper.updateExplainOriginByMaterial*/
+        MERGE INTO FTA_EO AA
+        USING (
+          <![CDATA[
+          SELECT
+            FE.EO_ID AS EO_ID,
+            MAX(CDI.BOM_QY) AS QY,
+            MAX(CDI.FOB_AMOUNT_KRW) AS AMOUNT,
+            MAX(CDI.WT) AS WT,
+
+              -- 원산지 재료비
+            SUM(
+              CASE
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 0 THEN
+                  0
+                ELSE
+                  FEM.AMOUNT
+              END
+            ) AS MTRIL_AMOUNT_INTRA,
+            -- 비원산지 재료비
+            SUM(
+              CASE
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 0 THEN
+                  FEM.AMOUNT
+                ELSE
+                  0
+              END
+            ) AS MTRIL_AMOUNT_OFSHR,
+
+            -- 원산지 재료 중량
+            SUM(
+              CASE
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 0 THEN
+                  0
+                ELSE
+                  FEM.TOT_WT
+              END
+            ) AS MTRIL_WT_INTRA,
+            -- 비원산지 재료 중량
+            SUM(
+              CASE
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 0 THEN
+                  FEM.TOT_WT
+                ELSE
+                  0
+              END
+            ) AS MTRIL_WT_OFSHR,
+
+
+            -- 원산지 재료비 오류
+            SUM(
+              CASE
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 0 THEN
+                  0
+                WHEN FEM.AMOUNT > 0 THEN
+                  0
+                ELSE
+                  1
+              END
+            ) AS UNTPC_ERROR_INTRA_CNT,
+            -- 비원산지 재료비 오류
+            SUM(
+              CASE
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                WHEN FEM.AMOUNT > 0 THEN
+                  0
+                ELSE
+                  1
+              END
+            ) AS UNTPC_ERROR_OFSHR_CNT,
+            -- 원산지 중량 오류
+            SUM(
+              CASE
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 0 THEN
+                  0
+                WHEN FEM.TOT_WT > 0 THEN
+                  0
+                ELSE
+                  1
+              END
+            ) AS WT_ERROR_INTRA_CNT,
+            -- 비원산지 중량 오류
+            SUM(
+              CASE
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                WHEN FEM.TOT_WT > 0 THEN
+                  0
+                ELSE
+                  1
+              END
+            ) AS WT_ERROR_OFSHR_CNT,
+
+            /***********************************************************
+             * 세번변경 기준 계산을 위한 변수 *
+             **********************************************************/
+            -- HS 오류 카운트
+            SUM(
+              CASE
+                WHEN LENGTH(COALESCE(FEM.HS_CODE, '-')) < 6 THEN
+                  1
+                ELSE
+                  0
+              END
+            ) AS HS_CODE_ERROR_CNT,
+            -- 2자리 일치 카운트
+            SUM(
+              CASE
+                -- 자재 HS 코드 누락의 경우, 포함
+                WHEN LENGTH(COALESCE(FEM.HS_CODE, '-')) < 6 THEN
+                  1
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 2)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 2) THEN
+                  0
+                -- 제품, 자재 HS 가 같은 경우
+                ELSE
+                  1
+              END
+            ) AS CC_MTCH_CNT,
+            -- 4자리 일치 카운트
+            SUM(
+              CASE
+                -- 자재 HS 코드 누락의 경우, 포함
+            WHEN LENGTH(COALESCE(FEM.HS_CODE, '-')) < 6 THEN
+              1
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 4)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 4) THEN
+                  0
+                -- 제품, 자재 HS 가 같은 경우
+                ELSE
+                  1
+              END
+            ) AS CTH_MTCH_CNT,
+            -- 6자리 일치 카운트
+            SUM(
+              CASE
+                -- 자재 HS 코드 누락의 경우, 포함
+            WHEN LENGTH(COALESCE(FEM.HS_CODE, '-')) < 6 THEN
+              1
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 6)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 6) THEN
+                  0
+                -- 제품, 자재 HS 가 같은 경우
+                ELSE
+                  1
+              END
+            ) AS CTSH_MTCH_CNT,
+
+             /***********************************************************
+               * 미소기준 계산을 위한 변수 *
+               **********************************************************/
+            -- 2자리 일치 비원산지 재료비
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 2)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 2) THEN
+                  0
+                -- 제품, 자재 HS 가 같은 경우
+                ELSE
+                  FEM.AMOUNT
+              END
+            ) AS CC_MTCH_AMOUNT,
+            -- 4자리 일치 비원산지 재료비
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 4)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 4) THEN
+                  0
+                -- 제품, 자재 HS 가 같은 경우
+                ELSE
+                  FEM.AMOUNT
+              END
+            ) AS CTH_MTCH_AMOUNT,
+            -- 6자리 일치 비원산지 재료비
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 6)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 6) THEN
+                  0
+                -- 제품, 자재 HS 가 같은 경우
+                ELSE
+                  FEM.AMOUNT
+              END
+            ) AS CTSH_MTCH_AMOUNT,
+
+            -- 2자리 일치 비원산지 중량
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 2)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 2) THEN
+                  0
+                -- 제품, 자재 HS 가 같은 경우
+                ELSE
+                  FEM.TOT_WT
+              END
+            ) AS CC_MTCH_WT,
+            -- 4자리 일치 비원산지 중량
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 4)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 4) THEN
+                  0
+                -- 제품, 자재 HS 가 같은 경우
+                ELSE
+                  FEM.TOT_WT
+              END
+            ) AS CTH_MTCH_WT,
+            -- 6자리 일치 비원산지 중량
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 6)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 6) THEN
+                  0
+                -- 제품, 자재 HS 가 같은 경우
+                ELSE
+                  FEM.TOT_WT
+              END
+            ) AS CTSH_MTCH_WT,
+
+            /***********************************************************
+             * 미소기준 오류 계산을 위한 변수 *
+             **********************************************************/
+            -- 2자리 일치 비원산지 재료비
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 2)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 2) THEN
+                  0
+                -- 제품, 자재 HS 가 같고, 금액이 있는 경우
+                WHEN FEM.AMOUNT > 0 THEN
+                  0
+                -- 오류
+                ELSE
+                  1
+              END
+            ) AS CC_AMOUNT_ERROR_CNT,
+            -- 4자리 일치 비원산지 재료비
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 4)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 4) THEN
+                  0
+                -- 제품, 자재 HS 가 같고, 금액이 있는 경우
+                WHEN FEM.AMOUNT > 0 THEN
+                  0
+                -- 오류
+                ELSE
+                  1
+              END
+            ) AS CTH_AMOUNT_ERROR_CNT,
+            -- 6자리 일치 비원산지 재료비
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 6)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 6) THEN
+                  0
+                -- 제품, 자재 HS 가 같고, 금액이 있는 경우
+                WHEN FEM.AMOUNT > 0 THEN
+                  0
+                -- 오류
+                ELSE
+                  1
+              END
+            ) AS CTSH_AMOUNT_ERROR_CNT,
+            -- 2자리 일치 비원산지 중량
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 2)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 2) THEN
+                  0
+                -- 제품, 자재 HS 가 같고, 중량이 있는 경우
+                WHEN FEM.TOT_WT > 0 THEN
+                  0
+                -- 오류
+                ELSE
+                  1
+              END
+            ) AS CC_WT_ERROR_CNT,
+            -- 4자리 일치 비원산지 중량
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 4)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 4) THEN
+                  0
+                -- 제품, 자재 HS 가 같고, 중량이 있는 경우
+                WHEN FEM.TOT_WT > 0 THEN
+                  0
+                -- 오류
+                ELSE
+                  1
+              END
+            ) AS CTH_WT_ERROR_CNT,
+            -- 6자리 일치 비원산지 중량
+            SUM(
+              CASE
+                -- 원산지 자재의 경우, 제외
+                WHEN COALESCE(FEM.ORGPLCE_AT, 0) = 1 THEN
+                  0
+                -- 제품, 자재 HS 가 다른 경우
+                WHEN SUBSTR(COALESCE(FE.HS_CODE, '-'), 0, 6)
+                    <> SUBSTR(COALESCE(FEM.HS_CODE, '-'), 0, 6) THEN
+                  0
+                -- 제품, 자재 HS 가 같고, 중량이 있는 경우
+                WHEN FEM.TOT_WT > 0 THEN
+                  0
+                -- 오류
+                ELSE
+                  1
+              END
+            ) AS CTSH_WT_ERROR_CNT
+            FROM CMPNY_DTLS_ITEM CDI
+           INNER JOIN FTA_EO FE
+              ON FE.DTLS_ID = CDI.DTLS_ID
+           INNER JOIN FTA_EO_MTRIL FEM
+              ON FEM.EO_ID = FE.EO_ID
+           INNER JOIN CMPNY_DTLS_MTRIL CDM
+              ON  CDM.DTLS_MTRIL_ID = FEM.DTLS_MTRIL_ID
+          ]]>
+           WHERE CDI.DTLS_GROUP_ID = #{groupId}
+             <if test="detailsId != null and detailsId != ''">
+                 AND CDI.DTLS_ID = #{detailsId}
+             </if>
+           GROUP BY FE.EO_ID
+        ) BB ON (
+          AA.EO_ID = BB.EO_ID
+        )
+        WHEN MATCHED THEN
+          UPDATE SET
+                AA.QY = BB.QY,
+                AA.AMOUNT = BB.AMOUNT,
+                AA.WT = BB.WT,
+                AA.MTRIL_AMOUNT_INTRA = BB.MTRIL_AMOUNT_INTRA,
+                AA.MTRIL_AMOUNT_OFSHR = BB.MTRIL_AMOUNT_OFSHR,
+                AA.MTRIL_WT_INTRA = BB.MTRIL_WT_INTRA,
+                AA.MTRIL_WT_OFSHR = BB.MTRIL_WT_OFSHR,
+                AA.UNTPC_ERROR_INTRA_CNT = BB.UNTPC_ERROR_INTRA_CNT,
+                AA.UNTPC_ERROR_OFSHR_CNT = BB.UNTPC_ERROR_OFSHR_CNT,
+                AA.WT_ERROR_INTRA_CNT = BB.WT_ERROR_INTRA_CNT,
+                AA.WT_ERROR_OFSHR_CNT = BB.WT_ERROR_OFSHR_CNT,
+                AA.HS_CODE_ERROR_CNT = BB.HS_CODE_ERROR_CNT,
+                AA.CC_MTCH_CNT = BB.CC_MTCH_CNT,
+                AA.CTH_MTCH_CNT = BB.CTH_MTCH_CNT,
+                AA.CTSH_MTCH_CNT = BB.CTSH_MTCH_CNT,
+                AA.CC_MTCH_AMOUNT = BB.CC_MTCH_AMOUNT,
+                AA.CTH_MTCH_AMOUNT = BB.CTH_MTCH_AMOUNT,
+                AA.CTSH_MTCH_AMOUNT = BB.CTSH_MTCH_AMOUNT,
+                AA.CC_MTCH_WT = BB.CC_MTCH_WT,
+                AA.CTH_MTCH_WT = BB.CTH_MTCH_WT,
+                AA.CTSH_MTCH_WT = BB.CTSH_MTCH_WT,
+                AA.CC_AMOUNT_ERROR_CNT = BB.CC_AMOUNT_ERROR_CNT,
+                AA.CTH_AMOUNT_ERROR_CNT = BB.CTH_AMOUNT_ERROR_CNT,
+                AA.CTSH_AMOUNT_ERROR_CNT = BB.CTSH_AMOUNT_ERROR_CNT,
+                AA.CC_WT_ERROR_CNT = BB.CC_WT_ERROR_CNT,
+                AA.CTH_WT_ERROR_CNT = BB.CTH_WT_ERROR_CNT,
+                AA.CTSH_WT_ERROR_CNT = BB.CTSH_WT_ERROR_CNT
+    </update>
+    
+    <update id="updateExplainOriginByJudgment" parameterType="map">
+        /*queryId=ExplainOriginMapper.updateExplainOriginByMaterial*/
+        MERGE INTO FTA_EO AA
+        USING (
+            SELECT FE.EO_ID AS EO_ID
+                 , FJ.JDGMNT_ID AS JDGMNT_ID
+                 , FJ.SUFFCN_AT AS SUFFCN_AT
+              FROM FTA_EO FE
+             INNER JOIN FTA_JDGMNT FJ
+                ON FJ.JDGMNT_ID = (
+                                   SELECT MAX(FJT.JDGMNT_ID) KEEP (DENSE_RANK FIRST ORDER BY FJT.SUFFCN_AT DESC, FJT.SORT_SN ASC)
+                                     FROM FTA_JDGMNT FJT
+                                    WHERE FJT.EO_ID = FE.EO_ID
+                                  )
+             WHERE FE.DTLS_GROUP_ID = #{groupId}
+               <if test="detailsId != null and detailsId != ''">
+                   AND FE.DTLS_ID = #{detailsId}
+               </if>
+        ) BB ON (
+          AA.EO_ID = BB.EO_ID
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+                JDGMNT_ID = BB.JDGMNT_ID,
+                ORGPLCE_AT = BB.SUFFCN_AT
+  </update>
 </mapper>

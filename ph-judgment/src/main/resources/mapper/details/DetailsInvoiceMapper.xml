@@ -33,7 +33,7 @@
         /*queryId=DetailsInvoiceMapper.updateStatus*/
         UPDATE CMPNY_XPORT_INVE_FTA
            SET STTUS = #{sttus}
-         WHERE INVE_ID = #{inveId} 
+         WHERE INVE_ID = #{inveId}
     </update>
     
     <select id="countDetailsItem" parameterType="map" resultType="Long">

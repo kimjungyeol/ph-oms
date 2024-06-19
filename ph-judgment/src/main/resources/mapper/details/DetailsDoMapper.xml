@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktnet.fta.details.document.mapper.DetailsDoMapper">
+    
+    <select id="selectGroupId" parameterType="map" resultType="Long">
+        /*queryId=DetailsDoMapper.selectGroupId*/
+        SELECT DTLS_GROUP_ID 
+          FROM FTA_DO
+         WHERE DO_ID = #{doId}
+           AND ROWNUM = 1
+    </select>
+    
+    <update id="updateGroupId" parameterType="map">
+        /*queryId=DetailsDoMapper.updateGroupId*/
+        UPDATE FTA_DO
+           SET DTLS_GROUP_ID = #{groupId}
+         WHERE DO_ID = #{doId}
+    </update>
+    
+    <update id="updateStatus" parameterType="map">
+        /*queryId=DetailsDoMapper.updateStatus*/
+        UPDATE FTA_DO
+           SET STTUS = #{sttus}
+         WHERE DO_ID = #{doId}
+           AND CMPNY_ID = #{cmpnyId}
+    </update>
+    
+    <update id="updateFromSales" parameterType="map">
+        /*queryId=DetailsDoMapper.updateFromSales*/
+        MERGE INTO FTA_DO_ITEM AA
+        USING (
+            SELECT
+                FDI.DO_ITEM_ID AS DO_ITEM_ID,
+                (
+                    SELECT MAX(CSI.SELNG_ITEM_ID) KEEP (DENSE_RANK FIRST ORDER BY CS.SELNG_DE DESC) AS SELNG_ITEM_ID
+                    FROM CMPNY_SELNG CS
+                            INNER JOIN CMPNY_SELNG_ITEM CSI
+                                ON  CSI.SELNG_ID = CS.SELNG_ID
+                                <![CDATA[
+                                AND CSI.QY > 0
+                                AND CSI.UNTPC > 0
+                                ]]>
+                    WHERE CS.CSTMR_ID = FD.SUPLYOFFIC_ID
+                    AND CS.CMPNY_ID = FD.CMPNY_ID
+                    AND CSI.ITEM_ID = FDI.ITEM_ID
+                ) AS SELNG_ITEM_ID
+            FROM FTA_DO FD
+                    INNER JOIN FTA_DO_ITEM FDI
+                        ON FDI.DO_ID = FD.DO_ID
+                        AND FDI.SELNG_ITEM_ID IS NULL
+            WHERE FD.DTLS_GROUP_ID = #{groupId}
+            AND   FD.CMPNY_ID = #{companyId}
+        ) BB ON (
+            AA.DO_ITEM_ID = BB.DO_ITEM_ID
+        )
+        WHEN MATCHED THEN
+            UPDATE SET
+                SELNG_ITEM_ID = BB.SELNG_ITEM_ID
+    </update>
+    
+    <select id="countDetailsItem" parameterType="map" resultType="Long">
+        /*queryId=DetailsDoMapper.countDetailsItem*/
+        SELECT COUNT(FDI.ITEM_ID)
+          FROM FTA_DO FD
+         INNER JOIN CMPNY_DTLS_GROUP CDG
+            ON CDG.DTLS_GROUP_ID = FD.DTLS_GROUP_ID
+         INNER JOIN FTA_DO_ITEM FDI
+            ON FDI.DO_ID = FD.DO_ID
+         INNER JOIN CMPNY_ITEM CI
+            ON CI.ITEM_ID = FDI.ITEM_ID
+          LEFT OUTER JOIN CMPNY_ITEM_CL CIC
+            ON CIC.ITEM_CL_ID = CI.ITEM_CL_ID
+          LEFT OUTER JOIN CMPNY_SELNG_ITEM CSI
+            ON CSI.SELNG_ITEM_ID = FDI.SELNG_ITEM_ID
+          LEFT OUTER JOIN CMPNY_SELNG CS
+            ON CS.SELNG_ID = CSI.SELNG_ID
+         WHERE FD.DTLS_GROUP_ID = #{groupId}
+           AND FD.CMPNY_ID = #{companyId}
+    </select>
+    
+    <insert id="insertDetailsItem" parameterType="map">
+        /*queryId=DetailsDoMapper.insertDetailsItem*/
+        INSERT INTO CMPNY_DTLS_ITEM (
+            DTLS_ID,
+            DTLS_GROUP_ID,
+            DTLS_TY,
+            ITEM_ID,
+            CSTMR_ID,
+            INVE_ID,
+            INVE_NO,
+            INVE_ITEM_ID,
+            DO_ID,
+            DO_ISSU_NO,
+            DO_ITEM_ID,
+            BOM_ID,
+            APPLC_DE,
+            BOM_MANAGE_NO,
+            ITEM_CODE,
+            ITEM_NM,
+            ITEM_STNDRD,
+            ISSU_ITEM_ID,
+            ISSU_ITEM_CODE,
+            ISSU_ITEM_NM,
+            ISSU_ITEM_STNDRD,
+            ISSU_ITEM_HS_CODE,
+            ITEM_CL_ID,
+            ITEM_CL_NM,
+            HS_17,
+            HS_12,
+            HS_07,
+            HS_02,
+            SELNG_QY,
+            SELNG_QY_UNIT,
+            CNVRSN_RT,
+            BOM_QY,
+            BOM_QY_UNIT,
+            UNTPC,
+            AMOUNT,
+            CRNCY_CODE,
+            FOB_UNTPC_KRW,
+            FOB_AMOUNT_KRW,
+            FOB_UNTPC_USD,
+            FOB_AMOUNT_USD,
+            WT,
+            WT_UNIT,
+            LOCK_AT,
+            CMPNY_ID,
+            CREAT_DT,
+            CREAT_ID,
+            UPDT_DT,
+            UPDT_ID
+        )
+        <![CDATA[
+    SELECT
+            #{startId} + ROW_NUMBER() OVER (ORDER BY MIN(FDI.DO_ITEM_ID)) AS DTLS_ID,
+            FD.DTLS_GROUP_ID                         AS DTLS_GROUP_ID,
+            'MATERIAL'                               AS DTLS_TY,
+            FDI.ITEM_ID                              AS ITEM_ID,
+            FD.SUPLYOFFIC_ID                         AS CSTMR_ID,
+            NULL                                     AS INVE_ID,
+            NULL                                     AS INVE_NO,
+            NULL                                     AS INVE_ITEM_ID,
+            FD.DO_ID                                 AS DO_ID,
+            FD.ISSU_NO                               AS DO_ISSU_NO,
+            MIN(FDI.DO_ITEM_ID)                           AS DO_ITEM_ID,
+            (
+                SELECT MAX(CB.BOM_ID) KEEP (DENSE_RANK FIRST ORDER BY CB.APPLC_DE DESC)
+                FROM CMPNY_BOM CB
+                WHERE CB.PRDUCT_ITEM_ID = FDI.ITEM_ID
+                AND CB.APPLC_DE <= FD.END_DE
+            )                                        AS BOM_ID,
+            COALESCE(MIN(CS.SELNG_DE), FD.END_DE)  AS APPLC_DE,
+            NULL                                     AS BOM_MANAGE_NO,
+            CI.ITEM_CODE                             AS ITEM_CODE,
+            CI.ITEM_NM                               AS ITEM_NM,
+            CI.STNDRD                                AS ITEM_STNDRD,
+      (
+        SELECT ITEM_ID
+        FROM CMPNY_ISSU_ITEM
+        WHERE CMPNY_ID = FD.CMPNY_ID
+        AND CSTMR_ID  = FD.SUPLYOFFIC_ID
+        AND ITEM_ID = FDI.ITEM_ID
+        AND ROWNUM = 1
+      )                                                                              AS ISSU_ITEM_ID,
+            NULL                                     AS ISSU_ITEM_CODE,
+            NULL                                     AS ISSU_ITEM_NM,
+            NULL                                     AS ISSU_ITEM_STNDRD,
+            NULL                                     AS ISSU_ITEM_HS_CODE,
+            CIC.ITEM_CL_ID                           AS ITEM_CL_ID,
+            CIC.ITEM_CL_NM                           AS ITEM_CL_NM,
+            CASE WHEN MAX(FIM.HS_USE) IS NULL OR MAX(FIM.HS_USE) = 1  THEN COALESCE(CIC.HS_17, CI.HS_CODE)
+                 ELSE CI.HS_CODE
+                 END HS_17,
+            CASE WHEN MAX(FIM.HS_USE) IS NULL OR MAX(FIM.HS_USE) = 1  THEN COALESCE(CIC.HS_12, CI.HS_CODE)
+                 ELSE CI.HS_CODE
+                 END HS_12,
+            CASE WHEN MAX(FIM.HS_USE) IS NULL OR MAX(FIM.HS_USE) = 1  THEN COALESCE(CIC.HS_07, CI.HS_CODE)
+                 ELSE CI.HS_CODE
+                 END HS_07,
+            CASE WHEN MAX(FIM.HS_USE) IS NULL OR MAX(FIM.HS_USE) = 1  THEN COALESCE(CIC.HS_02, CI.HS_CODE)
+                 ELSE CI.HS_CODE
+                 END HS_02,
+            1                                       AS SELNG_QY,
+            MAX(CSI.QY_UNIT)                              AS SELNG_QY_UNIT,
+            1                                        AS CNVRSN_RT,
+            1                                       AS BOM_QY,
+            MAX(CSI.QY_UNIT)                              AS BOM_QY_UNIT,
+            COALESCE(MAX(CSI.UNTPC), CI.SELNG_UNTPC, 0) AS UNTPC,
+            COALESCE(MAX(CSI.UNTPC), CI.SELNG_UNTPC, 0) AS AMOUNT,
+            'KRW'                                    AS CRNCY_CODE,
+            COALESCE(MAX(CSI.UNTPC), CI.SELNG_UNTPC, 0) AS FOB_UNTPC_KRW,
+            COALESCE(MAX(CSI.UNTPC), CI.SELNG_UNTPC, 0) AS FOB_AMOUNT_KRW,
+            0                                        AS FOB_UNTPC_USD,
+            0                                        AS FOB_AMOUNT_USD,
+            COALESCE(CI.WT, 0)                      AS WT,
+            NULL                                     AS WT_UNIT,
+            0                                        AS LOCK_AT,
+            FD.CMPNY_ID                              AS CMPNY_ID,
+            MAX(CDG.CREAT_DT)                             AS CREAT_DT,
+            CDG.CREAT_ID                             AS CREAT_ID,
+            MAX(CDG.UPDT_DT)                              AS UPDT_DT,
+            CDG.UPDT_ID                              AS UPDT_ID
+    FROM FTA_DO FD
+                    INNER JOIN CMPNY_DTLS_GROUP CDG
+            ON  CDG.DTLS_GROUP_ID = FD.DTLS_GROUP_ID
+                    INNER JOIN FTA_DO_ITEM FDI
+            ON  FDI.DO_ID = FD.DO_ID
+                    INNER JOIN CMPNY_ITEM CI
+            ON  CI.ITEM_ID = FDI.ITEM_ID
+                    LEFT OUTER JOIN CMPNY_ITEM_CL CIC
+            ON  CIC.ITEM_CL_ID = CI.ITEM_CL_ID
+                    LEFT OUTER JOIN CMPNY_SELNG_ITEM CSI
+            ON  CSI.SELNG_ITEM_ID = FDI.SELNG_ITEM_ID
+                    LEFT OUTER JOIN CMPNY_SELNG CS
+            ON  CS.SELNG_ID = CSI.SELNG_ID
+                     LEFT OUTER JOIN FTA_ITEM_JDGMNT FIM
+            ON  FDI.ITEM_ID =  FIM.ITEM_ID
+        ]]>
+        WHERE FD.DTLS_GROUP_ID = #{groupId}
+    AND   FD.CMPNY_ID = #{companyId}
+    GROUP BY 
+      FD.DTLS_GROUP_ID,
+      FDI.ITEM_ID,
+      FD.SUPLYOFFIC_ID,
+      FD.DO_ID,
+      FD.ISSU_NO ,
+      FD.END_DE,
+      CI.ITEM_CODE,
+      CI.ITEM_NM,
+      CI.STNDRD,
+      CIC.ITEM_CL_ID,
+      CIC.ITEM_CL_NM,
+      CIC.HS_17,
+      CI.HS_CODE,
+      CIC.HS_12,
+      CIC.HS_07,
+      CIC.HS_02,
+      CI.SELNG_UNTPC,
+      COALESCE(CI.WT, 0),
+      FD.CMPNY_ID,
+      CDG.CREAT_ID,
+      CDG.UPDT_ID
+    </insert>
+    
+    <select id="countExplainOrigin" parameterType="map" resultType="Long">
+        /*queryId=DetailsDoMapper.countExplainOrigin*/
+        SELECT COUNT(1)
+          FROM CMPNY_DTLS_ITEM CDI
+         INNER JOIN FTA_DO_ITEM FDI
+            ON FDI.DO_ITEM_ID = CDI.DO_ITEM_ID
+         INNER JOIN FTA_DO_FTA FDF
+            ON FDF.DO_ID = CDI.DO_ID
+         INNER JOIN CMPNY_FTA CF
+            ON CF.FTA_ID = FDF.FTA_ID
+           AND CF.CMPNY_ID = CDI.CMPNY_ID
+          LEFT OUTER JOIN CMPNY_CMPNM CCE
+            ON CCE.CMPNY_ID = CDI.CMPNY_ID
+           AND CCE.CMPNM_TY = 'EXPORTER'
+          LEFT OUTER JOIN CMPNY_CMPNM CCP
+            ON CCP.CMPNY_ID = CDI.CMPNY_ID
+           AND CCP.CMPNM_TY = 'PRODUCER'
+        WHERE CDI.DTLS_GROUP_ID = #{groupId}
+          <if test="detailsId != null and detailsId != ''">
+              AND CDI.DTLS_ID = #{detailsId}
+          </if>
+    </select>
+    
+    <insert id="insertExplainOrigin" parameterType="map">
+        /*queryId=DetailsDoMapper.insertExplainOrigin*/
+        INSERT INTO FTA_EO (
+          EO_ID,
+          DTLS_GROUP_ID,
+          DTLS_ID,
+          FTA_ID,
+          FTA_NM,
+          HS_TY,
+          HS_CODE,
+          ORGPLCE_AT,
+          EXPTER_CODE,
+          EXPTER_NM,
+          EXPTER_NM_ENG,
+          EXPTER_BSNM_NO,
+          EXPTER_REPRSNT_NM,
+          EXPTER_REPRSNT_NM_ENG,
+          EXPTER_TLPHON_NO,
+          EXPTER_MOBILE_NO,
+          EXPTER_FAX_NO,
+          EXPTER_EMAIL,
+          EXPTER_ADRES,
+          EXPTER_ADRES_DETAIL,
+          MKER_CODE,
+          MKER_NM,
+          MKER_NM_ENG,
+          MKER_BSNM_NO,
+          MKER_REPRSNT_NM,
+          MKER_REPRSNT_NM_ENG,
+          MKER_TLPHON_NO,
+          MKER_MOBILE_NO,
+          MKER_FAX_NO,
+          MKER_EMAIL,
+          MKER_ADRES,
+          MKER_ADRES_DETAIL,
+          DELNG_TY,
+          PROCS_DC,
+          SIGNER_ID,
+          SIGNER_NM,
+          SIGNER_ENG_NM,
+          SIGNER_CLSF_NM,
+          SIGNER_CLSF_ENG_NM,
+          SIGNER_DEPT_NM,
+          WRITNG_DE,
+          JDGMNT_ID,
+          CMPNY_ID,
+          CREAT_DT,
+          CREAT_ID,
+          UPDT_DT,
+          UPDT_ID
+        )
+        <![CDATA[
+        SELECT
+          #{startId} + ROW_NUMBER() OVER (ORDER BY CDI.DTLS_ID, FDF.FTA_ID) AS EO_ID,
+          CDI.DTLS_GROUP_ID,
+              CDI.DTLS_ID,
+              FDF.FTA_ID,
+              FDF.FTA_NM,
+              FDF.HS_TY,
+              COALESCE(
+                CASE
+                  WHEN FDF.HS_TY = 'HS2017' THEN
+                    CDI.HS_17
+                  WHEN FDF.HS_TY = 'HS2012' THEN
+                    CDI.HS_12
+                  WHEN FDF.HS_TY = 'HS2007' THEN
+                    CDI.HS_07
+                  WHEN FDF.HS_TY = 'HS2002' THEN
+                    CDI.HS_02
+                  ELSE
+                    SUBSTR(CDI.HS_17, 1, 6)
+                END,
+                CDI.HS_17
+              ) AS HS_CODE,
+              0 AS ORGPLCE_AT,
+              NULL AS EXPTER_CODE,
+              CCE.CMPNY_NM AS EXPTER_NM,
+              CCE.CMPNY_NM_ENG AS EXPTER_NM_ENG,
+              CCE.BSNM_NO AS EXPTER_BSNM_NO,
+              CCE.REPRSNT_NM AS EXPTER_REPRSNT_NM,
+              CCE.REPRSNT_NM_ENG AS EXPTER_REPRSNT_NM_ENG,
+              CCE.TLPHON_NO AS EXPTER_TLPHON_NO,
+              CCE.MOBILE_NO AS EXPTER_MOBILE_NO,
+              CCE.FAX_NO AS EXPTER_FAX_NO,
+              CCE.EMAIL AS EXPTER_EMAIL,
+              CCE.ADRES AS EXPTER_ADRES,
+              CCE.ADRES_DETAIL AS EXPTER_ADRES_DETAIL,
+              NULL AS MKER_CODE,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.CMPNY_NM
+                ELSE
+                  NULL
+              END AS MKER_NM,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                 CCP.CMPNY_NM_ENG
+                ELSE
+                 NULL
+              END AS MKER_NM_ENG,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.BSNM_NO
+                ELSE
+                  NULL
+              END AS MKER_BSNM_NO,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.REPRSNT_NM
+                ELSE
+                  NULL
+              END AS MKER_REPRSNT_NM,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.REPRSNT_NM_ENG
+                ELSE
+                  NULL
+              END AS MKER_REPRSNT_NM_ENG,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.TLPHON_NO
+                ELSE
+                  NULL
+              END AS MKER_TLPHON_NO,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.MOBILE_NO
+                ELSE
+                  NULL
+              END AS MKER_MOBILE_NO,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.FAX_NO
+                ELSE
+                  NULL
+              END AS MKER_FAX_NO,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.EMAIL
+                ELSE
+                  NULL
+              END AS MKER_EMAIL,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.ADRES
+                ELSE
+                  NULL
+              END AS MKER_ADRES,
+              CASE
+                WHEN CDI.DTLS_TY = 'PRODUCT' THEN
+                  CCP.ADRES_DETAIL
+                ELSE
+                  NULL
+              END AS MKER_ADRES_DETAIL,
+              CF.DELNG_TY AS DELNG_TY,
+              CICP.PROCS_DC AS PROCS_DC,
+              NULL AS SIGNER_ID,
+              NULL AS SIGNER_NM,
+              NULL AS SIGNER_ENG_NM,
+              NULL AS SIGNER_CLSF_NM,
+              NULL AS SIGNER_CLSF_ENG_NM,
+              NULL AS SIGNER_DEPT_NM,
+              CDI.APPLC_DE AS WRITNG_DE,
+              NULL AS JDGMNT_ID,
+              CDI.CMPNY_ID AS CMPNY_ID,
+              CDI.CREAT_DT AS CREAT_DT,
+              CDI.CREAT_ID AS CREAT_ID,
+              CDI.UPDT_DT AS UPDT_DT,
+              CDI.UPDT_ID AS UPDT_ID
+            FROM CMPNY_DTLS_ITEM CDI
+                  INNER JOIN FTA_DO_ITEM FDI
+                    ON  FDI.DO_ITEM_ID = CDI.DO_ITEM_ID
+                  INNER JOIN FTA_DO_FTA FDF
+                    ON  FDF.DO_ID = CDI.DO_ID
+                  INNER JOIN CMPNY_FTA CF
+                    ON CF.FTA_ID = FDF.FTA_ID
+                    AND CF.CMPNY_ID = CDI.CMPNY_ID
+                  LEFT OUTER JOIN CMPNY_CMPNM CCE
+                    ON CCE.CMPNY_ID = CDI.CMPNY_ID
+                    AND CCE.CMPNM_TY = 'EXPORTER'
+                  LEFT OUTER JOIN CMPNY_CMPNM CCP
+                    ON CCP.CMPNY_ID = CDI.CMPNY_ID
+                    AND CCP.CMPNM_TY = 'PRODUCER'
+                  LEFT OUTER JOIN CMPNY_ITEM_CL_PROCS CICP
+                    ON CDI.ITEM_CL_ID = CICP.ITEM_CL_ID 
+        ]]>
+        WHERE CDI.DTLS_GROUP_ID = #{groupId}
+        <if test="detailsId != null and detailsId != ''">
+            AND CDI.DTLS_ID = #{detailsId}
+        </if>
+  </insert>
+    
+</mapper>

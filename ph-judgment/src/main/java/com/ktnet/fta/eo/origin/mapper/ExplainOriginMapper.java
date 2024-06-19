@@ -21,4 +21,18 @@ public interface ExplainOriginMapper {
 
     public Long countExplainOriginReceipt(Map<String, Object> map);
 
+    public int insertExplainOriginReceipt(Map<String, Object> map);
+
+    public int updateExplainOriginMaterialForMainPurchase(Map<String, Object> map);
+
+    public int updateExplainOriginMaterialByPurchase(Map<String, Object> map);
+
+    public int updateExplainOriginMaterialByDoReceipt(Map<String, Object> map);
+
+    public int updateExplainOriginByPurchase(Map<String, Object> map);
+
+    public int updateExplainOriginByMaterial(Map<String, Object> map);
+
+    public int updateExplainOriginByJudgment(Map<String, Object> map);
+
 }

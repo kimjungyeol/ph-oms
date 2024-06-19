@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ktnet.common.response.ApiResponse;
 import com.ktnet.fta.common.web.BasicController;
 import com.ktnet.fta.judgment.service.JudgmentService;
 import com.ktnet.fta.simulation.service.SimulationService;
@@ -33,8 +34,22 @@ public class JudgmentController extends BasicController {
         return "api get teset";
     }
 
+    @PostMapping("/api/post/test")
+    // public String test(@RequestBody Map<String, Object> reqMap) {
+    public ApiResponse<?> test(@RequestBody Map<String, Object> reqMap) {
+
+        logger.debug(reqMap.toString());
+
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        resultMap.put("resultMap", "SU");
+
+        return new ApiResponse<>(resultMap, 1, "SUCCESS");
+
+        // return "SSSSS";
+    }
+
 //    @PostMapping("/api/post/test")
-//    public ResponseEntity<String> test(@RequestBody Map<String, Object> reqMap) {
+//    public String test(@RequestBody Map<String, Object> reqMap) {
 //
 //        logger.debug(reqMap.toString());
 //
@@ -42,24 +57,8 @@ public class JudgmentController extends BasicController {
 //        Map<String, String> resultMap = new HashMap<String, String>();
 //        resultMap.put("result", result);
 //
-//        return ResponseEntity.ok("SUCCESS..!");
+//        return "SUCCESS";
 //    }
-
-    @PostMapping("/api/post/test")
-    public String test(@RequestBody Map<String, Object> reqMap) {
-
-        logger.debug(reqMap.toString());
-
-        String result = judgmentService.test();
-        Map<String, String> resultMap = new HashMap<String, String>();
-        resultMap.put("result", result);
-
-//        this.result = result;
-//        this.resultCode = resultCode;
-//        this.resultMsg = resultMsg;
-
-        return "SUCCESS";
-    }
 
     @PostMapping("/api/co/judgment")
     public void judgment(@RequestBody Map<String, Object> reqMap) {

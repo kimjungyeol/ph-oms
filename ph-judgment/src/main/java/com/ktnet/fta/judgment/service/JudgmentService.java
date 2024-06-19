@@ -29,11 +29,13 @@ import com.ktnet.fta.psr.dto.PsrSearchResultDto;
 import com.ktnet.fta.psr.dto.PsrStdItemTypeDto;
 import com.ktnet.fta.psr.service.PsrService;
 
+import jakarta.annotation.Resource;
+
 @Service("judgmentService")
 public class JudgmentService {
 
     /*** Service ***/
-    @Autowired
+    @Resource(name = "psrService")
     private PsrService psrService;
 
     /*** Mapper ***/
