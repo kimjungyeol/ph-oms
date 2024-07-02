@@ -57,7 +57,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(httpInterceptor)
 				.addPathPatterns("/**")
-				.excludePathPatterns("/css/**", "/images/**", "/js/**", "/error");
+				.excludePathPatterns("/css/**", "/images/**", "/js/**", "/error", "/favicon.ico");
 		
 		registry.addInterceptor(localeChangeInterceptor());
 	}
